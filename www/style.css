@@ -1,0 +1,252 @@
+body {
+  overflow: hidden;
+}
+
+/*
+.container-fluid {
+  padding: 0px !important;
+}
+*/
+
+.navbar {
+  margin-bottom: 0px !important;
+}
+
+.well {
+  box-shadow: none;
+}
+
+/*
+.row {
+  margin-left: calc(-15px / 2);
+  margin-right: calc(-15px / 2);
+}
+these are fine as -15 but the leaflet in mobile is being made extra wide
+*/
+
+.row > div:first-of-type {
+  padding: 15px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+header > img {
+  height: 100px;
+}
+
+header > h1 {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+header > h2 {
+  font-size: medium;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+
+div.legend-item {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+}
+div.legend-item:hover {
+  background-color: #eee;
+}
+form.well {
+  background: none;
+  border: none;
+}
+
+form.well > div.legend-item > p {
+  margin-left: 18px !important;
+}
+
+form.well > div.legend-item > div.form-group > .checkbox > label {
+  font-weight: bold !important;
+}
+
+ul.legend-list {
+  padding-left: 20px;
+}
+ul.legend-list > li {
+  list-style: none;
+  font-weight: normal;
+}
+
+ul.legend-list li img, .checkbox > label img {
+  width: 18px;
+  height: 18px;
+}
+ul.legend-list li .checkbox {
+  margin: 0;
+}
+ul.legend-list li {
+  padding-left: calc( 18px + 0.25em);
+  text-indent:  calc(-18px - 0.25em);
+}
+
+.checkbox {
+  accent-color: #888;
+}
+
+.form-group {
+  margin-bottom: 0px;
+}
+.legend-description {
+  font-size: smaller;
+}
+div.legend-item-options {
+  margin-left: 18px;
+  margin-right: 18px;
+}
+div.legend-item-options label {
+  display: none;
+}
+
+/* POPUPS */
+.leaflet-tooltip {
+    border-radius: 0;
+}
+.leaflet-popup-content p, .leaflet-tooltip p {
+  margin: 0.5em;
+}
+.leaflet-popup-content-wrapper, .leaflet-tooltip-content-wrapper {
+  border-radius: 0;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  padding: 0.5em;
+  width: 50vw;
+}
+
+.leaflet-tooltip img, .leaflet-popup-content > img {
+  width: 100%;
+}
+
+.leaflet-popup-content > p, .leaflet-tooltip p {
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 10px;
+}
+
+.popup_image_wrapper {
+  margin: 0;
+    margin-bottom: 1em;
+    /*height: 250px;
+    max-height: 250px;*/
+    width: 100%;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.popup_image_wrapper ul {
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
+}
+.popup_image_wrapper li {
+  display: inline-block;
+}
+.popup_image {
+  width: 100%;
+  height: auto;
+  border: 1px solid white;
+}
+/* REFERENCE */
+
+.reference-doc {
+  border: 0px;
+  width: 100%;
+  height: 100vh;
+}
+
+.reference-content {
+  padding: 1em;
+  max-width: 768px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* DESKTOP */
+@media (min-width: 768px) {
+  
+  #mainMap {
+    height: calc(100vh - 50px) !important;
+    /*width: 62vw !important;*/
+  }
+  
+  .nav {
+    height: 3em;
+  }
+  
+  /* sidebar */
+  .row > div:first-of-type {
+    height: calc(100vh - 50px) !important;
+    /*width: 38vw !important;*/
+    overflow-y: auto;
+  }
+  
+  .row > div {
+  padding: 0px;
+}
+
+}
+
+/* MOBILE */
+@media (max-width: 767px) {
+ 
+  /*
+  #mainMap, .reference-doc {
+    height: 62vh !important;
+  }
+  */
+  
+  .tab-pane[data-value="Monitoring Site Map"] > .row > div[role=main] {
+    height: calc(62vh - 50px) !important;
+  }
+  
+  #monitoring-mainMap {
+    height: calc(62vh - 50px) !important;
+  }
+  
+  .tab-pane[data-value="Monitoring Site Map"] > .row > div:first-of-type {
+    height: 38vh !important;
+    overflow-y: auto;
+  }
+  
+}
+
+/* Hover functionality */
+.leaflet-interactive:hover, .leaflet-marker-icon:hover {
+  filter: invert() hue-rotate(180deg); /*brightness(0.5);*/
+}
+
+/* Fadeout basemap */
+.leaflet-container {
+  background-color: white;
+}
+.leaflet-Basemap-pane {
+  opacity: 0.75;
+  filter: saturate(0.75);
+}
+.leaflet-Lines-Habitat-pane {
+  opacity: 0.75;
+  /*mix-blend-mode: multiply;*/
+}
+.leaflet-Reference-pane {
+  filter: saturate(0);
+  mix-blend-mode: multiply;
+  opacity: 0.33;
+}
+.leaflet-Polygons-pane {
+  mix-blend-mode: multiply;
+}
