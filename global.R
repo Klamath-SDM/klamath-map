@@ -2,15 +2,24 @@ library(tidyverse)
 library(shiny)
 library(leaflet)
 library(sf)
-library(shinyauthr)
+#library(shinyauthr)
 
-source("funcs.R")
-source("modules/monitoring_module.R")
-source("modules/reference_module.R")
+#source("funcs.R")
+#source("modules/monitoring_module.R")
+#source("modules/reference_module.R")
+
+#readRenviron(".Renviron")
+
 
 ###############
 # DATA IMPORTS 
 ###############
+
+# add in temperature and flow data 
+temperature <- read_csv(here::here('data-raw', 'temp_data.csv')) |> 
+  sf::st_as_sf(coords = c("longitude","latitude")) 
+flow <- read_csv(here::here('data-raw', 'flow_table.csv')) |> 
+  sf::st_as_sf(coords = c("longitude","latitude"))
 
 # TODO Add in data for the Klamath Basin
 
