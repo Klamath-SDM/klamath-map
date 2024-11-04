@@ -16,10 +16,10 @@ library(sf)
 ###############
 
 # add in temperature and flow data 
-temperature <- read_csv(here::here('data-raw', 'temp_data.csv')) |> 
-  sf::st_as_sf(coords = c("longitude","latitude")) 
-flow <- read_csv(here::here('data-raw', 'flow_table.csv')) |> 
-  sf::st_as_sf(coords = c("longitude","latitude"))
+temperature <- read_csv(here::here('data-raw', 'temp_data.csv')) 
+  # sf::st_as_sf(coords = c("longitude","latitude")) 
+flow <- read_csv(here::here('data-raw', 'flow_table.csv')) 
+  # sf::st_as_sf(coords = c("longitude","latitude"))
 
 # TODO Add in data for the Klamath Basin
 
