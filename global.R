@@ -2,6 +2,7 @@ library(tidyverse)
 library(shiny)
 library(leaflet)
 library(sf)
+library(janitor)
 #library(shinyauthr)
 
 #source("funcs.R")
@@ -25,7 +26,10 @@ flow <- read_csv(here::here('data-raw', 'flow_table.csv'))
 
 # Import RST data
 # rst_trap_locations <- readRDS("data/rst_trap_locations.Rds")
-# rst_sites <- readRDS("data/rst_sites.Rds")
+rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |> 
+  clean_names() |> 
+  select(rst_name, operator, latitude, longitude, link) |> 
+  glimpse()
 # rst_sites_circ <- readRDS("data/rst_sites_circ.Rds")
 # 
 # # Import temp loggers data
@@ -61,18 +65,18 @@ flow <- read_csv(here::here('data-raw', 'flow_table.csv'))
 # # ICON DEFINITIONS 
 # ##################
 # 
-# rst_markers <- iconList(
-#   "single" = makeIcon("icon-diamond.png", "icon-diamond.png", 18, 18, 9, 9),
-#   "stack" = makeIcon("icon-diamond-stack.png", "icon-diamond-stack.png", 18, 18, 9, 9),
-#   "video" = makeIcon("icon-video.png", "icon-video.png", 18, 18, 9, 9),
-#   "T" = makeIcon("icon-t.png", "icon-t.png", 14, 14, 7, 7),
-#   "T-hollow" = makeIcon("icon-t-hollow.png", "icon-t-hollow.png", 14, 14, 7, 7),
-#   "H" = makeIcon("icon-spiral.png", "icon-spiral.png", 18, 18, 9, 9),
-#   "X" = makeIcon("icon-x.png", "icon-x.png", 14, 14, 7, 7),
-#   "circle-T" = makeIcon("icon-circle-t.png", "icon-circle-t.png", 18, 18, 9, 9),
-#   "circle-F" = makeIcon("icon-circle-f.png", "icon-circle-f.png", 18, 18, 9, 9),
-#   "circle-TF" = makeIcon("icon-circle-tf.png", "icon-circle-tf.png", 18, 18, 9, 9)
-# )
+rst_markers <- iconList(
+  "single" = makeIcon("icon-diamond.png", "icon-diamond.png", 18, 18, 9, 9),
+  "stack" = makeIcon("icon-diamond-stack.png", "icon-diamond-stack.png", 18, 18, 9, 9),
+  "video" = makeIcon("icon-video.png", "icon-video.png", 18, 18, 9, 9),
+  "T" = makeIcon("icon-t.png", "icon-t.png", 14, 14, 7, 7),
+  "T-hollow" = makeIcon("icon-t-hollow.png", "icon-t-hollow.png", 14, 14, 7, 7),
+  "H" = makeIcon("icon-spiral.png", "icon-spiral.png", 18, 18, 9, 9),
+  "X" = makeIcon("icon-x.png", "icon-x.png", 14, 14, 7, 7),
+  "circle-T" = makeIcon("icon-circle-t.png", "icon-circle-t.png", 18, 18, 9, 9),
+  "circle-F" = makeIcon("icon-circle-f.png", "icon-circle-f.png", 18, 18, 9, 9),
+  "circle-TF" = makeIcon("icon-circle-tf.png", "icon-circle-tf.png", 18, 18, 9, 9)
+)
 # reach_markers <- iconList(
 #   "001" = makeIcon("icon-circle-001.png", "icon-circle-001.png", 18, 18, 9, 9),
 #   "010" = makeIcon("icon-circle-010.png", "icon-circle-010.png", 18, 18, 9, 9),

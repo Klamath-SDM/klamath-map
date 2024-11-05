@@ -14,39 +14,58 @@ shinyServer(function(input, output, session) {
                  ))
   )
   
-  
   output$mainMap <- renderLeaflet({
-    leaflet() %>%
-      addTiles() %>%
-      setView(lng = -122, lat = 41, zoom = 8) # Adjust to your desired coordinates and zoom level
+    leaflet() |> 
+      addTiles() |> 
+      setView(lng = -122, lat = 41, zoom = 8) 
   })
   
-  # Observe the checkbox input to control the visibility of the markers
   observe({
-    leafletProxy("mainMap") %>%
+    leafletProxy("mainMap") |> 
       clearMarkers()
     
     if (input$show_temp_loggers) {
-      # Add flow gage markers
-      leafletProxy("mainMap") %>%
-        addCircleMarkers(
+      # Add flow gages
+      leafletProxy("mainMap") |> 
+        addMarkers(
           data = flow,
-          lng = ~longitude, lat = ~latitude, # Ensure column names match your data
-          color = "blue",
-          radius = 5,
-          popup = ~paste("Flow Gage:", gage_number) # Customize based on `flow` data fields
+          lng = ~longitude, lat = ~latitude, 
+          icon = ~ rst_markers["circle-F"],
+          # color = "blue",
+          # radius = 5,
+          popup = ~paste("Flow Gage:", gage_number) #TODO add other pop-ups, potentially adding a graph when clicked
         )
       
-      # Add temperature logger markers
-      leafletProxy("mainMap") %>%
-        addCircleMarkers(
+      # Add temperature gages
+      leafletProxy("mainMap") |> 
+        addMarkers(
           data = temperature,
-          lng = ~longitude, lat = ~latitude, # Ensure column names match your data
-          color = "red",
-          radius = 5,
-          popup = ~paste("Temperature Gage:", gage_number) # Customize based on `temperature` data fields
+          lng = ~longitude, lat = ~latitude, 
+          icon = ~ rst_markers["circle-T"],
+          # color = "blue",
+          # radius = 5,
+          popup = ~paste("Temperature Gage:", gage_number)
         )
     }
   })
   
+  observe({
+    # Check if the "show_rst" checkbox is checked
+    if (input$show_rst) {
+      leafletProxy("mainMap") |>
+        addMarkers(
+          data = rst_sites,
+          lng = ~longitude, lat = ~latitude,
+          icon = ~ rst_markers["single"],
+          popup = ~paste("RST Name:", rst_name),
+          # layerId = ~uid, # Uncomment if needed
+          # label = ~lapply(if_else(!is.na(image_embed), paste0(popup, "<p><strong>Click for more details &rarr;</strong></p>"), popup), htmltools::HTML),
+          group = "Rotary Screw Traps"
+        )
+    } else {
+      # Remove rotary screw trap markers if the checkbox is unchecked
+      leafletProxy("mainMap") |>
+        clearGroup("Rotary Screw Traps")
+    }
+  })
 })
