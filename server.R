@@ -5,6 +5,8 @@ shinyServer(function(input, output, session) {
   
   # monitoring_tab_server("monitoring")
   
+#TODO consider adding basemap, slowly add pieces of framework to make sure all pieces are working properly
+  
   insertUI(
     selector = ".navbar .container-fluid .navbar-collapse",
     ui = tags$ul(class = "nav navbar-nav navbar-right",
@@ -33,7 +35,7 @@ shinyServer(function(input, output, session) {
           icon = ~ rst_markers["circle-F"],
           # color = "blue",
           # radius = 5,
-          popup = ~paste("Flow Gage:", gage_number) #TODO add other pop-ups, potentially adding a graph when clicked
+          popup = ~paste("Flow Gage:", gage_number, "<br>Latest Date: ", latest_data, "<br>Earliest Date: ", earliest_data) #TODO add other pop-ups, potentially adding a graph when clicked
         )
       
       # Add temperature gages
@@ -44,7 +46,7 @@ shinyServer(function(input, output, session) {
           icon = ~ rst_markers["circle-T"],
           # color = "blue",
           # radius = 5,
-          popup = ~paste("Temperature Gage:", gage_number)
+          popup = ~paste("Temperature Gage:", gage_number, "<br>Latest Date: ", latest_data, "<br>Earliest Date: ", earliest_data)
         )
     }
   })
@@ -57,7 +59,7 @@ shinyServer(function(input, output, session) {
           data = rst_sites,
           lng = ~longitude, lat = ~latitude,
           icon = ~ rst_markers["single"],
-          popup = ~paste("RST Name:", rst_name),
+          popup = ~paste("RST Name:", rst_name), #TODO adjust pop-up, maybe change font, and do a hover-over pop-up, not "click"
           # layerId = ~uid, # Uncomment if needed
           # label = ~lapply(if_else(!is.na(image_embed), paste0(popup, "<p><strong>Click for more details &rarr;</strong></p>"), popup), htmltools::HTML),
           group = "Rotary Screw Traps"
