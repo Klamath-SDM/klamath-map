@@ -61,7 +61,7 @@ shinyServer(function(input, output, session) {
           data = rst_sites,
           lng = ~longitude, lat = ~latitude,
           icon = ~ rst_markers["single"],
-          popup = ~paste("<em>RST Trap</em><br>", rst_name), #TODO adjust pop-up, maybe change font, and do a hover-over pop-up, not "click"
+          popup = ~paste("<em>RST Trap</em><br>", "Trap Name: ", rst_name), #TODO adjust pop-up, maybe change font, and do a hover-over pop-up, not "click"
           # layerId = ~uid, # Uncomment if needed
           label = ~htmltools::HTML("<em>RST Trap</em>"), 
           # label = ~lapply(if_else(!is.na(image_embed), paste0(popup, "<p><strong>Click for more details &rarr;</strong></p>"), popup), htmltools::HTML),

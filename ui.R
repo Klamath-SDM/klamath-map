@@ -13,6 +13,29 @@ ui <- fluidPage(
     
     sidebarLayout(
       sidebarPanel(
+               h5("This map was developed to support the Klamath SDM effort led by US Bureau of Reclamation."),
+        br(),
+        selectInput(
+          "zoom_select_river", 
+          "Zoom to River",
+          c(
+            "(Default View)",
+            "Klamath River",
+            "Trinity River",
+            "Upper Klamath Lake",
+            "Lost River",
+            "Williamson River",
+            "Wood River",
+            "Link River",
+            "Scott River",
+            "Shasta River",
+            "Indian Creek",
+            "Sprague River"
+          )
+        )
+        ,
+        
+        hr(),
         tags$div(
           class = "legend-item",
           checkboxInput(
