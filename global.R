@@ -56,6 +56,11 @@ rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |>
 # 
 # bypasses <- readRDS("data/bypasses.Rds")
 # hatcheries <- readRDS("data/hatcheries.Rds")
+
+hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |> 
+  clean_names() |> 
+  select(-c(google_earth_location)) 
+
 # 
 # bbox <- rst_trap_locations |> st_bbox()
 # river_bounds <- readRDS("data/river_bounds.rds")
