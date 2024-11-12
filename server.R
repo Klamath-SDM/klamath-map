@@ -14,6 +14,16 @@ shinyServer(function(input, output, session) {
       addTiles() |> 
       setView(lng = -122, lat = 41, zoom = 8) 
   })
+  server <- function(input, output, session) {
+    output$map <- renderLeaflet({
+      leaflet() %>%
+        addProviderTiles("CartoDB.Positron") %>%  # Add a basemap
+        addPolygons(data = shapefile,            # Add your shapefile data
+                    color = "blue",              # Set polygon color
+                    weight = 2,                  # Set line thickness
+                    fillOpacity = 0.5)           # Set polygon fill transparency
+    })
+  }
   
   # Define coordinates for each river
   river_coords <- list(
@@ -41,6 +51,27 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  # Observer to manage Klamath Basin outline display
+  observe({
+    proxy <- leafletProxy("mainMap")
+    
+    if (input$show_basin_outline) {
+      # Add the basin outline as polygons or polylines depending on the data structure
+      proxy |>
+        addPolygons(
+          data = kl_basin_outline,
+          color = "blue",  # Customize the color
+          weight = 2,      # Customize the thickness of the outline
+          opacity = 0.8,   # Customize the opacity
+          fillOpacity = 0.2,  # Set fill opacity if needed
+          label = "Klamath River Basin",
+          group = "Basin Outline"  # Group name for control
+        )
+    } else {
+      proxy |> clearGroup("Basin Outline")
+    }
+  })
+  
   # Observer to handle temperature and flow gages display
   observe({
     proxy <- leafletProxy("mainMap") |> clearMarkers()
@@ -54,6 +85,7 @@ shinyServer(function(input, output, session) {
         label = ~htmltools::HTML("<em>USGS Flow Gage</em>")
       ) |>
         addMarkers(
+          
           data = temperature,
           lng = ~longitude, lat = ~latitude, 
           icon = ~ rst_markers["circle-T"],
@@ -102,7 +134,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # Additional observers and layers can be added here following a similar structure
+  # Additional other layers
   
 }) # Properly closing shinyServer
 

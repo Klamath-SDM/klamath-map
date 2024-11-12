@@ -15,6 +15,8 @@ library(janitor)
 ###############
 # DATA IMPORTS 
 ###############
+#klamath basin outline - TODO add basin polygon
+river_shapefile <- st_read("data-raw/R8_FAC_Klamath_Basin_WFL1/R8_FAC_Klamath_Basin_WFL1.shp")
 
 # add in temperature and flow data 
 temperature <- read_csv(here::here('data-raw', 'temp_data.csv')) 
@@ -30,6 +32,12 @@ rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |>
   clean_names() |> 
   select(rst_name, operator, latitude, longitude, link) |> 
   glimpse()
+
+# Klamath River Basin Shp
+kl_basin_outline <- st_read("data-raw/R8_FAC_Klamath_Basin_WFL1/R8_FAC_Klamath_Basin_WFL1.shp")
+
+kl_basin_outline <- st_transform(kl_basin_outline, crs = 4326)
+
 # rst_sites_circ <- readRDS("data/rst_sites_circ.Rds")
 # 
 # # Import temp loggers data
