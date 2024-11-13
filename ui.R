@@ -105,13 +105,29 @@ ui <- fluidPage(
         #   ),
         #   HTML(
         #     "<p class=legend-description>Reach midpoints are shown; zoom in to see <img src='icon-x.png' style='height:1em;'/> reach breaks and footprints where data is available. Select to filter:</p>"
-        #   ),
+        #   
         
-        # Main Panel for Map Display
         mainPanel(
           leafletOutput("mainMap")
         )
       )
+    ),
+    
+    # Additional Resources tab
+    # Additional Resources Tab
+    tabPanel("Additional Resources",
+             tags$div(class = "reference-content",
+                      HTML("<p><strong>Additional resources</strong></p>"),
+                      tags$ul(
+                        tags$li("Suckers Infographic"),
+                        tags$iframe(
+                          src = "suckers_infographic.pdf",
+                          width = "100%",
+                          height = "600px",
+                          style = "border: none;"
+                        )
+                      )
+             )
     )
   )
 )
