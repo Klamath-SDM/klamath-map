@@ -42,7 +42,7 @@ ui <- fluidPage(
           hr(),
           
           # Checkbox for Basin Outline
-          checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = FALSE),
+          checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = TRUE),
           
           # Temperature and Flow Gages Checkbox with Legend
           tags$div(
