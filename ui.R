@@ -113,18 +113,24 @@ ui <- fluidPage(
       )
     ),
     
-    # Additional Resources tab
     # Additional Resources Tab
     tabPanel("Additional Resources",
              tags$div(class = "reference-content",
                       HTML("<p><strong>Additional resources</strong></p>"),
                       tags$ul(
-                        tags$li("Suckers Infographic"),
-                        tags$iframe(
-                          src = "suckers_infographic.pdf",
-                          width = "100%",
-                          height = "600px",
-                          style = "border: none;"
+                        tags$li(
+                          tags$a(
+                            href = "suckers_infographic.pdf",
+                            target = "_blank",
+                            "Suckers Infographic"
+                          )
+                        ),
+                        tags$li(
+                          tags$a(
+                            href = "chinook-salmon-migration-timing.pdf",
+                            target = "_blank",
+                            "Chinook Migration Timing Conceptual Map"
+                          )
                         )
                       )
              )
