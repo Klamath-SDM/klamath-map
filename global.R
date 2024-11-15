@@ -38,6 +38,11 @@ kl_basin_outline <- st_read("data-raw/R8_FAC_Klamath_Basin_WFL1/R8_FAC_Klamath_B
 
 kl_basin_outline <- st_transform(kl_basin_outline, crs = 4326)
 
+# sub-basin boundaries
+sub_basin <- st_read("data-raw/sub-basin-boundaries/Klamath_HUC8_Subbasin.shp")
+
+sub_basin <- st_transform(sub_basin, crs = 4326)
+
 # rst_sites_circ <- readRDS("data/rst_sites_circ.Rds")
 # 
 # # Import temp loggers data
@@ -54,6 +59,10 @@ kl_basin_outline <- st_transform(kl_basin_outline, crs = 4326)
 # video_mon_circle <- readRDS("data/video_mon_circle.Rds")
 # 
 # # Import habitat extent data
+habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
+  clean_names() |> 
+  glimpse()
+
 # salmonid_habitat_extents <- readRDS("data/salmonid_habitat_extents.Rds")
 # spawning_habitat <- salmonid_habitat_extents |> 
 #   filter((species_ha == "Spring Run Chinook - spawning"))
