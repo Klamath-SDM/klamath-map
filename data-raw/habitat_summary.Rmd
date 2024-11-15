@@ -52,7 +52,7 @@ habitat_data |>
 
 ```
 
-#### In Development 
+#### In Development
 
 -   Resource Environmental Services (RES) is currently developing HEC-EFM models for Jenny Creek, Camp Creek, Beaver Creek, and Spencer Creek. It is unclear the exact extents of these models.
 
@@ -62,9 +62,17 @@ habitat_data |>
 
 ### Coho
 
-### Fall Run Chinook 
+![](hsi-figures/coho_hsi.png){width="600"}
 
-## Sources:
+### Fall Run Chinook
+
+The following HSI was provided in the 2019 *Application of the Stream Salmonid Simulator (S3) to Klamath River fall Chinook salmon (Oncorhynchus tshawytscha), California* report by Perry et al.
+
+![](hsi-figures/klamath_chinook_hsi.png){width="600"}
+
+## Sources
+
+### Modeled Habitat 
 
 -   Dodrill, M.J., Perry, R.W., Som, N.A., Manhard, C.V., and Alexander, J.D., 2022, Extending the Stream Salmonid Simulator to accommodate the life history of coho salmon (Oncorhynchus kisutch) in the Klamath River Basin, Northern California: U.S. Geological Survey Open-File Report 2022–1071, 70 p., <https://doi.org/10.3133/ofr20221071.>
 
@@ -72,12 +80,14 @@ habitat_data |>
 
 -   Hardy, T. B., 2012. Technical Memorandum: Revised Coho fry habitat versus discharge relationships for the Klamath River*.* River Systems Institute, Texas State University, San Marcos, TX. April 4.
 
--   Perry, R.W., Plumb, J.M., et al., 2019. Application of the Stream Salmonid Simulator (S3) to Klamath River Fall Chinook Salmon. USGS Open-File Report 2019-1107.
+-   Perry, R.W., Plumb, J.M., Jones, E.C., Som, N.A., Hardy, T.B., and Hetrick, N.J., 2019, Application of the Stream Salmonid Simulator (S3) to Klamath River fall Chinook salmon (Oncorhynchus tshawytscha), California—Parameterization and calibration: U.S. Geological Survey Open-File Report 2019–1107, 89 p., <https://doi.org/10.3133/ofr20191107.>
 
 -   Perry, R.W., Jones, E.C., Plumb, J.M., Som, N.A., Hetrick, N.J., Hardy, T.B., Polos, J.C., Martin, A.C., Alvarez, J.S., and De Juilio, K.P., 2018, Application of the Stream Salmonid Simulator (S3) to the restoration reach of the Trinity River, California—Parameterization and calibration: U.S. Geological Survey Open-File Report 2018-1174, 64 p., <https://doi.org/10.3133/ofr20181174.>
 
 -   Klamath River Renewal Corporation. *Biological Assessment Appendix I - Reservoir Drawdown Hydraulic Model and SRH-1D Suspended Sediment Concentration Model Update Documentation*, 2011, [www.klamathrenewal.org/wp-content/uploads/2021/03/A-10-BA-Appendix-I-%E2%80%93-Reservoir-Drawdown-Hydraulic-Model-and-SRH-1D-Suspended-Sediment-Concentration-Model-and-Update-Documentation.pdf.](www.klamathrenewal.org/wp-content/uploads/2021/03/A-10-BA-Appendix-I-%E2%80%93-Reservoir-Drawdown-Hydraulic-Model-and-SRH-1D-Suspended-Sediment-Concentration-Model-and-Update-Documentation.pdf.)
 
--   
+### Habitat Suitability Indices 
 
--   
+-   Coho Salmon (Oncorhynchus kisutch) Life History Patterns in the Pacific Northwest and California Final Report March 2007; Prepared for USBR by Biostream Environmental <https://coastcoho.org/wp-content/uploads/2022/03/Coho-Salmon-Life-History-Patterns-in-the-Pacific-Northwest-_-California.pdf>
+
+## 
