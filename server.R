@@ -72,6 +72,26 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  observe({
+    proxy <- leafletProxy("mainMap")
+    
+    if (input$show_sub_basin_outline) {
+      # Add the basin outline as polygons or polylines depending on the data structure
+      proxy |>
+        addPolygons(
+          data = sub_basin,
+          color = "blue",  # Customize the color
+          weight = 2,      # Customize the thickness of the outline
+          opacity = 0.8,   # Customize the opacity
+          fillOpacity = 0.2,  # Set fill opacity if needed
+          label = "Klamath Sub-Basin Boundaries",
+          group = "Sub-Basin Outline"  # Group name for control
+        )
+    } else {
+      proxy |> clearGroup("Sub-Basin Outline")
+    }
+  })
+  
   # Observer to handle temperature and flow gages display
   observe({
     proxy <- leafletProxy("mainMap") |> clearMarkers()
