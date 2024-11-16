@@ -60,7 +60,9 @@ sub_basin <- st_transform(sub_basin, crs = 4326)
 # 
 # # Import habitat extent data
 habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
-  clean_names() |> 
+  clean_names() |>
+  mutate(longitude = as.numeric(longtidue)) |>
+  select(-longtidue) |>
   glimpse()
 
 # salmonid_habitat_extents <- readRDS("data/salmonid_habitat_extents.Rds")

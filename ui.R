@@ -44,6 +44,7 @@ ui <- fluidPage(
           # Checkbox for Basin Outline
           checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = TRUE),
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
+          
           # Temperature and Flow Gages Checkbox with Legend
           tags$div(
             class = "legend-item",
@@ -85,27 +86,25 @@ ui <- fluidPage(
             class = "legend-item",
             checkboxInput("show_hatcheries", "Hatcheries", value = TRUE),
             HTML("<img src='icon-spiral.png' style='width: 20px; height: 20px;' /> Fish Hatcheries")
+          ),
+          
+          hr(),
+          
+          # Habitat Data
+          tags$div(
+            class = "legend-item",
+            checkboxInput("show_habitat_data", "Habitat Models", value = TRUE),
+            HTML(
+              "<ul class='legend-list'>
+                  <li><img src='icon-x.png' /> Habitat Data</li>
+                </ul>"
+            ),
+            p( p(class = "legend-description", "See",
+                 tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.Rmd', "Habitat Rmd", target = "_blank"), 
+                 "for more detailed data exploration.")
+            )
           )
         ),
-        
-        # tags$div(
-        #   class = "legend-item",
-        #   checkboxInput(
-        #     ns("show_survey_reaches"),
-        #     "Adult Survey Reaches",
-        #     value = TRUE,
-        #     width = NULL
-        #   ),
-        #   HTML(
-        #     "<ul class='legend-list'>
-        #                 <li><img src='icon-circle-100.png' /> Holding Surveys</li>
-        #                 <li><img src='icon-circle-010.png' /> Redd Surveys</li>
-        #                 <li><img src='icon-circle-001.png' /> Carcass Surveys</li>
-        #            </ul>"
-        #   ),
-        #   HTML(
-        #     "<p class=legend-description>Reach midpoints are shown; zoom in to see <img src='icon-x.png' style='height:1em;'/> reach breaks and footprints where data is available. Select to filter:</p>"
-        #   
         
         mainPanel(
           leafletOutput("mainMap")

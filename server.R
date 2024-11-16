@@ -17,11 +17,11 @@ shinyServer(function(input, output, session) {
   server <- function(input, output, session) {
     output$map <- renderLeaflet({
       leaflet() %>%
-        addProviderTiles("CartoDB.Positron") %>%  # Add a basemap
-        addPolygons(data = shapefile,            # Add your shapefile data
-                    color = "blue",              # Set polygon color
-                    weight = 2,                  # Set line thickness
-                    fillOpacity = 0.5)           # Set polygon fill transparency
+        addProviderTiles("CartoDB.Positron") %>%  
+        addPolygons(data = shapefile,            
+                    color = "blue",              
+                    weight = 2,                  
+                    fillOpacity = 0.5)           
     })
   }
   
@@ -56,16 +56,16 @@ shinyServer(function(input, output, session) {
     proxy <- leafletProxy("mainMap")
     
     if (input$show_basin_outline) {
-      # Add the basin outline as polygons or polylines depending on the data structure
+      # Add the basin outline 
       proxy |>
         addPolygons(
           data = kl_basin_outline,
-          color = "blue",  # Customize the color
-          weight = 2,      # Customize the thickness of the outline
-          opacity = 0.8,   # Customize the opacity
-          fillOpacity = 0.2,  # Set fill opacity if needed
+          color = "blue",  
+          weight = 2,     
+          opacity = 0.8,   
+          fillOpacity = 0.2,  
           label = "Klamath River Basin",
-          group = "Basin Outline"  # Group name for control
+          group = "Basin Outline"  
         )
     } else {
       proxy |> clearGroup("Basin Outline")
@@ -76,19 +76,21 @@ shinyServer(function(input, output, session) {
     proxy <- leafletProxy("mainMap")
     
     if (input$show_sub_basin_outline) {
-      # Add the basin outline as polygons or polylines depending on the data structure
+      # Add the sub-basin outline 
       proxy |>
         addPolygons(
           data = sub_basin,
-          color = "blue",  # Customize the color
-          weight = 2,      # Customize the thickness of the outline
-          opacity = 0.8,   # Customize the opacity
-          fillOpacity = 0.2,  # Set fill opacity if needed
-          label = "Klamath Sub-Basin Boundaries",
-          group = "Sub-Basin Outline"  # Group name for control
+          color = "green",  
+          weight = 2,      
+          opacity = 0.8,   
+          fillOpacity = 0.2,  
+          label = ~paste(NAME, "Basin"),
+          popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
+          group = "Sub-Basin Outline"  # Ensure consistent group name
         )
     } else {
-      proxy |> clearGroup("Sub-Basin Outline")
+      # Clear the sub-basin layer
+      proxy |> clearGroup("Sub-Basin Outline")  # Use the same group name
     }
   })
   
@@ -149,13 +151,28 @@ shinyServer(function(input, output, session) {
           # popup = ~ popup,
           # options = leaflet::pathOptions(pane = "Points-Hatcheries")
         )
-    } else {
-      leafletProxy("mainMap") |> clearGroup("Hatcheries")
+   } else {
+     leafletProxy("mainMap") |> clearGroup("Hatcheries")
     }
   })
   
-  # Additional other layers
+  # habitat data
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_habitat_data) {
+      proxy |> addMarkers(
+        data = habitat_data,
+        lng = ~longitude, lat = ~latitude,
+        icon = ~rst_markers["X"],
+        popup = ~paste0(
+          "<em>Habitat Data</em><br>Model Type: ", model_type,
+          "<br>Status: ", status, "<br>Location Name: ", location_name
+        ),
+        label = ~htmltools::HTML("<em>Habitat Datagt </em>"),
+      )
+    } else {
+      proxy |> clearGroup("Habitat Data")
+    }
+  })
   
-}) # Properly closing shinyServer
-
-
+})
