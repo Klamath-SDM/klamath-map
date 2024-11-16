@@ -168,7 +168,7 @@ shinyServer(function(input, output, session) {
           "<em>Habitat Data</em><br>Model Type: ", model_type,
           "<br>Status: ", status, "<br>Location Name: ", location_name
         ),
-        label = ~htmltools::HTML("<em>Habitat Datagt </em>"),
+        label = ~htmltools::HTML("<em>Habitat Data</em>"),
       )
     } else {
       proxy |> clearGroup("Habitat Data")
