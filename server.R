@@ -14,16 +14,6 @@ shinyServer(function(input, output, session) {
       addTiles() |> 
       setView(lng = -122, lat = 41, zoom = 8) 
   })
-  server <- function(input, output, session) {
-    output$map <- renderLeaflet({
-      leaflet() %>%
-        addProviderTiles("CartoDB.Positron") %>%  
-        addPolygons(data = shapefile,            
-                    color = "blue",              
-                    weight = 2,                  
-                    fillOpacity = 0.5)           
-    })
-  }
   
   # Define coordinates for each river
   river_coords <- list(
@@ -54,9 +44,7 @@ shinyServer(function(input, output, session) {
   # Observer to manage Klamath Basin outline display
   observe({
     proxy <- leafletProxy("mainMap")
-    
     if (input$show_basin_outline) {
-      # Add the basin outline 
       proxy |>
         addPolygons(
           data = kl_basin_outline,
@@ -65,67 +53,70 @@ shinyServer(function(input, output, session) {
           opacity = 0.8,   
           fillOpacity = 0.2,  
           label = "Klamath River Basin",
-          group = "Basin Outline"  
+          group = "Basin Outline"
         )
     } else {
       proxy |> clearGroup("Basin Outline")
     }
   })
   
+  # Observer to manage sub-basin outline display
   observe({
     proxy <- leafletProxy("mainMap")
-    
     if (input$show_sub_basin_outline) {
-      # Add the sub-basin outline 
       proxy |>
         addPolygons(
           data = sub_basin,
-          color = "green",  
-          weight = 2,      
-          opacity = 0.8,   
-          fillOpacity = 0.2,  
+          color = "green",
+          weight = 2,
+          opacity = 0.8,
+          fillOpacity = 0.2,
           label = ~paste(NAME, "Basin"),
           popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
-          group = "Sub-Basin Outline"  # Ensure consistent group name
+          group = "Sub-Basin Outline"
         )
     } else {
-      # Clear the sub-basin layer
-      proxy |> clearGroup("Sub-Basin Outline")  # Use the same group name
+      proxy |> clearGroup("Sub-Basin Outline")
     }
   })
   
-  # Observer to handle temperature and flow gages display
+  # Observer to manage temperature and flow gages display
   observe({
     proxy <- leafletProxy("mainMap") |> clearMarkers()
-    
     if (input$show_temp_loggers) {
-      proxy |> addMarkers(
-        data = flow,
-        lng = ~longitude, lat = ~latitude, 
-        icon = ~ rst_markers["circle-F"],
-        popup = ~paste("<em>Flow Gage</em><br>", "Gage Number:", gage_number, "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data, "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", gage_number, "', '_blank')\">Gage Site</button>"),
-        label = ~htmltools::HTML("<em>USGS Flow Gage</em>")
-      ) |>
+      proxy |> 
         addMarkers(
-          
+          data = flow,
+          lng = ~longitude, lat = ~latitude, 
+          icon = ~rst_markers["circle-F"],
+          popup = ~paste("<em>Flow Gage</em><br>", "Gage Number:", gage_number, 
+                         "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data,
+                         "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+                         gage_number, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>USGS Flow Gage</em>")
+        ) |> 
+        addMarkers(
           data = temperature,
           lng = ~longitude, lat = ~latitude, 
-          icon = ~ rst_markers["circle-T"],
-          popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_number, "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data, "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", gage_number, "', '_blank')\">Gage Site</button>"),
+          icon = ~rst_markers["circle-T"],
+          popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_number, 
+                         "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data,
+                         "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+                         gage_number, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>USGS Temperature Gage</em>")
         )
     }
   })
   
-  # Observer to manage RST Traps with hover pop-up and more info button
+  # Observer to manage RST Traps display
   observe({
     if (input$show_rst) {
       leafletProxy("mainMap") |>
         addMarkers(
           data = rst_sites,
           lng = ~longitude, lat = ~latitude,
-          icon = ~ rst_markers["single"],
-          popup = ~paste("<em>RST Trap</em><br>", "Trap Name:", rst_name, 
+          icon = ~rst_markers["single"],
+          popup = ~paste("<em>RST Trap</em><br>", "Trap Name:", rst_name,
                          "<br><button onclick='Shiny.setInputValue(\"more_info\", \"", rst_name, "\")'>More Info</button>"),
           label = ~htmltools::HTML("<em>RST Trap</em>"),
           group = "Rotary Screw Traps"
@@ -135,64 +126,41 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # Observer to manage Hatchery markers
-  observe({
-    if (input$show_hatcheries) {
-      leafletProxy("mainMap") |>
-        addMarkers(
-          data = hatcheries,
-          lng = ~longitude, lat = ~latitude,
-          icon = ~ rst_markers["H"],
-          popup = ~paste("<em>Hatchery</em><br>", "Hatchery Name:", site_name, 
-                         "<button onclick=\"window.open('", resource, "', '_blank')\">More Info</button>"),
-          label = ~htmltools::HTML("<em>Hatchery</em>"),
-          group = "Hatcheries"
-          # label = ~ lapply(popup, htmltools::HTML),
-          # popup = ~ popup,
-          # options = leaflet::pathOptions(pane = "Points-Hatcheries")
-        )
-   } else {
-     leafletProxy("mainMap") |> clearGroup("Hatcheries")
-    }
-  })
-  
-  # habitat data
+  # Observer for redd and carcass data
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_habitat_data) {
-      proxy |> addMarkers(
-        data = habitat_data,
-        lng = ~longitude, lat = ~latitude,
-        icon = ~rst_markers["X"],
-        popup = ~paste0(
-          "<em>Habitat Data</em><br>Model Type: ", model_type,
-          "<br>Status: ", status, "<br>Location Name: ", location_name
-        ),
-        label = ~htmltools::HTML("<em>Habitat Data</em>"),
-      )
+    if (input$show_survey_type) {
+      redd_data <- survey_type |> filter(adult_survey_type == "Redd")
+      if (nrow(redd_data) > 0) {
+        proxy |> addMarkers(
+          data = redd_data,
+          lng = ~longitude, lat = ~latitude,
+          popup = ~paste("<em>Redd Adult Survey Reach</em><br>",
+                         "Type of Survey: ", adult_survey_type, "<br>",
+                         "Temporal Coverage: ", temporal_coverage, "<br>",
+                         "<button onclick=\"window.open('", link, "', '_blank')\">More Information</button>"),
+          label = ~htmltools::HTML("<em>Redd Survey</em>"),
+          icon = ~reach_markers["010"],
+          group = "Survey Data"
+        )
+      }
+      #TODO change the hyperlink text under "link" so that it has the link to the source
+      carcass_redd_data <- survey_type |> filter(adult_survey_type == "Carcass, Redd")
+      if (nrow(carcass_redd_data) > 0) {
+        proxy |> addMarkers(
+          data = carcass_redd_data,
+          lng = ~longitude, lat = ~latitude,
+          popup = ~paste("<em>Redd and Carcass Adult Survey Reach</em><br>",
+                         "Type of Survey: ", adult_survey_type, "<br>",
+                         "Temporal Coverage: ", temporal_coverage, "<br>",
+                         "<button onclick=\"window.open('", link, "', '_blank')\">More Information</button>"),
+          label = ~htmltools::HTML("<em>Redd and Carcass Survey</em>"),
+          icon = ~reach_markers["100"],
+          group = "Survey Data"
+        )
+      }
     } else {
-      proxy |> clearGroup("Habitat Data")
+      proxy |> clearGroup("Survey Data")
     }
   })
-  
-
-# redd and carcass data
-
-observe({
-  proxy <- leafletProxy("mainMap")
-  if (input$show_survey_type) {
-    proxy |> addMarkers(
-      data = survey_type,
-      lng = ~longitude, lat = ~latitude,
-      icon = ~reach_markers["010"]
-      # popup = ~paste0(
-      #   "<em>Survey Data</em><br>Data Type: ", adult_survey_type
-      # ),
-      # label = ~htmltools::HTML("<em>Survey Data</em>"),
-    )
-  } else {
-    proxy |> clearGroup("Survey Data")
-  }
-})
-
 })
