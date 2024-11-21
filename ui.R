@@ -99,69 +99,54 @@ ui <- fluidPage(
                   <li><img src='icon-x.png' /> Habitat Data</li>
                 </ul>"
             ),
-            p( p(class = "legend-description", "See",
-                 tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.Rmd', "Habitat Rmd", target = "_blank"), 
-                 "for more detailed data exploration.")
-            )
-          )
+            p(class = "legend-description", "See",
+              tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.Rmd', "Habitat Rmd", target = "_blank"), 
+              "for more detailed data exploration.")
         ),
-        mainPanel(
-          leafletOutput("mainMap")
-        )
+        hr(),
+       
+    # Survey Type
+    tags$div(
+      class = "legend-item",
+      checkboxInput("show_survey_type", "Survey Type", value = TRUE),
+      HTML(
+        "<ul class='legend-list'>
+                <li><img src='icon-circle-010.png' /> Redd</li>
+                <li><img src='icon-circle-100.png' /> Carcass</li>
+              </ul>"
+      ),
+      p(class = "legend-description", "[Placeholder for legend].")
+    )
+    ),
+    mainPanel(
+      leafletOutput("mainMap")
+    )
       )
     ),
-        # hr(),
-        
-        # Redd and Carcass Survey Data
-     #    tags$div(
-     #      class = "legend-item",
-     #      checkboxInput(
-     #        "show_survey_type",
-     #        "Adult Survey Type",
-     #        value = TRUE
-     #      ),
-     #      HTML(
-     #        "<ul class='legend-list'>
-     #   <li><img src='icon-circle-100.png' /> Holding Surveys</li>
-     #   <li><img src='icon-circle-010.png' /> Redd Surveys</li>
-     #   <li><img src='icon-circle-001.png' /> Carcass Surveys</li>
-     # </ul>"
-     #      ),
-     #      HTML(
-     #        "<p class=legend-description>Reach midpoints are shown; zoom in to see <img src='icon-x.png' style='height:1em;'/> reach breaks and footprints where data is available. Select to filter:</p>"
-     #      ),
-     #      tags$div(
-     #        class = "legend-item-options",
-     #        selectInput(
-     #          "select_survey_type",
-     #          "Select Survey Type",
-     #          c("(All Survey Types)", "Holding", "Redd", "Carcass")
-     #        )
-     #      )
-     #    )
-     #  ),
     
+   
     # Additional Resources Tab
-    tabPanel("Additional Resources",
-             tags$div(class = "reference-content",
-                      HTML("<p><strong>Additional resources</strong></p>"),
-                      tags$ul(
-                        tags$li(
-                          tags$a(
-                            href = "suckers_infographic.pdf",
-                            target = "_blank",
-                            "Suckers Infographic"
-                          )
-                        ),
-                        tags$li(
-                          tags$a(
-                            href = "chinook-salmon-migration-timing.pdf",
-                            target = "_blank",
-                            "Chinook Migration Timing Conceptual Map"
-                          )
-                        )
-                      )
-             )
+    tabPanel(
+      "Additional Resources",
+      tags$div(class = "reference-content",
+               HTML("<p><strong>Additional resources</strong></p>"),
+               tags$ul(
+                 tags$li(
+                   tags$a(
+                     href = "suckers_infographic.pdf",
+                     target = "_blank",
+                     "Suckers Infographic"
+                   )
+                 ),
+                 tags$li(
+                   tags$a(
+                     href = "chinook-salmon-migration-timing.pdf",
+                     target = "_blank",
+                     "Chinook Migration Timing Conceptual Map"
+                   )
+                 )
+               )
+      )
     )
   )
 )

@@ -175,26 +175,24 @@ shinyServer(function(input, output, session) {
     }
   })
   
-})
 
 # redd and carcass data
-# 
-# observe({
-#   proxy <- leafletProxy("mainMap")
-#   if (input$show_survey_type) {
-#     proxy |> addMarkers(
-#       data = survey_type |> filter(has_holding == TRUE),
-#       icon = ~ reach_markers["100"],
-#       lng = ~longitude, lat = ~latitude,
-#       icon = ~rst_markers["X"],
-#       popup = ~paste0(
-#         "<em>Survey Type</em><br>Model Type: ", adult_survey_type
-#       ),
-#       # label = ~htmltools::HTML("<em>Survey Data</em>"),
-#       group = "Survey Data"
-#     )
-#   } else {
-#     proxy |> clearGroup("Survey Data")
-#   }
-# 
-# })
+
+observe({
+  proxy <- leafletProxy("mainMap")
+  if (input$show_survey_type) {
+    proxy |> addMarkers(
+      data = survey_type,
+      lng = ~longitude, lat = ~latitude,
+      icon = ~reach_markers["010"]
+      # popup = ~paste0(
+      #   "<em>Survey Data</em><br>Data Type: ", adult_survey_type
+      # ),
+      # label = ~htmltools::HTML("<em>Survey Data</em>"),
+    )
+  } else {
+    proxy |> clearGroup("Survey Data")
+  }
+})
+
+})
