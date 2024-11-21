@@ -43,42 +43,30 @@ sub_basin <- st_read("data-raw/sub-basin-boundaries/Klamath_HUC8_Subbasin.shp")
 
 sub_basin <- st_transform(sub_basin, crs = 4326)
 
-# rst_sites_circ <- readRDS("data/rst_sites_circ.Rds")
-# 
-# # Import temp loggers data
-# temp_loggers <- readRDS("data/temp_loggers.Rds")
-# gages_cdec_usgs <- readRDS("data/gages_cdec_usgs.Rds")
-# 
-# # Import survey reaches data
-# survey_reaches <- readRDS("data/survey_reaches.Rds")
-# survey_reach_detail <- readRDS("data/survey_reach_detail.Rds")
-# survey_reach_breaks <- readRDS("data/survey_reach_breaks.Rds")
-# 
-# # Import video monitor data
-# video_mon <- readRDS("data/video_mon.Rds")
-# video_mon_circle <- readRDS("data/video_mon_circle.Rds")
-# 
-# # Import habitat extent data
+# Import habitat extent data
 habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
   clean_names() |>
   mutate(longitude = as.numeric(longtidue)) |>
   select(-longtidue) |>
   glimpse()
 
-# salmonid_habitat_extents <- readRDS("data/salmonid_habitat_extents.Rds")
-# spawning_habitat <- salmonid_habitat_extents |> 
-#   filter((species_ha == "Spring Run Chinook - spawning"))
-# rearing_habitat <- salmonid_habitat_extents |> 
-#   filter((species_ha == "Spring Run Chinook - rearing"))
-# other_habitat <- salmonid_habitat_extents |> 
-#   filter((is.na(species_ha)))
-# 
-# bypasses <- readRDS("data/bypasses.Rds")
-# hatcheries <- readRDS("data/hatcheries.Rds")
+# Hatcheries
 
 hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |> 
   clean_names() |> 
   select(-c(google_earth_location)) 
+
+# Redd and Carcass
+
+survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |> 
+  clean_names() |> 
+  select(-c(upstream_google_earth, upstream_rkm, upstream_google_earth, downstream_google_earth)) |> 
+  mutate(latitude = downstream_lat,
+         longitude = downstream_long,
+         adult_survey_type = data_type) |> 
+  select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |> 
+  filter(!is.na(latitude)) |> 
+  glimpse()
 
 # 
 # bbox <- rst_trap_locations |> st_bbox()
@@ -101,12 +89,12 @@ rst_markers <- iconList(
   "circle-F" = makeIcon("icon-circle-f.png", "icon-circle-f.png", 18, 18, 9, 9),
   "circle-TF" = makeIcon("icon-circle-tf.png", "icon-circle-tf.png", 18, 18, 9, 9)
 )
-# reach_markers <- iconList(
-#   "001" = makeIcon("icon-circle-001.png", "icon-circle-001.png", 18, 18, 9, 9),
-#   "010" = makeIcon("icon-circle-010.png", "icon-circle-010.png", 18, 18, 9, 9),
-#   "100" = makeIcon("icon-circle-100.png", "icon-circle-100.png", 18, 18, 9, 9),
-#   "011" = makeIcon("icon-circle-011.png", "icon-circle-011.png", 18, 18, 9, 9),
-#   "101" = makeIcon("icon-circle-101.png", "icon-circle-101.png", 18, 18, 9, 9),
-#   "110" = makeIcon("icon-circle-110.png", "icon-circle-110.png", 18, 18, 9, 9),
-#   "111" = makeIcon("icon-circle-111.png", "icon-circle-111.png", 18, 18, 9, 9)
-# )
+reach_markers <- iconList(
+  "001" = makeIcon("icon-circle-001.png", "icon-circle-001.png", 18, 18, 9, 9),
+  "010" = makeIcon("icon-circle-010.png", "icon-circle-010.png", 18, 18, 9, 9),
+  "100" = makeIcon("icon-circle-100.png", "icon-circle-100.png", 18, 18, 9, 9),
+  "011" = makeIcon("icon-circle-011.png", "icon-circle-011.png", 18, 18, 9, 9),
+  "101" = makeIcon("icon-circle-101.png", "icon-circle-101.png", 18, 18, 9, 9),
+  "110" = makeIcon("icon-circle-110.png", "icon-circle-110.png", 18, 18, 9, 9),
+  "111" = makeIcon("icon-circle-111.png", "icon-circle-111.png", 18, 18, 9, 9)
+)

@@ -105,12 +105,41 @@ ui <- fluidPage(
             )
           )
         ),
-        
         mainPanel(
           leafletOutput("mainMap")
         )
       )
     ),
+        # hr(),
+        
+        # Redd and Carcass Survey Data
+     #    tags$div(
+     #      class = "legend-item",
+     #      checkboxInput(
+     #        "show_survey_type",
+     #        "Adult Survey Type",
+     #        value = TRUE
+     #      ),
+     #      HTML(
+     #        "<ul class='legend-list'>
+     #   <li><img src='icon-circle-100.png' /> Holding Surveys</li>
+     #   <li><img src='icon-circle-010.png' /> Redd Surveys</li>
+     #   <li><img src='icon-circle-001.png' /> Carcass Surveys</li>
+     # </ul>"
+     #      ),
+     #      HTML(
+     #        "<p class=legend-description>Reach midpoints are shown; zoom in to see <img src='icon-x.png' style='height:1em;'/> reach breaks and footprints where data is available. Select to filter:</p>"
+     #      ),
+     #      tags$div(
+     #        class = "legend-item-options",
+     #        selectInput(
+     #          "select_survey_type",
+     #          "Select Survey Type",
+     #          c("(All Survey Types)", "Holding", "Redd", "Carcass")
+     #        )
+     #      )
+     #    )
+     #  ),
     
     # Additional Resources Tab
     tabPanel("Additional Resources",
