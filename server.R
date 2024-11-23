@@ -144,7 +144,8 @@ shinyServer(function(input, output, session) {
           group = "Survey Data"
         )
       }
-      #TODO change the hyperlink text under "link" so that it has the link to the source
+      #TODO change the hyperlink text under "link" so that it has the link to the source - Maybe just add the most recent report
+      # check on temporal coverage 
       carcass_redd_data <- survey_type |> filter(adult_survey_type == "Carcass, Redd")
       if (nrow(carcass_redd_data) > 0) {
         proxy |> addMarkers(
