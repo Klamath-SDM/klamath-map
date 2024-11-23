@@ -1,0 +1,97 @@
+---
+title: "Klamath Basin Existing Maps Crosswalk Material"
+author: "Badhia Yunes Katz"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(sf)
+library(httr)
+library(jsonlite)
+library(leaflet)
+library(janitor)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The goal of this markdown is to pull in data from existing maps and select the layers we are interested on using for crosswalk with or shiny map
+
+Pulling layers from (USGS Dam Removal Monitoring Map)[https://www.arcgis.com/apps/mapviewer/index.html?webmap=646c4ea7f4224845bd4c3c5a4f2f3e4e] 
+
+```{r setup, echo=FALSE}
+# Base FeatureServer URL
+base_url <- "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/Klamath_Web_Map/FeatureServer"
+
+# Query the layers endpoint
+response <- httr::GET(paste0(base_url, "?f=json"))
+content <- content(response, "text")
+layers <- fromJSON(content)$layers
+
+# Check layer names and indices
+print(layers)
+```
+
+```{r setup, include=FALSE, warning=FALSE}
+
+# download layers
+download_layer <- function(layer_id, layer_name, output_dir) {
+  layer_url <- paste0(base_url, "/", layer_id, "/query")
+  response <- httr::GET(layer_url, query = list(where = "1=1", outFields = "*", f = "geojson"))
+  geojson_data <- content(response, "text", encoding = "UTF-8")
+  sf_data <- st_read(geojson_data, quiet = TRUE)
+  file_name <- paste0(output_dir, "/", layer_name, ".shp")
+  st_write(sf_data, file_name, delete_layer = TRUE, quiet = TRUE)
+  message("Saved: ", file_name)
+}
+
+output_dir <- "data-raw//usgs_dam_removal_map/klamath_map_shapefiles"
+dir.create(output_dir, showWarnings = FALSE)
+
+for (i in seq_len(nrow(layers))) {
+  download_layer(layers$id[i], layers$name[i], output_dir)
+}
+```
+
+Plotting to clean symbology
+
+```{r}
+bed_sed_shapefile <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir.shp") |> 
+  clean_names() 
+dams_tbremoved_shapefile <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
+  clean_names()
+
+
+
+# Create a leaflet map with POINT layers
+usgs_dam_removal_monitoring <- leaflet() |> 
+  addTiles() |> 
+  addCircleMarkers(
+    data = bed_sed_shapefile,
+    lng = ~st_coordinates(geometry)[, 1],  # Extract longitude
+    lat = ~st_coordinates(geometry)[, 2],  # Extract latitude
+    radius = 6,  
+    color = "blue", 
+    fillColor = "blue",  
+    group = "USGS IronGate Reservoir bed sediment cores"
+  ) |> 
+  addCircleMarkers(
+    data = dams_tbremoved_shapefile,
+    lng = ~st_coordinates(geometry)[, 1],  # Extract longitude
+    lat = ~st_coordinates(geometry)[, 2],  # Extract latitude
+    radius = 6,  
+    color = "orange", 
+    fillColor = "orange",
+    group = "Dams to be Removed"
+  ) |> 
+  addLayersControl(
+    overlayGroups = c("USGS IronGate Reservoir bed sediment cores", "Dams to be Removed"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+usgs_dam_removal_monitoring
+
+
+```
+
