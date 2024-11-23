@@ -13,14 +13,19 @@ library(jsonlite)
 library(leaflet)
 library(janitor)
 
-knitr::opts_chunk$set(echo = TRUE)
+# knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The goal of this markdown is to pull in data from existing maps and select the layers we are interested on using for crosswalk with or shiny map
+The goal of this markdown is to pull in data from existing maps and select the layers we are interested on using for crosswalk with or shiny map. The following resources are being used:
 
-Pulling layers from (USGS Dam Removal Monitoring Map)[https://www.arcgis.com/apps/mapviewer/index.html?webmap=646c4ea7f4224845bd4c3c5a4f2f3e4e] 
+  * [USGS Dam Removal Monitoring Map](https://www.arcgis.com/apps/mapviewer/index.html?webmap=646c4ea7f4224845bd4c3c5a4f2f3e4e) 
+  * [SFEI Klmath Basin Monitoring Map](https://sfei.maps.arcgis.com/apps/MapSeries/index.html?appid=9b10920b676b4dfebce14f8c4ea70c4d&entry=1)
 
-```{r setup, echo=FALSE}
+
+
+### Pulling layers from [USGS Dam Removal Monitoring Map](https://www.arcgis.com/apps/mapviewer/index.html?webmap=646c4ea7f4224845bd4c3c5a4f2f3e4e) 
+
+```{r, echo=FALSE}
 # Base FeatureServer URL
 base_url <- "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/Klamath_Web_Map/FeatureServer"
 
@@ -28,14 +33,16 @@ base_url <- "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/K
 response <- httr::GET(paste0(base_url, "?f=json"))
 content <- content(response, "text")
 layers <- fromJSON(content)$layers
+```
 
+Layers included on this map:
+
+```{r, echo=FALSE}
 # Check layer names and indices
 print(layers)
 ```
 
-```{r setup, include=FALSE, warning=FALSE}
-
-# download layers
+```{r, include=FALSE, warning=FALSE}
 download_layer <- function(layer_id, layer_name, output_dir) {
   layer_url <- paste0(base_url, "/", layer_id, "/query")
   response <- httr::GET(layer_url, query = list(where = "1=1", outFields = "*", f = "geojson"))
@@ -54,44 +61,80 @@ for (i in seq_len(nrow(layers))) {
 }
 ```
 
-Plotting to clean symbology
 
-```{r}
-bed_sed_shapefile <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir.shp") |> 
-  clean_names() 
-dams_tbremoved_shapefile <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
-  clean_names()
+```{r, include=FALSE}
+# commenting out since this was a test, leaving it here for now util I make sure that everything works as expected on function below and map is succesully added to Shiny
+
+# bed_sed_shapefile <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir.shp") |> 
+#   clean_names() 
+# 
+# dams_tbremoved_shapefile <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
+#   clean_names()
+# 
+# dams <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams.shp") |> 
+#   clean_names()
+# 
+# kl_river_corridor <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Klamath_River_Corridor.shp") |> 
+#   clean_names()
+# 
+# copco_res_bedsed <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Copco_Reservoir_bed_sediment_cores.shp") |> 
+#   clean_names()
+# 
+# estuary_bedsed <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Estuary_bed_sediment_samples.shp") |> 
+#   clean_names()
+# 
+# ig_reservoir_bedsed <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir.shp") |> 
+#   clean_names()
+# 
+# geomorphic_reaches <- st_read("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Mainstem_Geomorphic_Reaches.shp") |> 
+#   clean_names()
+```
 
 
+```{r, include=FALSE}
+folder_path <- "data-raw/usgs_dam_removal_map/klamath_map_shapefiles/"
+shapefiles <- list.files(folder_path, pattern = "\\.shp$", full.names = TRUE)
+shapefile_list <- map(shapefiles, ~st_read(.x) |> clean_names())
+names(shapefile_list) <- gsub(".shp$", "", basename(shapefiles))  
 
-# Create a leaflet map with POINT layers
-usgs_dam_removal_monitoring <- leaflet() |> 
-  addTiles() |> 
-  addCircleMarkers(
-    data = bed_sed_shapefile,
-    lng = ~st_coordinates(geometry)[, 1],  # Extract longitude
-    lat = ~st_coordinates(geometry)[, 2],  # Extract latitude
-    radius = 6,  
-    color = "blue", 
-    fillColor = "blue",  
-    group = "USGS IronGate Reservoir bed sediment cores"
-  ) |> 
-  addCircleMarkers(
-    data = dams_tbremoved_shapefile,
-    lng = ~st_coordinates(geometry)[, 1],  # Extract longitude
-    lat = ~st_coordinates(geometry)[, 2],  # Extract latitude
-    radius = 6,  
-    color = "orange", 
-    fillColor = "orange",
-    group = "Dams to be Removed"
-  ) |> 
+sapply(shapefile_list, function(x) st_geometry_type(x))
+
+usgs_damrev_monitoring_map <- leaflet() |>  addTiles() 
+
+for (shapefile_name in names(shapefile_list)) {
+  shapefile <- shapefile_list[[shapefile_name]]
+  geom_type <- st_geometry_type(shapefile)
+  if ("POLYGON" %in% geom_type | "MULTIPOLYGON" %in% geom_type) {
+    usgs_damrev_monitoring_map <- usgs_damrev_monitoring_map |> 
+      addPolygons(data = shapefile, color = "blue", fill = TRUE, fillOpacity = 0.5, group = shapefile_name)
+  } else if ("POINT" %in% geom_type) {
+    # Add point layers using addCircleMarkers
+    usgs_damrev_monitoring_map <- usgs_damrev_monitoring_map |> 
+      addCircleMarkers(data = shapefile, color = "red", radius = 5, group = shapefile_name)
+  } else if ("LINE" %in% geom_type) {
+    # Add line layers using addPolylines
+    usgs_damrev_monitoring_map <- usgs_damrev_monitoring_map |> 
+      addPolylines(data = shapefile, color = "green", group = shapefile_name)
+  }
+}
+
+usgs_damrev_monitoring_map <- usgs_damrev_monitoring_map |> 
   addLayersControl(
-    overlayGroups = c("USGS IronGate Reservoir bed sediment cores", "Dams to be Removed"),
+    overlayGroups = names(shapefile_list), #TODO clean up so that it is easy to differentiate layers, add a pop-ups, etc
     options = layersControlOptions(collapsed = FALSE)
   )
+```
 
-usgs_dam_removal_monitoring
+Showing layers on map
 
+#TODO next steps, clean up so that it is easy to differentiate layers, add a pop-ups, etc. 
+
+```{r, echo=FALSE}
+usgs_damrev_monitoring_map
+
+#TODO continue to add the rest of shapefiles, then save as #RDS
+
+# saveRDS(map_with_points, "data-raw/usgs_dam_removal_map/usgs_damrev_monitoring_map.RDS")
 
 ```
 
