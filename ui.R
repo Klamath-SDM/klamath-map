@@ -118,6 +118,17 @@ ui <- fluidPage(
       p(class = "legend-description", "[Placeholder for legend].")
     )
     ),
+    # hr(),
+    # 
+    # # USGS dam removal survey monitoring map
+    # tags$div(
+    #   class = "legend-item",
+    #   checkboxInput("show_usgs_map", "USGS Map", value = TRUE),
+    #   p(class = "legend-description", "[Placeholder for legend].")
+    # )
+    #   ),
+    
+  
     mainPanel(
       leafletOutput("mainMap")
     )

@@ -126,6 +126,23 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  # Observer Hatcheries
+  observe({
+    if (input$show_hatcheries) {
+      leafletProxy("mainMap") |>
+        addMarkers(
+          data = hatcheries,
+          lng = ~longitude, lat = ~latitude,
+          icon = ~rst_markers["H"],
+          popup = ~paste("<em>Hatchery</em><br>", "Hatchery Name:", site_name),
+          label = ~htmltools::HTML("<em>Hatchery</em>"),
+          group = "Hatcheries"
+        )
+    } else {
+      leafletProxy("mainMap") |> clearGroup("Hatcheries")
+    }
+  })
+  
   # Observer for redd and carcass data
   observe({
     proxy <- leafletProxy("mainMap")
@@ -164,4 +181,29 @@ shinyServer(function(input, output, session) {
       proxy |> clearGroup("Survey Data")
     }
   })
+  
+  # Observer to see USGS map
+  
+#   
+# usgs_map <- readRDS("data-raw/usgs_dam_removal_map/usgs_damrev_monitoring_map.RDS")
+#   
+#   # Observer to toggle RDS map
+#  observe({
+#   if (input$show_usgs_map) {
+#     leafletProxy("mainMap") |>
+#       addPolygons(
+#         data = usgs_map,
+#         color = "blue",
+#         weight = 2,
+#         opacity = 1.0,
+#         fillColor = "lightblue",
+#         fillOpacity = 0.5,
+#         label = ~htmltools::HTML("<em>RDS Map Layer</em>"),
+#         group = "RDS Map"
+#       )
+#   } else {
+#     leafletProxy("mainMap") |> clearGroup("RDS Map")
+#   }
+# })
 })
+  
