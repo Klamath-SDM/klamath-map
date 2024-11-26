@@ -182,28 +182,20 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # Observer to see USGS map
+  # USGS Dam Removal Map
+  # observe({
+  #   # Get the selected layers from the input
+  #   selected_layers <- input$show_layers
+  #   
+  #   # Initialize map proxy to avoid redrawing the whole map
+  #   proxy <- leafletProxy("map") %>% clearMarkers() %>% clearShapes()
+  #   
+  #   # Loop through selected layers and add them to the map
+  #   for (shapefile_name in selected_layers) {
+  #     shapefile <- shapefile_list[[shapefile_name]]
+  #     proxy <- add_shapefile_layer(proxy, shapefile, shapefile_name, color_palette)
+  #   }
+  #   proxy
+  # })
   
-#   
-# usgs_map <- readRDS("data-raw/usgs_dam_removal_map/usgs_damrev_monitoring_map.RDS")
-#   
-#   # Observer to toggle RDS map
-#  observe({
-#   if (input$show_usgs_map) {
-#     leafletProxy("mainMap") |>
-#       addPolygons(
-#         data = usgs_map,
-#         color = "blue",
-#         weight = 2,
-#         opacity = 1.0,
-#         fillColor = "lightblue",
-#         fillOpacity = 0.5,
-#         label = ~htmltools::HTML("<em>RDS Map Layer</em>"),
-#         group = "RDS Map"
-#       )
-#   } else {
-#     leafletProxy("mainMap") |> clearGroup("RDS Map")
-#   }
-# })
 })
-  

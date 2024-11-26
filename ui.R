@@ -119,22 +119,22 @@ ui <- fluidPage(
     )
     ),
     # hr(),
-    # 
-    # # USGS dam removal survey monitoring map
+    
+    #USGS dam removal map
     # tags$div(
     #   class = "legend-item",
-    #   checkboxInput("show_usgs_map", "USGS Map", value = TRUE),
-    #   p(class = "legend-description", "[Placeholder for legend].")
-    # )
+    #     checkboxGroupInput(
+    #       inputId = "layer_selection",
+    #       label = "Select Layers to Display:",
+    #       choices = names(shapefile_list),
+    #       selected = names(shapefile_list)
+    #     )
     #   ),
-    
-  
     mainPanel(
       leafletOutput("mainMap")
     )
-      )
-    ),
-    
+  )
+),
    
     # Additional Resources Tab
     tabPanel(
@@ -155,10 +155,17 @@ ui <- fluidPage(
                      target = "_blank",
                      "Chinook Migration Timing Conceptual Map"
                    )
-                 )
+                 ),
+                 tags$li(
+                   tags$a(
+                     href = "https://klamathtribeswaterquality.com/reports/",
+                     target = "_blank",
+                     "The Klamath Tribes Water Quality Report Repository"
+                   )
                )
       )
     )
   )
+)
 )
 # next steps - add another section to compile literature and their locations 
