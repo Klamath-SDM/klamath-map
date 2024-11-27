@@ -1,5 +1,6 @@
 shinyServer(function(input, output, session) {
   
+  # Insert UI component
   insertUI(
     selector = ".navbar .container-fluid .navbar-collapse",
     ui = tags$ul(class = "nav navbar-nav navbar-right",
@@ -9,9 +10,10 @@ shinyServer(function(input, output, session) {
                  ))
   )
   
+  # Render the main map
   output$mainMap <- renderLeaflet({
-    leaflet() |> 
-      addTiles() |> 
+    leaflet() |>
+      addTiles() |>
       setView(lng = -122, lat = 41, zoom = 8) 
   })
   
@@ -35,9 +37,11 @@ shinyServer(function(input, output, session) {
     selected_river <- input$zoom_select_river
     if (selected_river != "(Default View)" && selected_river %in% names(river_coords)) {
       coords <- river_coords[[selected_river]]
-      leafletProxy("mainMap") %>% setView(lng = coords[1], lat = coords[2], zoom = 10)
+      leafletProxy("mainMap") |>
+        setView(lng = coords[1], lat = coords[2], zoom = 10)
     } else {
-      leafletProxy("mainMap") %>% setView(lng = -122.85, lat = 41.95, zoom = 7)
+      leafletProxy("mainMap") |>
+        setView(lng = -122.85, lat = 41.95, zoom = 7)
     }
   })
   
@@ -56,7 +60,8 @@ shinyServer(function(input, output, session) {
           group = "Basin Outline"
         )
     } else {
-      proxy |> clearGroup("Basin Outline")
+      proxy |>
+        clearGroup("Basin Outline")
     }
   })
   
@@ -76,7 +81,8 @@ shinyServer(function(input, output, session) {
           group = "Sub-Basin Outline"
         )
     } else {
-      proxy |> clearGroup("Sub-Basin Outline")
+      proxy |>
+        clearGroup("Sub-Basin Outline")
     }
   })
   
@@ -122,7 +128,8 @@ shinyServer(function(input, output, session) {
           group = "Rotary Screw Traps"
         )
     } else {
-      leafletProxy("mainMap") |> clearGroup("Rotary Screw Traps")
+      leafletProxy("mainMap") |>
+        clearGroup("Rotary Screw Traps")
     }
   })
   
@@ -139,97 +146,86 @@ shinyServer(function(input, output, session) {
           group = "Hatcheries"
         )
     } else {
-      leafletProxy("mainMap") |> clearGroup("Hatcheries")
+      leafletProxy("mainMap") |>
+        clearGroup("Hatcheries")
+    }
+  })
+  
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_habitat_data) {
+      proxy |> addMarkers(
+        data = habitat_data,
+        lng = ~longitude, lat = ~latitude,
+        icon = ~rst_markers["X"],
+        popup = ~paste0(
+          "<em>Habitat Data</em><br>Model Type: ", model_type,
+          "<br>Status: ", status, "<br>Location Name: ", location_name
+        ),
+        label = ~htmltools::HTML("<em>Habitat Data</em>"),
+      )
+    } else {
+      proxy |> clearGroup("Habitat Data")
     }
   })
   
   # Observer for redd and carcass data
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_survey_type) {
-      redd_data <- survey_type |> filter(adult_survey_type == "Redd")
-      if (nrow(redd_data) > 0) {
-        proxy |> addMarkers(
-          data = redd_data,
-          lng = ~longitude, lat = ~latitude,
-          popup = ~paste("<em>Redd Adult Survey Reach</em><br>",
-                         "Type of Survey: ", adult_survey_type, "<br>",
-                         "Temporal Coverage: ", temporal_coverage, "<br>",
-                         "<button onclick=\"window.open('", link, "', '_blank')\">More Information</button>"),
-          label = ~htmltools::HTML("<em>Redd Survey</em>"),
-          icon = ~reach_markers["010"],
-          group = "Survey Data"
-        )
-      }
-      #TODO change the hyperlink text under "link" so that it has the link to the source - Maybe just add the most recent report
-      # check on temporal coverage 
-      carcass_redd_data <- survey_type |> filter(adult_survey_type == "Carcass, Redd")
-      if (nrow(carcass_redd_data) > 0) {
-        proxy |> addMarkers(
-          data = carcass_redd_data,
-          lng = ~longitude, lat = ~latitude,
-          popup = ~paste("<em>Redd and Carcass Adult Survey Reach</em><br>",
-                         "Type of Survey: ", adult_survey_type, "<br>",
-                         "Temporal Coverage: ", temporal_coverage, "<br>",
-                         "<button onclick=\"window.open('", link, "', '_blank')\">More Information</button>"),
-          label = ~htmltools::HTML("<em>Redd and Carcass Survey</em>"),
-          icon = ~reach_markers["100"],
-          group = "Survey Data"
-        )
-      }
-    } else {
-      proxy |> clearGroup("Survey Data")
-    }
-  })
-  
-  # USGS Dam Removal Map
-  # Add shapefiles to the map as layers
-  # output$mainMap <- renderLeaflet({
-  #   leaflet() |> 
-  #     addTiles() |> 
-  #     setView(lng = -122, lat = 41, zoom = 8) |> 
-  #     # Add placeholders for all map groups
-  #     addCircleMarkers(data = dams_tb_removed, color = "red", weight = 2, group = "Dams to be Removed") |> 
-  #     addCircleMarkers(data = dams, color = "blue", weight = 2, group = "Dams") |> 
-  #     addPolylines(data = kl_corridor, color = "green", weight = 2, group = "Klamath River Corridor") |> 
-  #     addCircleMarkers(data = copco_res, color = "orange", weight = 2, group = "Copco Reservoir") |> 
-  #     addCircleMarkers(data = estuary_bedsed, color = "purple", weight = 2, group = "Estuary Bed Sediments") |> 
-  #     addCircleMarkers(data = ig_reservoir, color = "cyan", weight = 2, group = "Iron Gate Reservoir") |> 
-  #     addCircleMarkers(data = geomorphic_reaches, color = "brown", weight = 2, group = "Geomorphic Reaches") |> 
-  #     addMarkers(data = sediment_bug, lng = ~longitude, lat = ~latitude, group = "Sediment Bug Samples") |> 
-  #     addMarkers(data = stream_gages, lng = ~longitude, lat = ~latitude, group = "Stream Gages") |> 
-  #     addMarkers(data = fingerprinting, lng = ~longitude, lat = ~latitude, group = "Tributary Fingerprinting Samples") |> 
-  #     addLayersControl(
-  #       overlayGroups = c(
-  #         "Dams to be Removed", "Dams", "Klamath River Corridor", 
-  #         "Copco Reservoir", "Estuary Bed Sediments", "Iron Gate Reservoir",
-  #         "Geomorphic Reaches", "Sediment Bug Samples", 
-  #         "Stream Gages", "Tributary Fingerprinting Samples"
-  #       ),
-  #       options = layersControlOptions(collapsed = FALSE)
-  #     )
+  # observe({
+  #   proxy <- leafletProxy("mainMap")
+  #   if (input$show_survey_type) {
+  #     redd_data <- survey_type |> filter(adult_survey_type == "Redd")
+  #     if (nrow(redd_data) > 0) {
+  #       proxy |> addMarkers(
+  #         data = redd_data,
+  #         lng = ~longitude, lat = ~latitude,
+  #         popup = ~paste("<em>Redd Adult Survey Reach</em><br>",
+  #                        "Type of Survey: ", adult_survey_type, "<br>",
+  #                        "Temporal Coverage: ", temporal_coverage, "<br>",
+  #                        "<button onclick=\"window.open('", link, "', '_blank')\">More Information</button>"),
+  #         label = ~htmltools::HTML("<em>Redd Survey</em>"),
+  #         icon = ~reach_markers["010"],
+  #         group = "Survey Data"
+  #       )
+  #     }
+  #   } else {
+  #     proxy |> clearGroup("Survey Data")
+  #   }
   # })
   
+  # Observer for surveyed river extent
+  # observe({
+  #   proxy <- leafletProxy("mainMap")
+  #   if (input$show_surveyed_river_extent) {
+  #     proxy |>
+  #       addPolylines(data = surveyed_river_extent, 
+  #                    color = "blue", 
+  #                    weight = 2, 
+  #                    group = "Survey extent")
+  #   } else {
+  #     proxy  |> 
+  #       clearGroup("Survey extent")
+  #   }
+  # })
+  
+  # Observer for USGS Dam Removal Map
   observe({
     proxy <- leafletProxy("mainMap")
-    
-    # If the checkbox is unchecked, clear all the dam-related layers from the map
     if (!input$show_usgs_dam_layers) {
-      proxy %>%
-        clearGroup("Dams to be Removed") %>%
-        clearGroup("Dams") %>%
-        clearGroup("Klamath River Corridor") %>%
-        clearGroup("Copco Reservoir") %>%
-        clearGroup("Estuary Bed Sediments") %>%
-        clearGroup("Iron Gate Reservoir") %>%
-        clearGroup("Geomorphic Reaches") %>%
-        clearGroup("Sediment Bug Samples") %>%
-        clearGroup("Stream Gages") %>%
+      proxy |>
+        clearGroup("Dams to be Removed") |>
+        clearGroup("Dams") |>
+        clearGroup("Klamath River Corridor") |>
+        clearGroup("Copco Reservoir") |>
+        clearGroup("Estuary Bed Sediments") |>
+        clearGroup("Iron Gate Reservoir") |>
+        clearGroup("Geomorphic Reaches") |>
+        clearGroup("Sediment Bug Samples") |>
+        clearGroup("Stream Gages") |>
         clearGroup("Tributary Fingerprinting Samples")
     }
   })
   
-  
+  # Observer for toggling dams to be removed
   observe({
     proxy <- leafletProxy("mainMap")
     if (input$show_dams_tb_removed) {
@@ -242,11 +238,12 @@ shinyServer(function(input, output, session) {
                          label = ~htmltools::HTML("<em>Dams to be Removed</em>"), 
                          group = "Dams to be Removed")
     } else {
-      proxy |> clearGroup("Dams to be Removed")
+      proxy |>
+        clearGroup("Dams to be Removed")
     }
   })
   
-  # Observer to toggle "Existing Dams"
+  # Observer for toggling dams
   observe({
     proxy <- leafletProxy("mainMap")
     if (input$show_dams) {
@@ -259,137 +256,22 @@ shinyServer(function(input, output, session) {
                          label = ~htmltools::HTML("<em>Dams</em>"), 
                          group = "Dams")
     } else {
-      proxy |> clearGroup("Dams")
+      proxy |>
+        clearGroup("Dams")
     }
   })
   
   # Observer for Klamath River Corridor
-  # observe({
-  #   proxy <- leafletProxy("mainMap")
-  #   if (input$show_kl_corridor) {
-  #     # Ensure spatial data is of the correct type
-  #     if (st_geometry_type(kl_corridor) == "LINESTRING") {
-  #       proxy |>
-  #         addPolylines(data = kl_corridor, color = "green", weight = 2, group = "Klamath River Corridor")
-  #     } else {
-  #       message("kl_corridor is not a polygon. Check your spatial data.")
-  #     }
-  #   } else {
-  #     proxy |> clearGroup("Klamath River Corridor")
-  #   }
-  # })
-  # Observer to toggle "Copco Reservoir"
-  
-  
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_copco_res) {
+    if (input$show_kl_corridor) {
       proxy |>
-        addCircleMarkers(data = copco_res, 
-                         color = "orange", 
-                         fillOpacity = 0.7, 
-                         weight = 2, 
-                         radius = 5,
-                         label = ~htmltools::HTML("<em>Copco Reservoir</em>"), 
-                         group = "Copco Reservoir")
+        addPolylines(data = kl_corridor, color = "green", weight = 2, group = "Klamath River Corridor")
     } else {
-      proxy |> clearGroup("Copco Reservoir")
-    }
-  })
-  
-  # Observer to toggle "Estuary Bed Sediments"
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_estuary_bedsed) {
       proxy |>
-        addCircleMarkers(data = estuary_bedsed, 
-                         color = "purple", 
-                         fillOpacity = 0.7, 
-                         weight = 2, 
-                         radius = 5,
-                         label = ~htmltools::HTML("<em>Estuary Bed Sediments</em>"), 
-                         group = "Estuary Bed Sediments")
-    } else {
-      proxy |> clearGroup("Estuary Bed Sediments")
-    }
-  })
-  # Observer to toggle "Iron Gate Reservoir"
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_ig_reservoir) {
-      proxy |>
-        addCircleMarkers(data = ig_reservoir, 
-                         color = "cyan", 
-                         fillOpacity = 0.7, 
-                         weight = 2, 
-                         radius = 5,
-                         label = ~htmltools::HTML("<em>Iron Gate Reservoir</em>"),
-                         group = "Iron Gate Reservoir")
-    } else {
-      proxy |> clearGroup("Iron Gate Reservoir")
-    }
-  })
-  
-  # Observer to toggle "Geomorphic Reaches"
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_geomorphic_reaches) {
-      proxy |>
-        addCircleMarkers(data = geomorphic_reaches, 
-                         color = "brown", 
-                         fillOpacity = 0.7, 
-                         weight = 2, 
-                         radius = 5, 
-                         label = ~htmltools::HTML("<em>Geomorphic Reaches</em>"),
-                         group = "Geomorphic Reaches")
-    } else {
-      proxy |> clearGroup("Geomorphic Reaches")
-    }
-  })
-  
-  # Observer to toggle "Sediment Bug Samples"
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_sediment_bug) {
-      proxy |>
-        addMarkers(data = sediment_bug, 
-                   lng = ~longitude, 
-                   lat = ~latitude, 
-                   label = ~htmltools::HTML("<em>Sediment Bug Samples</em>"), 
-                   group = "Sediment Bug Samples")
-    } else {
-      proxy |> clearGroup("Sediment Bug Samples")
-    }
-  })
-  
-  # Observer to toggle "Stream Gages"
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_stream_gages) {
-      proxy |>
-        addMarkers(data = stream_gages, 
-                   lng = ~longitude, 
-                   lat = ~latitude, 
-                   label = ~htmltools::HTML("<em>Stream Gages</em>"), 
-                   group = "Stream Gages")
-    } else {
-      proxy |> clearGroup("Stream Gages")
-    }
-  })
-  
-  # Observer to toggle "Tributary Fingerprinting Samples"
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_fingerprinting) {
-      proxy |>
-        addMarkers(data = fingerprinting, 
-                   lng = ~longitude, 
-                   lat = ~latitude, 
-                   label = ~htmltools::HTML("<em>Tributary Fingerprinting Samples</em>"),  
-                   group = "Tributary Fingerprinting Samples")
-    } else {
-      proxy |> clearGroup("Tributary Fingerprinting Samples")
+        clearGroup("Klamath River Corridor")
     }
   })
   
 })
+
