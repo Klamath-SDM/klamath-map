@@ -56,19 +56,46 @@ hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |>
   clean_names() |> 
   select(-c(google_earth_location)) 
 
-# Redd and Carcass
+# Redd and Carcass ----
 
 survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |> 
   clean_names() |> 
   select(-c(upstream_google_earth, upstream_rkm, upstream_google_earth, downstream_google_earth)) |> 
-  mutate(latitude = downstream_lat,
-         longitude = downstream_long,
-         adult_survey_type = data_type) |> 
-  select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |> 
-  filter(!is.na(latitude)) |> 
+  # mutate(latitude = downstream_lat,
+  #        longitude = downstream_long,
+  #        adult_survey_type = data_type) |> 
+  # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |> 
+  # filter(!is.na(latitude)) |> 
   glimpse()
 
-# USGS map layers
+survey_spatial <- survey_type |> 
+  rowwise() |> 
+  filter(!is.na(downstream_long)) |> 
+  mutate(geometry = st_sfc(st_polygon(list(matrix(c(downstream_long, downstream_lat, 
+                                                    downstream_long, upstream_lat,
+                                                    upstream_long, upstream_lat,
+                                                    upstream_long, downstream_lat,
+                                                    downstream_long, downstream_lat),
+                                                  ncol = 2, byrow = TRUE))),
+                           crs = 4326)) |> 
+  st_as_sf()
+
+
+surveyed_river <- st_intersection(kl_corridor, survey_spatial)
+plot(surveyed_river["geometry"])
+
+surveyed_river_extent <- surveyed_river |> 
+  group_by(watershed, agency, temporal_coverage, data_type, species, location_description) |> 
+  summarise(
+    geometry = st_union(geometry),
+    .groups = 'drop'  
+  )
+# testing plot
+# leaflet(surveyed_river_extent) |> 
+#   addTiles() |> 
+#   addPolylines(color = "blue", weight = 3, opacity = 0.7) 
+
+# USGS map layers ----
 
 dams_tb_removed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
   mutate(longitude = st_coordinates(geometry)[, 1],
