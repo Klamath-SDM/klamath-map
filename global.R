@@ -69,62 +69,42 @@ survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   glimpse()
 
 # USGS map layers
-# 
-# folder_path <- "data-raw/usgs_dam_removal_map/klamath_map_shapefiles/"
-# shapefiles <- list.files(folder_path, pattern = "\\.shp$", full.names = TRUE)
-# shapefile_list <- map(shapefiles, ~ st_read(.x) |> clean_names())
-# names(shapefile_list) <- gsub(".shp$", "", basename(shapefiles))
-# 
-# # Exclude specific layers
-# excluded_layers <- c("Klamath_Basin", "Watersheds_HUC8")
-# shapefile_list <- shapefile_list[!names(shapefile_list) %in% excluded_layers]
-# 
-# # Create color palette for point layers
-# point_layer_names <- names(shapefile_list)[sapply(shapefile_list, function(x) "POINT" %in% st_geometry_type(x))]
-# color_palette <- colorFactor(palette = "Set1", domain = point_layer_names)
-# 
-# # Function to add shapefile layers to a map
-# add_shapefile_layer <- function(map, shapefile, shapefile_name, color_palette) {
-#   geom_type <- unique(st_geometry_type(shapefile))
-#   label_content <- if ("name" %in% names(shapefile)) {
-#     shapefile$name  # Use 'name' column if available
-#   } else {
-#     str_to_title(shapefile_name)
-#   }
-#   
-#   if ("POLYGON" %in% geom_type | "MULTIPOLYGON" %in% geom_type) {
-#     map <- map |> 
-#       addPolygons(
-#         data = shapefile,
-#         color = "blue",
-#         fill = TRUE,
-#         fillOpacity = 0.5,
-#         group = shapefile_name
-#         # label = ~label_content
-#       )
-#   } else if ("POINT" %in% geom_type) {
-#     layer_color <- color_palette(shapefile_name)
-#     map <- map |> 
-#       addCircleMarkers(
-#         data = shapefile,
-#         color = layer_color,
-#         radius = 5,
-#         group = shapefile_name
-#         # label = ~label_content
-#       )
-#   } else if ("LINESTRING" %in% geom_type) {
-#     map <- map |> 
-#       addPolylines(
-#         data = shapefile,
-#         color = "green",
-#         group = shapefile_name
-#         # label = ~label_content
-#       )
-#   } else {
-#     warning(paste("Unsupported geometry type in layer:", shapefile_name))
-#   }
-#   map
-# }
+
+dams_tb_removed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+dams <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+kl_corridor <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Klamath_River_Corridor.shp")
+copco_res <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Copco_Reservoir_bed_sediment_cores.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+estuary_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Estuary_bed_sediment_samples.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+ig_reservoir <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+ig_reservoir_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir_bed_sediment_cores.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+ig_reservoir_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir_bed_sediment_cores.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+geomorphic_reaches <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Mainstem_Geomorphic_Reaches.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+sediment_bug <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Sediment_Bug_Samples.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+stream_gages <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_stream_gages.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+fingerprinting <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Tributary_Fingerprinting_Samples.shp") |> 
+  mutate(longitude = st_coordinates(geometry)[, 1],
+         latitude = st_coordinates(geometry)[, 2])
+
 
 
 # bbox <- rst_trap_locations |> st_bbox()

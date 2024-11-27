@@ -183,19 +183,213 @@ shinyServer(function(input, output, session) {
   })
   
   # USGS Dam Removal Map
-  # observe({
-  #   # Get the selected layers from the input
-  #   selected_layers <- input$show_layers
-  #   
-  #   # Initialize map proxy to avoid redrawing the whole map
-  #   proxy <- leafletProxy("map") %>% clearMarkers() %>% clearShapes()
-  #   
-  #   # Loop through selected layers and add them to the map
-  #   for (shapefile_name in selected_layers) {
-  #     shapefile <- shapefile_list[[shapefile_name]]
-  #     proxy <- add_shapefile_layer(proxy, shapefile, shapefile_name, color_palette)
-  #   }
-  #   proxy
+  # Add shapefiles to the map as layers
+  # output$mainMap <- renderLeaflet({
+  #   leaflet() |> 
+  #     addTiles() |> 
+  #     setView(lng = -122, lat = 41, zoom = 8) |> 
+  #     # Add placeholders for all map groups
+  #     addCircleMarkers(data = dams_tb_removed, color = "red", weight = 2, group = "Dams to be Removed") |> 
+  #     addCircleMarkers(data = dams, color = "blue", weight = 2, group = "Dams") |> 
+  #     addPolylines(data = kl_corridor, color = "green", weight = 2, group = "Klamath River Corridor") |> 
+  #     addCircleMarkers(data = copco_res, color = "orange", weight = 2, group = "Copco Reservoir") |> 
+  #     addCircleMarkers(data = estuary_bedsed, color = "purple", weight = 2, group = "Estuary Bed Sediments") |> 
+  #     addCircleMarkers(data = ig_reservoir, color = "cyan", weight = 2, group = "Iron Gate Reservoir") |> 
+  #     addCircleMarkers(data = geomorphic_reaches, color = "brown", weight = 2, group = "Geomorphic Reaches") |> 
+  #     addMarkers(data = sediment_bug, lng = ~longitude, lat = ~latitude, group = "Sediment Bug Samples") |> 
+  #     addMarkers(data = stream_gages, lng = ~longitude, lat = ~latitude, group = "Stream Gages") |> 
+  #     addMarkers(data = fingerprinting, lng = ~longitude, lat = ~latitude, group = "Tributary Fingerprinting Samples") |> 
+  #     addLayersControl(
+  #       overlayGroups = c(
+  #         "Dams to be Removed", "Dams", "Klamath River Corridor", 
+  #         "Copco Reservoir", "Estuary Bed Sediments", "Iron Gate Reservoir",
+  #         "Geomorphic Reaches", "Sediment Bug Samples", 
+  #         "Stream Gages", "Tributary Fingerprinting Samples"
+  #       ),
+  #       options = layersControlOptions(collapsed = FALSE)
+  #     )
   # })
+  
+  observe({
+    proxy <- leafletProxy("mainMap")
+    
+    # If the checkbox is unchecked, clear all the dam-related layers from the map
+    if (!input$show_usgs_dam_layers) {
+      proxy %>%
+        clearGroup("Dams to be Removed") %>%
+        clearGroup("Dams") %>%
+        clearGroup("Klamath River Corridor") %>%
+        clearGroup("Copco Reservoir") %>%
+        clearGroup("Estuary Bed Sediments") %>%
+        clearGroup("Iron Gate Reservoir") %>%
+        clearGroup("Geomorphic Reaches") %>%
+        clearGroup("Sediment Bug Samples") %>%
+        clearGroup("Stream Gages") %>%
+        clearGroup("Tributary Fingerprinting Samples")
+    }
+  })
+  
+  
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_dams_tb_removed) {
+      proxy |>
+        addCircleMarkers(data = dams_tb_removed, 
+                         color = "red", 
+                         fillOpacity = 0.7, 
+                         weight = 2, 
+                         radius = 5,
+                         label = ~htmltools::HTML("<em>Dams to be Removed</em>"), 
+                         group = "Dams to be Removed")
+    } else {
+      proxy |> clearGroup("Dams to be Removed")
+    }
+  })
+  
+  # Observer to toggle "Existing Dams"
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_dams) {
+      proxy |>
+        addCircleMarkers(data = dams, 
+                         color = "blue", 
+                         fillOpacity = 0.7, 
+                         weight = 2, 
+                         radius = 5,
+                         label = ~htmltools::HTML("<em>Dams</em>"), 
+                         group = "Dams")
+    } else {
+      proxy |> clearGroup("Dams")
+    }
+  })
+  
+  # Observer for Klamath River Corridor
+  # observe({
+  #   proxy <- leafletProxy("mainMap")
+  #   if (input$show_kl_corridor) {
+  #     # Ensure spatial data is of the correct type
+  #     if (st_geometry_type(kl_corridor) == "LINESTRING") {
+  #       proxy |>
+  #         addPolylines(data = kl_corridor, color = "green", weight = 2, group = "Klamath River Corridor")
+  #     } else {
+  #       message("kl_corridor is not a polygon. Check your spatial data.")
+  #     }
+  #   } else {
+  #     proxy |> clearGroup("Klamath River Corridor")
+  #   }
+  # })
+  # Observer to toggle "Copco Reservoir"
+  
+  
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_copco_res) {
+      proxy |>
+        addCircleMarkers(data = copco_res, 
+                         color = "orange", 
+                         fillOpacity = 0.7, 
+                         weight = 2, 
+                         radius = 5,
+                         label = ~htmltools::HTML("<em>Copco Reservoir</em>"), 
+                         group = "Copco Reservoir")
+    } else {
+      proxy |> clearGroup("Copco Reservoir")
+    }
+  })
+  
+  # Observer to toggle "Estuary Bed Sediments"
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_estuary_bedsed) {
+      proxy |>
+        addCircleMarkers(data = estuary_bedsed, 
+                         color = "purple", 
+                         fillOpacity = 0.7, 
+                         weight = 2, 
+                         radius = 5,
+                         label = ~htmltools::HTML("<em>Estuary Bed Sediments</em>"), 
+                         group = "Estuary Bed Sediments")
+    } else {
+      proxy |> clearGroup("Estuary Bed Sediments")
+    }
+  })
+  # Observer to toggle "Iron Gate Reservoir"
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_ig_reservoir) {
+      proxy |>
+        addCircleMarkers(data = ig_reservoir, 
+                         color = "cyan", 
+                         fillOpacity = 0.7, 
+                         weight = 2, 
+                         radius = 5,
+                         label = ~htmltools::HTML("<em>Iron Gate Reservoir</em>"),
+                         group = "Iron Gate Reservoir")
+    } else {
+      proxy |> clearGroup("Iron Gate Reservoir")
+    }
+  })
+  
+  # Observer to toggle "Geomorphic Reaches"
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_geomorphic_reaches) {
+      proxy |>
+        addCircleMarkers(data = geomorphic_reaches, 
+                         color = "brown", 
+                         fillOpacity = 0.7, 
+                         weight = 2, 
+                         radius = 5, 
+                         label = ~htmltools::HTML("<em>Geomorphic Reaches</em>"),
+                         group = "Geomorphic Reaches")
+    } else {
+      proxy |> clearGroup("Geomorphic Reaches")
+    }
+  })
+  
+  # Observer to toggle "Sediment Bug Samples"
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_sediment_bug) {
+      proxy |>
+        addMarkers(data = sediment_bug, 
+                   lng = ~longitude, 
+                   lat = ~latitude, 
+                   label = ~htmltools::HTML("<em>Sediment Bug Samples</em>"), 
+                   group = "Sediment Bug Samples")
+    } else {
+      proxy |> clearGroup("Sediment Bug Samples")
+    }
+  })
+  
+  # Observer to toggle "Stream Gages"
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_stream_gages) {
+      proxy |>
+        addMarkers(data = stream_gages, 
+                   lng = ~longitude, 
+                   lat = ~latitude, 
+                   label = ~htmltools::HTML("<em>Stream Gages</em>"), 
+                   group = "Stream Gages")
+    } else {
+      proxy |> clearGroup("Stream Gages")
+    }
+  })
+  
+  # Observer to toggle "Tributary Fingerprinting Samples"
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_fingerprinting) {
+      proxy |>
+        addMarkers(data = fingerprinting, 
+                   lng = ~longitude, 
+                   lat = ~latitude, 
+                   label = ~htmltools::HTML("<em>Tributary Fingerprinting Samples</em>"),  
+                   group = "Tributary Fingerprinting Samples")
+    } else {
+      proxy |> clearGroup("Tributary Fingerprinting Samples")
+    }
+  })
   
 })

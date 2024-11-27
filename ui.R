@@ -41,19 +41,19 @@ ui <- fluidPage(
           
           hr(),
           
-          # Checkbox for Basin Outline
+          # Basin Outline
           checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = TRUE),
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
           
-          # Temperature and Flow Gages Checkbox with Legend
+          # Gages and Temperature Loggers
           tags$div(
             class = "legend-item",
             checkboxInput("show_temp_loggers", "Gages and Temperature Loggers", value = TRUE),
             HTML(
               "<ul class='legend-list'>
-                <li><img src='icon-circle-f.png' /> USGS flow gage</li>
-                <li><img src='icon-circle-t.png' /> USGS temperature gage</li>
-              </ul>"
+          <li><img src='icon-circle-f.png' /> USGS flow gage</li>
+          <li><img src='icon-circle-t.png' /> USGS temperature gage</li>
+        </ul>"
             ),
             p(class = "legend-description", "See",
               tags$a(href = 'https://github.com/Klamath-SDM/KlamathEDA/blob/add-flow-temp-shiny/data-raw/flow_data/explore_flow_gages.Rmd', 
@@ -66,22 +66,22 @@ ui <- fluidPage(
           
           hr(),
           
-          # Rotary Screw Traps Checkbox with Legend
+          # Rotary Screw Traps
           tags$div(
             class = "legend-item",
             checkboxInput("show_rst", "Rotary Screw Traps", value = TRUE),
             HTML(
               "<ul class='legend-list'>
-                <li><img src='icon-diamond.png' /> Single Trap</li>
-                <li><img src='icon-diamond-stack.png' /> Multiple Traps</li>
-              </ul>"
+          <li><img src='icon-diamond.png' /> Single Trap</li>
+          <li><img src='icon-diamond-stack.png' /> Multiple Traps</li>
+        </ul>"
             ),
             p(class = "legend-description", "Private rotary screw trap sites are illustrated as general vicinities (half mile radius).")
           ),
           
           hr(),
           
-          # Fish Hatcheries Checkbox with Icon
+          # Fish Hatcheries
           tags$div(
             class = "legend-item",
             checkboxInput("show_hatcheries", "Hatcheries", value = TRUE),
@@ -90,50 +90,63 @@ ui <- fluidPage(
           
           hr(),
           
-          # Habitat Data
+          # Habitat Models
           tags$div(
             class = "legend-item",
             checkboxInput("show_habitat_data", "Habitat Models", value = TRUE),
             HTML(
               "<ul class='legend-list'>
-                  <li><img src='icon-x.png' /> Habitat Data</li>
-                </ul>"
+          <li><img src='icon-x.png' /> Habitat Data</li>
+        </ul>"
             ),
             p(class = "legend-description", "See",
-              tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.Rmd', "Habitat Rmd", target = "_blank"), 
+              tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.Rmd', 
+                     "Habitat Rmd", target = "_blank"), 
               "for more detailed data exploration.")
+          ),
+          
+          hr(),
+          
+          # Survey Type
+          tags$div(
+            class = "legend-item",
+            checkboxInput("show_survey_type", "Survey Type", value = TRUE),
+            HTML(
+              "<ul class='legend-list'>
+          <li><img src='icon-circle-010.png' /> Redd</li>
+          <li><img src='icon-circle-100.png' /> Carcass</li>
+        </ul>"
+            ),
+            p(class = "legend-description", "[Placeholder for legend].")
+          ),
+          
+          hr(),
+          
+          # USGS Dam Removal Map Layers
+          tags$div(
+            class = "legend-item",
+            checkboxInput("show_usgs_dam_layers", "USGS Dam Removal Map Layers", value = TRUE),
+            conditionalPanel(
+              condition = "input.show_usgs_dam_layers == true",
+            checkboxInput("show_dams_tb_removed", "Dams to be Removed", value = TRUE),
+            checkboxInput("show_dams", "Existing Dams", value = TRUE),
+            checkboxInput("show_kl_corridor", "Klamath River Corridor", value = TRUE),
+            checkboxInput("show_copco_res", "Copco Reservoir Bed Sediment Cores", value = TRUE),
+            checkboxInput("show_estuary_bedsed", "Estuary Bed Sediment Samples", value = TRUE),
+            checkboxInput("show_ig_reservoir", "Iron Gate Reservoir", value = TRUE),
+            checkboxInput("show_ig_reservoir_bedsed", "Iron Gate Reservoir Bed Sediment Cores", value = TRUE),
+            checkboxInput("show_geomorphic_reaches", "Geomorphic Reaches", value = TRUE),
+            checkboxInput("show_sediment_bug", "Sediment Bug Samples", value = TRUE),
+            checkboxInput("show_stream_gages", "Stream Gages", value = TRUE),
+            checkboxInput("show_fingerprinting", "Tributary Fingerprinting Samples", value = TRUE)
+          )
+          )
         ),
-        hr(),
-       
-    # Survey Type
-    tags$div(
-      class = "legend-item",
-      checkboxInput("show_survey_type", "Survey Type", value = TRUE),
-      HTML(
-        "<ul class='legend-list'>
-                <li><img src='icon-circle-010.png' /> Redd</li>
-                <li><img src='icon-circle-100.png' /> Carcass</li>
-              </ul>"
-      ),
-      p(class = "legend-description", "[Placeholder for legend].")
-    )
-    ),
-    # hr(),
-    
-    #USGS dam removal map
-    # tags$div(
-    #   class = "legend-item",
-    #     checkboxGroupInput(
-    #       inputId = "layer_selection",
-    #       label = "Select Layers to Display:",
-    #       choices = names(shapefile_list),
-    #       selected = names(shapefile_list)
-    #     )
-    #   ),
-    mainPanel(
-      leafletOutput("mainMap")
-    )
-  )
+        
+        mainPanel(
+          leafletOutput("mainMap")
+        )
+      )
 ),
    
     # Additional Resources Tab
