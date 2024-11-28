@@ -155,7 +155,7 @@ ui <- fluidPage(
                tags$ul(
                  tags$li(
                    tags$a(
-                     href = "suckers_infographic.pdf",
+                     href = "klamath_suckers_infographic.pdf",
                      target = "_blank",
                      "Suckers Infographic"
                    )
@@ -173,7 +173,14 @@ ui <- fluidPage(
                      target = "_blank",
                      "The Klamath Tribes Water Quality Report Repository"
                    )
-               )
+               ),
+                          tags$li(
+                            tags$a(
+                              href = "flow_model_resources.pdf",
+                              target = "_blank",
+                              "Flow Model Resources"
+                            )
+                          )
       )
     )
   )
