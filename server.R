@@ -211,27 +211,9 @@ shinyServer(function(input, output, session) {
   # Observer for USGS Dam Removal Map
   observe({
     proxy <- leafletProxy("mainMap")
-    if (!input$show_usgs_dam_layers) {
-      proxy |>
-        clearGroup("Dams to be Removed") |>
-        clearGroup("Dams") |>
-        clearGroup("Klamath River Corridor") |>
-        clearGroup("Copco Reservoir") |>
-        clearGroup("Estuary Bed Sediments") |>
-        clearGroup("Iron Gate Reservoir") |>
-        clearGroup("Geomorphic Reaches") |>
-        clearGroup("Sediment Bug Samples") |>
-        clearGroup("Stream Gages") |>
-        clearGroup("Tributary Fingerprinting Samples")
-    }
-  })
-  
-  # Observer for toggling dams to be removed
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_dams_tb_removed) {
-      proxy |>
-        addCircleMarkers(data = dams_tb_removed, 
+    if (input$show_usgs_dam_layers) {
+      if (input$show_dams_tb_removed) {
+        proxy |> addCircleMarkers(data = dams_tb_removed, 
                          color = "red", 
                          fillOpacity = 0.7, 
                          weight = 2, 
@@ -241,6 +223,7 @@ shinyServer(function(input, output, session) {
     } else {
       proxy |>
         clearGroup("Dams to be Removed")
+    }
     }
   })
   
