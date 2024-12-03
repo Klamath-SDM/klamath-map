@@ -55,13 +55,12 @@ ui <- fluidPage(
           <li><img src='icon-circle-t.png' /> USGS temperature gage</li>
         </ul>"
             ),
-            p(class = "legend-description", "See",
+            p(class = "legend-description", "For more information on Flow data exploration click",
               tags$a(href = 'https://github.com/Klamath-SDM/KlamathEDA/blob/add-flow-temp-shiny/data-raw/flow_data/explore_flow_gages.Rmd', 
-                     "flow Rmd", target = "_blank"), 
-              "and",
+                     "here", target = "_blank"), 
+              ". For more information on Temperature data exploration click",
               tags$a(href = 'https://github.com/Klamath-SDM/KlamathEDA/blob/add-flow-temp-shiny/data-raw/temperature_data/explore_temp_gages.Rmd', 
-                     "temp Rmd", target = "_blank"),
-              "for more detailed data exploration.")
+                     "here", target = "_blank"))
           ),
           
           hr(),
