@@ -106,10 +106,7 @@ copco_res <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_
 estuary_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Estuary_bed_sediment_samples.shp") |> 
   mutate(longitude = st_coordinates(geometry)[, 1],
          latitude = st_coordinates(geometry)[, 2])
-ig_reservoir <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-ig_reservoir_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir_bed_sediment_cores.shp") |> 
+jc_boyle_reservoir_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_JCBoyle_Reservoir_bed_sediment_cores.shp") |> 
   mutate(longitude = st_coordinates(geometry)[, 1],
          latitude = st_coordinates(geometry)[, 2])
 ig_reservoir_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir_bed_sediment_cores.shp") |> 

@@ -126,19 +126,22 @@ ui <- fluidPage(
             checkboxInput("show_usgs_dam_layers", "USGS Dam Removal Map Layers", value = TRUE),
             conditionalPanel(
               condition = "input.show_usgs_dam_layers == true",
-            checkboxInput("show_dams_tb_removed", "Dams to be Removed", value = TRUE),
-            checkboxInput("show_dams", "Existing Dams", value = TRUE),
-            checkboxInput("show_kl_corridor", "Klamath River Corridor", value = TRUE),
-            checkboxInput("show_copco_res", "Copco Reservoir Bed Sediment Cores", value = TRUE),
-            checkboxInput("show_estuary_bedsed", "Estuary Bed Sediment Samples", value = TRUE),
-            checkboxInput("show_ig_reservoir", "Iron Gate Reservoir", value = TRUE),
-            checkboxInput("show_ig_reservoir_bedsed", "Iron Gate Reservoir Bed Sediment Cores", value = TRUE),
-            checkboxInput("show_geomorphic_reaches", "Geomorphic Reaches", value = TRUE),
-            checkboxInput("show_sediment_bug", "Sediment Bug Samples", value = TRUE),
-            checkboxInput("show_stream_gages", "Stream Gages", value = TRUE),
-            checkboxInput("show_fingerprinting", "Tributary Fingerprinting Samples", value = TRUE)
-          )
-          )
+              checkboxInput("show_dams_tb_removed", HTML("<span style='color:red;'>&#9673;</span> Dams to be Removed"), value = TRUE),
+              checkboxInput("show_dams", HTML("<span style='color:blue;'>&#9673;</span> Existing Dams"), value = TRUE),
+              checkboxInput("show_kl_corridor", HTML("<span style='color:green;'>&#9673;</span> Klamath River Corridor"), value = TRUE),
+              checkboxInput("show_copco_res", HTML("<span style='color:orange;'>&#9673;</span> Copco Reservoir Bed Sediment Cores"), value = TRUE),
+              checkboxInput("show_estuary_bedsed", HTML("<span style='color:purple;'>&#9673;</span> Estuary Bed Sediment Samples"), value = TRUE),
+              checkboxInput("show_jc_boyle_reservoir_bedsed", HTML("<span style='color:cyan;'>&#9673;</span> JCBoyle Reservoir Bed Sediments"), value = TRUE),
+              checkboxInput("show_ig_reservoir_bedsed", HTML("<span style='color:lavender;'>&#9673;</span> Iron Gate Reservoir Bed Sediment Cores"), value = TRUE),
+              checkboxInput("show_geomorphic_reaches", HTML("<span style='color:brown;'>&#9673;</span> Geomorphic Reaches"), value = TRUE),
+              checkboxInput("show_sediment_bug", HTML("<span style='color:yellow;'>&#9673;</span> Sediment Bug Samples"), value = TRUE),
+              checkboxInput("show_stream_gages", HTML("<span style='color:black;'>&#9673;</span> Stream Gages"), value = TRUE),
+              checkboxInput("show_fingerprinting", HTML("<span style='color:lightgreen;'>&#9673;</span> Tributary Fingerprinting Samples"), value = TRUE)
+            )
+          ),
+          p(class = "legend-description", "These layers were sourced from",
+            tags$a(href = 'https://ca.water.usgs.gov/apps/klamath-dam-removal-monitoring.html', 
+                   "USGS Dam Removal Monitorning Map", target = "_blank"))
         ),
         
         mainPanel(

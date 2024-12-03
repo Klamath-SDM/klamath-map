@@ -208,11 +208,9 @@ shinyServer(function(input, output, session) {
   # })
   
   # Observer for USGS Dam Removal Map
-  # Observer for USGS Dam Removal Map
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_usgs_dam_layers) {
-      if (input$show_dams_tb_removed) {
+    if (input$show_usgs_dam_layers && input$show_dams_tb_removed) {
         proxy |> addCircleMarkers(data = dams_tb_removed, 
                          color = "red", 
                          fillOpacity = 0.7, 
@@ -224,13 +222,12 @@ shinyServer(function(input, output, session) {
       proxy |>
         clearGroup("Dams to be Removed")
     }
-    }
   })
   
   # Observer for toggling dams
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_dams) {
+    if (input$show_usgs_dam_layers && input$show_dams) {
       proxy |>
         addCircleMarkers(data = dams, 
                          color = "blue", 
@@ -248,7 +245,7 @@ shinyServer(function(input, output, session) {
   # Observer for Klamath River Corridor
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_kl_corridor) {
+    if (input$show_usgs_dam_layers && input$show_kl_corridor) {
       proxy |>
         addPolylines(data = kl_corridor, color = "green", weight = 2, group = "Klamath River Corridor")
     } else {
@@ -261,7 +258,7 @@ shinyServer(function(input, output, session) {
   
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_copco_res) {
+    if (input$show_usgs_dam_layers && input$show_copco_res) {
       proxy |>
         addCircleMarkers(data = copco_res, 
                          color = "orange", 
@@ -278,7 +275,7 @@ shinyServer(function(input, output, session) {
   # Observer to toggle "Estuary Bed Sediments"
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_estuary_bedsed) {
+    if (input$show_usgs_dam_layers && input$show_estuary_bedsed) {
       proxy |>
         addCircleMarkers(data = estuary_bedsed, 
                          color = "purple", 
@@ -291,27 +288,43 @@ shinyServer(function(input, output, session) {
       proxy |> clearGroup("Estuary Bed Sediments")
     }
   })
-  # Observer to toggle "Iron Gate Reservoir"
+  # Observer to toggle "JCBoyle Reservoir Bed Sediment Cores"
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_ig_reservoir) {
+    if (input$show_usgs_dam_layers && input$show_jc_boyle_reservoir_bedsed) {
       proxy |>
-        addCircleMarkers(data = ig_reservoir, 
+        addCircleMarkers(data = jc_boyle_reservoir_bedsed, 
                          color = "cyan", 
+                         fillOpacity = 0.7, 
+                         weight = 2, 
+                         radius = 5,
+                         label = ~htmltools::HTML("<em>JCBoyle Reservoir Bed Sediment Cores</em>"),
+                         group = "Iron Gate Reservoir")
+    } else {
+      proxy |> clearGroup("JCBoyle Reservoir Bed Sediment Cores")
+    }
+  })
+  # Observer to toggle "Iron Gate Reservoir bed sediment cores"
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_usgs_dam_layers && input$show_ig_reservoir_bedsed) {
+      proxy |>
+        addCircleMarkers(data = ig_reservoir_bedsed, 
+                         color = "lavender", 
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
                          label = ~htmltools::HTML("<em>Iron Gate Reservoir</em>"),
                          group = "Iron Gate Reservoir")
     } else {
-      proxy |> clearGroup("Iron Gate Reservoir")
+      proxy |> clearGroup("Iron Gate Reservoir Bed Sediment Cores")
     }
   })
   
   # Observer to toggle "Geomorphic Reaches"
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_geomorphic_reaches) {
+    if (input$show_usgs_dam_layers && input$show_geomorphic_reaches) {
       proxy |>
         addCircleMarkers(data = geomorphic_reaches, 
                          color = "brown", 
@@ -328,7 +341,7 @@ shinyServer(function(input, output, session) {
   # Observer to toggle "Sediment Bug Samples"
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_sediment_bug) {
+    if (input$show_usgs_dam_layers && input$show_sediment_bug) {
       proxy |>
         addCircleMarkers(data = sediment_bug, 
                          color = "yellow", 
@@ -345,7 +358,7 @@ shinyServer(function(input, output, session) {
   # Observer to toggle "Stream Gages"
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_stream_gages) {
+    if (input$show_usgs_dam_layers && input$show_stream_gages) {
       proxy |>
         addCircleMarkers(data = stream_gages, 
                          color = "black", 
@@ -362,10 +375,10 @@ shinyServer(function(input, output, session) {
   # Observer to toggle "Tributary Fingerprinting Samples"
   observe({
     proxy <- leafletProxy("mainMap")
-    if (input$show_fingerprinting) {
+    if (input$show_usgs_dam_layers && input$show_fingerprinting) {
       proxy |>
         addCircleMarkers(data = fingerprinting, 
-                         color = "black", 
+                         color = "lightgreen", 
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5, 
