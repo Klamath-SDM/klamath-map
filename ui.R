@@ -99,10 +99,9 @@ ui <- fluidPage(
           <li><img src='icon-x.png' /> Habitat Data</li>
         </ul>"
             ),
-            p(class = "legend-description", "See",
-              tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.Rmd', 
-                     "Habitat Rmd", target = "_blank"), 
-              "for more detailed data exploration.")
+            p(class = "legend-description", "For more detailed data exploration information click",
+              tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.md', 
+                     "here", target = "_blank"))
           ),
           
           hr(),
