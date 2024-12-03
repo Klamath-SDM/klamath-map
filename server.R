@@ -85,10 +85,30 @@ shinyServer(function(input, output, session) {
         clearGroup("Sub-Basin Outline")
     }
   })
+  # Observer to manage stream lines
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_streams) {
+      proxy |>
+        addPolylines(
+          data = streams,
+          color = "blue",
+          weight = 2,
+          opacity = 0.8,
+          fillOpacity = 0.2,
+          label = ~paste(Label, "Stream"),
+          popup = ~paste("<em>Stream</em><br>", "Stream Name:", Label),
+          group = "Streams"
+        )
+    } else {
+      proxy |>
+        clearGroup("Srteams")
+    }
+  })
   
   # Observer to manage temperature and flow gages display
   observe({
-    proxy <- leafletProxy("mainMap") |> clearMarkers()
+    proxy <- leafletProxy("mainMap") 
     if (input$show_temp_loggers) {
       proxy |> 
         addMarkers(
@@ -99,7 +119,8 @@ shinyServer(function(input, output, session) {
                          "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data,
                          "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
                          gage_number, "', '_blank')\">Gage Site</button>"),
-          label = ~htmltools::HTML("<em>USGS Flow Gage</em>")
+          label = ~htmltools::HTML("<em>USGS Flow Gage</em>"),
+          group = "USGS Gages"
         ) |> 
         addMarkers(
           data = temperature,
@@ -109,11 +130,14 @@ shinyServer(function(input, output, session) {
                          "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data,
                          "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
                          gage_number, "', '_blank')\">Gage Site</button>"),
-          label = ~htmltools::HTML("<em>USGS Temperature Gage</em>")
+          label = ~htmltools::HTML("<em>USGS Temperature Gage</em>"),
+          group = "USGS Gages"
         )
+    } else {
+      proxy |>
+        clearGroup("USGS Gages")
     }
   })
-  
   # Observer to manage RST Traps display
   observe({
     if (input$show_rst) {
@@ -163,6 +187,7 @@ shinyServer(function(input, output, session) {
           "<br>Status: ", status, "<br>Location Name: ", location_name
         ),
         label = ~htmltools::HTML("<em>Habitat Data</em>"),
+        group = "Habitat Data"
       )
     } else {
       proxy |> clearGroup("Habitat Data")
@@ -299,7 +324,7 @@ shinyServer(function(input, output, session) {
                          weight = 2, 
                          radius = 5,
                          label = ~htmltools::HTML("<em>JCBoyle Reservoir Bed Sediment Cores</em>"),
-                         group = "Iron Gate Reservoir")
+                         group = "JCBoyle Reservoir Bed Sediment Cores")
     } else {
       proxy |> clearGroup("JCBoyle Reservoir Bed Sediment Cores")
     }
@@ -315,7 +340,7 @@ shinyServer(function(input, output, session) {
                          weight = 2, 
                          radius = 5,
                          label = ~htmltools::HTML("<em>Iron Gate Reservoir</em>"),
-                         group = "Iron Gate Reservoir")
+                         group = "Iron Gate Reservoir Bed Sediment Cores")
     } else {
       proxy |> clearGroup("Iron Gate Reservoir Bed Sediment Cores")
     }
