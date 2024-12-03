@@ -15,7 +15,7 @@ library(janitor)
 ###############
 # DATA IMPORTS 
 ###############
-#klamath basin outline - TODO add basin polygon
+#klamath basin outline 
 river_shapefile <- st_read("data-raw/R8_FAC_Klamath_Basin_WFL1/R8_FAC_Klamath_Basin_WFL1.shp")
 
 # add in temperature and flow data 
@@ -42,6 +42,10 @@ kl_basin_outline <- st_transform(kl_basin_outline, crs = 4326)
 sub_basin <- st_read("data-raw/sub-basin-boundaries/Klamath_HUC8_Subbasin.shp")
 
 sub_basin <- st_transform(sub_basin, crs = 4326)
+
+# basin stream lines
+streams <- st_read("data-raw/klamath_basin_river_lines/Merged_Rivers.shp")
+streams <- st_transform(streams, crs = 4326)
 
 # Import habitat extent data
 habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
