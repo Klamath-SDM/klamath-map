@@ -107,17 +107,17 @@ ui <- fluidPage(
           hr(),
           
           # Survey Type
-          # tags$div(
-          #   class = "legend-item",
-          #   checkboxInput("show_surveyed_river_extent", 
-          #                 "Survey Extent - Redd/Carcass", 
-          #                 value = TRUE),
-          #   htmltools::HTML(
-          #     "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
-          #   ),
-          #   p(class = "legend-description", "[Placeholder for legend].")
-          # ),
-          # hr(),
+          tags$div(
+            class = "legend-item",
+            checkboxInput("show_upstream_buffer",
+                          "Survey Extent - Redd/Carcass",
+                          value = TRUE),
+            # htmltools::HTML(
+            #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
+            # ),
+            p(class = "legend-description", "[Placeholder for legend].")
+          ),
+          hr(),
           
           # USGS Dam Removal Map Layers
           tags$div(

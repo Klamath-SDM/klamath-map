@@ -1,15 +1,4 @@
 Watershed,Agency,Data Type,Species ,Upstream River Access,Upstream RKM,Upstream Lat,Upstream Long,Upstream Google Earth,Downstream Access,Downstream RKM,Downstream Lat,Downstream Long,Downstream Google Earth,Location Description,has_holding,had_redd,has_carcass,Temporal Coverage,Link
-Scotch/Camp,"CDFW, Karuk",Carcass and redd,,,,,,,,,,,,,FALSE,TRUE,TRUE,,
-Jenny,"CDFW, Karuk",Carcass and redd,,,,,,,,,,,,,FALSE,TRUE,TRUE,,
-Fall,"CDFW, Karuk",Carcass and redd,,,,,,,,,,,,,FALSE,TRUE,TRUE,,
-Shovel,"CDFW, Karuk",Carcass and redd,,,,,,,,,,,,,FALSE,TRUE,TRUE,,
-Bogus,CDFW,Carcass,,,,,,"41°55'47""N 122°26'29""W
-(Location of Iron Gate Fish Hatchery",,,,,"41°55'47""N 122°26'29""W
-(Location of Iron Gate Fish Hatchery","4 reaches from mouth to fish ladder.  Mouth of Bogus Creek is roughly 75 feet downstream of the entrance to
-the auxiliary ladder used to collect adult salmonid returns at IGH.",FALSE,FALSE,TRUE,,
-Klamath,USFWS,Redd (coho),,,,,,"41°47'24""N 123°22'43""W
-(Location of Indian Creek confluence at Klamath River)",,,,,"41°47'24""N 123°22'43""W
-(Location of Indian Creek confluence at Klamath River)",Rkm 310.3 to 173.8 (Iron Gate Dam to Indian Creek confluence at Happy Camp),FALSE,TRUE,FALSE,,
 Klamath,USFWS,Redd,Coho Salmon,Iron Gate Dam,309.8,41.93373079,-122.4353314,"41°56'01""N 122°26'07""W",Deliverance Camp,287.5,41.832778,-122.606944,"41°49'58""N 122°36'25""W",,FALSE,TRUE,FALSE,2001-2005,Mainstem Klamath River Coho Salmon Redd Surveys 2001 to 2005
 Klamath,USFWS,Redd,Coho Salmon,Ash Creek,285.7,41.833611,-122.620278,"41°50'01""N 122°37'13""W",Beaver Creek riffle,261.9,41.869167,-122.816667,"41°52'09.0""N 122°49'00.0""W",,FALSE,TRUE,FALSE,2001-2005,Mainstem Klamath River Coho Salmon Redd Surveys 2001 to 2005
 Klamath,USFWS,Redd,Coho Salmon,Beaver Creek ,261.9,41.869167,-122.816667,"41°52'09.0""N 122°49'00.0""W",Blue Heron ,234.3,41.786667,-123.030278,"41°47'12""N 123°01'49""W",,FALSE,TRUE,FALSE,2001-2005,Mainstem Klamath River Coho Salmon Redd Surveys 2001 to 2005

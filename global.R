@@ -62,26 +62,44 @@ hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |>
 
 # Redd and Carcass ----
 
-# survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |> 
-#   clean_names() |> 
-#   select(-c(upstream_google_earth, upstream_rkm, upstream_google_earth, downstream_google_earth)) |> 
+redd_carcass_survey <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
+  clean_names() |>
+  select(-c(upstream_rkm, upstream_google_earth, downstream_google_earth, has_holding, has_carcass, had_redd, link)) |>
+  filter(!is.na(downstream_long)) |>
+  glimpse()
+
+# Ensure the upstream and downstream points are in spatial format (sf)
+upstream_points <- st_as_sf(redd_carcass_survey, coords = c("upstream_long", "upstream_lat"), crs = 4326)
+downstream_points <- st_as_sf(redd_carcass_survey, coords = c("downstream_long", "downstream_lat"), crs = 4326)
+
+# Create a buffer around the upstream and downstream points
+buffer_distance <- 500  # Distance in meters (you can adjust this based on your data)
+upstream_buffer <- st_buffer(upstream_points, dist = buffer_distance)
+downstream_buffer <- st_buffer(downstream_points, dist = buffer_distance)
+
+
+
+
+# survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
+#   clean_names() |>
+#   select(-c(upstream_google_earth, upstream_rkm, upstream_google_earth, downstream_google_earth)) |>
 #   # mutate(latitude = downstream_lat,
 #   #        longitude = downstream_long,
-#   #        adult_survey_type = data_type) |> 
-#   # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |> 
-#   # filter(!is.na(latitude)) |> 
+#   #        adult_survey_type = data_type) |>
+#   # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |>
+#   # filter(!is.na(latitude)) |>
 #   glimpse()
-# 
-# survey_spatial <- survey_type |> 
-#   rowwise() |> 
-#   filter(!is.na(downstream_long)) |> 
-#   mutate(geometry = st_sfc(st_polygon(list(matrix(c(downstream_long, downstream_lat, 
+
+# survey_spatial <- survey_type |>
+#   # rowwise() |>
+#   filter(!is.na(downstream_long)) |>
+#   mutate(geometry = st_sfc(st_polygon(list(matrix(c(downstream_long, downstream_lat,
 #                                                     downstream_long, upstream_lat,
 #                                                     upstream_long, upstream_lat,
 #                                                     upstream_long, downstream_lat,
 #                                                     downstream_long, downstream_lat),
 #                                                   ncol = 2, byrow = TRUE))),
-#                            crs = 4326)) |> 
+#                            crs = 4326)) |>
 #   st_as_sf()
 # 
 # 

@@ -93,7 +93,7 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = streams,
           color = "blue",
-          weight = 2,
+          weight = 4,
           opacity = 0.8,
           fillOpacity = 0.2,
           label = ~paste(Label, "Stream"),
@@ -195,27 +195,23 @@ shinyServer(function(input, output, session) {
   })
   
   # Observer for redd and carcass data
-  # observe({
-  #   proxy <- leafletProxy("mainMap")
-  #   if (input$show_survey_type) {
-  #     redd_data <- survey_type |> filter(adult_survey_type == "Redd")
-  #     if (nrow(redd_data) > 0) {
-  #       proxy |> addMarkers(
-  #         data = redd_data,
-  #         lng = ~longitude, lat = ~latitude,
-  #         popup = ~paste("<em>Redd Adult Survey Reach</em><br>",
-  #                        "Type of Survey: ", adult_survey_type, "<br>",
-  #                        "Temporal Coverage: ", temporal_coverage, "<br>",
-  #                        "<button onclick=\"window.open('", link, "', '_blank')\">More Information</button>"),
-  #         label = ~htmltools::HTML("<em>Redd Survey</em>"),
-  #         icon = ~reach_markers["010"],
-  #         group = "Survey Data"
-  #       )
-  #     }
-  #   } else {
-  #     proxy |> clearGroup("Survey Data")
-  #   }
-  # })
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_upstream_buffer) {
+        proxy |> addPolygons( data = upstream_buffer,
+                              color = "green",
+                              weight = 2,
+                              opacity = 0.8,
+                              fillOpacity = 0.2,
+                              # label = ~paste(NAME, "Basin"),
+                              # popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
+                              group = "Upstream Buffer"
+        )
+    } else {
+      proxy |>
+        clearGroup("Upstream Buffer ")
+    }
+  })
   
   # Observer for surveyed river extent
   # observe({
