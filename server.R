@@ -19,17 +19,17 @@ shinyServer(function(input, output, session) {
   
   # Define coordinates for each river
   river_coords <- list(
-    "Klamath River" = c(-122.85, 41.95),
-    "Trinity River" = c(-123.1, 41.0),
-    "Upper Klamath Lake" = c(-121.79, 42.5),
-    "Lost River" = c(-121.56, 42.0),
-    "Williamson River" = c(-121.88, 42.7),
-    "Wood River" = c(-121.86, 42.8),
-    "Link River" = c(-121.8, 42.22),
-    "Scott River" = c(-123.0, 41.55),
-    "Shasta River" = c(-122.43, 41.8),
-    "Indian Creek" = c(-122.84, 41.55),
-    "Sprague River" = c(-121.5, 42.4)
+    "Williamson" = c(-121.89, 42.937),          
+    "Sprague" = c(-121.356, 42.354),              
+    "Upper Klamath Lake" = c(-121.79, 42.5),  
+    "Butte" = c(-121.9, 41.7),                
+    "Shasta" = c(-122.41, 41.7),              
+    "Scott" = c(-123.0, 41.55),               
+    "Lower Klamath" = c( -123.4, 41.6),       
+    "Salmon" = c(-123.4, 41.3),               
+    "Trinity" = c(-123.1, 41.0),              
+    "South Fork Trinity" = c(-123.5, 40.5),   
+    "Lost" = c(-121.56, 42.0)                 
   )
   
   # Observer for zooming to selected river
@@ -93,7 +93,7 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = streams,
           color = "blue",
-          weight = 4,
+          weight = 3,
           opacity = 0.8,
           fillOpacity = 0.2,
           label = ~paste(Label, "Stream"),
@@ -165,7 +165,11 @@ shinyServer(function(input, output, session) {
           data = hatcheries,
           lng = ~longitude, lat = ~latitude,
           icon = ~rst_markers["H"],
-          popup = ~paste("<em>Hatchery</em><br>", "Hatchery Name:", site_name),
+          popup = ~paste(
+            "<em>Hatchery</em><br>",
+            "Hatchery Name:", site_name, 
+            "<br><button onclick='window.open(\"", resource, "\", \"_blank\")'>More Info</button>"
+          ),
           label = ~htmltools::HTML("<em>Hatchery</em>"),
           group = "Hatcheries"
         )
@@ -210,6 +214,23 @@ shinyServer(function(input, output, session) {
     } else {
       proxy |>
         clearGroup("Upstream Buffer ")
+    }
+  })
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_downstream_buffer) {
+      proxy |> addPolygons( data = downstream_buffer,
+                            color = "red",
+                            weight = 2,
+                            opacity = 0.8,
+                            fillOpacity = 0.2,
+                            # label = ~paste(NAME, "Basin"),
+                            # popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
+                            group = "Downstream Buffer"
+      )
+    } else {
+      proxy |>
+        clearGroup("Downstream Buffer ")
     }
   })
   

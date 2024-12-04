@@ -72,7 +72,7 @@ redd_carcass_survey <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
 upstream_points <- st_as_sf(redd_carcass_survey, coords = c("upstream_long", "upstream_lat"), crs = 4326)
 downstream_points <- st_as_sf(redd_carcass_survey, coords = c("downstream_long", "downstream_lat"), crs = 4326)
 # Buffer around the upstream and downstream points
-buffer_distance <- 500 
+buffer_distance <- 90 
 upstream_buffer <- st_buffer(upstream_points, dist = buffer_distance)
 downstream_buffer <- st_buffer(downstream_points, dist = buffer_distance)
 

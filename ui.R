@@ -22,20 +22,20 @@ ui <- fluidPage(
           # Select Input for Zooming to Rivers
           selectInput(
             "zoom_select_river", 
-            "Zoom to River",
+            "Zoom to Basin",
             c(
               "(Default View)",
-              "Klamath River",
-              "Trinity River",
+              "Williamson",
+              "Sprague",
               "Upper Klamath Lake",
-              "Lost River",
-              "Williamson River",
-              "Wood River",
-              "Link River",
-              "Scott River",
-              "Shasta River",
-              "Indian Creek",
-              "Sprague River"
+              "Butte",
+              "Shasta",
+              "Scott",
+              "Lower Klamath",
+              "Salmon",
+              "Trinity",
+              "South Fork Trinity",
+              "Lost"
             )
           ),
           
@@ -110,6 +110,17 @@ ui <- fluidPage(
           tags$div(
             class = "legend-item",
             checkboxInput("show_upstream_buffer",
+                          "Survey Extent - Redd/Carcass",
+                          value = TRUE),
+            # htmltools::HTML(
+            #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
+            # ),
+            p(class = "legend-description", "[Placeholder for legend].")
+          ),
+          hr(),
+          tags$div(
+            class = "legend-item",
+            checkboxInput("show_downstream_buffer",
                           "Survey Extent - Redd/Carcass",
                           value = TRUE),
             # htmltools::HTML(
