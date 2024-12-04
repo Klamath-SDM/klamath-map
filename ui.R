@@ -110,7 +110,7 @@ ui <- fluidPage(
           tags$div(
             class = "legend-item",
             checkboxInput("show_upstream_buffer",
-                          "Survey Extent - Redd/Carcass",
+                          "Survey Extent - Redd/Carcass (Upstream)",
                           value = TRUE),
             # htmltools::HTML(
             #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
@@ -118,10 +118,11 @@ ui <- fluidPage(
             p(class = "legend-description", "[Placeholder for legend].")
           ),
           hr(),
+          
           tags$div(
             class = "legend-item",
             checkboxInput("show_downstream_buffer",
-                          "Survey Extent - Redd/Carcass",
+                          "Survey Extent - Redd/Carcass (Downstream)",
                           value = TRUE),
             # htmltools::HTML(
             #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"

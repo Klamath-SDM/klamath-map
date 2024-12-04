@@ -1,10 +1,7 @@
 ---
 title: "Klamath Basin Flow Gage EDA"
 output: 
-  html_document:
-    toc_depth: 2
-    theme: flatly
-    code_folding: hide
+  github_document
 ---
 
 ```{r, include = FALSE}
@@ -30,11 +27,9 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
 )
 ```
 
-## Define Geographic Extent 
+USGS flow gage exploration - Klamath River Basin
 
 ## Pull Gage Data  
-
-## Compare Gage Sources
 
 
 ## Main stream Klamath
@@ -45,7 +40,7 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
   - 11523000 - Klamath River A Orleans 
   - 11530500 - Klamath River Near Klamath (Furthest Downstream)
   
-```{r}
+```{r, include=FALSE}
 kr_at_keno_or <- dataRetrieval::readNWISdv(11509500, "00060", startDate = "1950-01-01") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
@@ -123,9 +118,10 @@ all_kalamth_usgs_gages <- bind_rows(kr_at_keno_or, kr_blw_powerplant, kr_blw_ior
                                     kr_at_orleans, kr_nr_klamath) |> 
   glimpse()
 ```
-### Map Plot Klamath USGS Gages
 
-```{r}
+
+```{r include=FALSE}
+### Map Plot Klamath USGS Gages
 # Filter to keep only one unique gage per location
 klmath_gage_dates <- all_kalamth_usgs_gages |> 
   group_by(gage_number) |> 
@@ -137,7 +133,10 @@ unique_gage_data_kl <- all_kalamth_usgs_gages |>
 
 unique_gage_sf <- unique_gage_data_kl |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+
+```{r eval=FALSE, include=FALSE}
 leaflet(unique_gage_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
@@ -145,20 +144,25 @@ leaflet(unique_gage_sf) |>
 
 ### Date coverage
 
-```{r}
+```{r, echo=FALSE}
 all_kalamth_usgs_gages |> ggplot(aes(x = date, y = value, color = as.character(gage_number))) + 
   geom_line() + 
   scale_color_manual(values = colors_full) +
   facet_wrap(~gage_number) +
-  theme_minimal()
+  theme_minimal() +
+  labs(title = "Flow vs Date by Gage Number",
+       y = "Flow")
 
 
 all_kalamth_usgs_gages |> 
   ggplot(aes(x = date, y = value, color = gage_number)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) +
-  theme_minimal()
+  theme_minimal() +
+  labs(title = "Flow vs Date - all Gages",
+       y = "Flow")
 ```
+
 ### Date range summary
 
 ```{r, echo=FALSE}
@@ -343,9 +347,10 @@ all_trinity_usgs_gages <- bind_rows(tr_sf, tr_hoopa, tr_ab_coffee, tr_lewiston, 
   glimpse()
 ```
 
-### Map Plot Trinity USGS Gages
 
-```{r}
+
+```{r, include=FALSE}
+### Map Plot Trinity USGS Gages
 # Filter to keep only one unique gage per location
 
 gage_dates <- all_trinity_usgs_gages |> 
@@ -359,16 +364,20 @@ unique_gage_trinity <- all_trinity_usgs_gages |>
 
 unique_gage_tr <- unique_gage_trinity |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+
+```{r eval=FALSE, include=FALSE}
 leaflet(unique_gage_tr) |> 
   addTiles() |> 
     addCircleMarkers(
     popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date)
   )
 ```
+
 ### Date coverage per gage
 
-```{r}
+```{r, echo=FALSE}
 all_trinity_usgs_gages |> ggplot(aes(x = year(date), y = value, color = gage_number)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) +
@@ -392,7 +401,7 @@ date_range_summary_trinity <- all_trinity_usgs_gages |>
 ## Scott
 
   - 11519500 SCOTT R NR FORT JONES CA
-```{r}
+```{r, include=FALSE}
 scott <- dataRetrieval::readNWISdv(11519500, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
@@ -407,9 +416,8 @@ scott <- dataRetrieval::readNWISdv(11519500, "00060") |>
 
 ```
 
-### Map Plot Scott USGS
 
-```{r}
+```{r, echo=FALSE}
 scott_usgs_dates <- scott |> 
   group_by(gage_number) |> 
   summarise(min_date = min(date), max_date = max(date))
@@ -421,7 +429,11 @@ unique_gage_scott<- scott |>
 
 unique_gage_scott_sf <- unique_gage_scott |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+
+```{r eval=FALSE, include=FALSE}
+### Map Plot Scott USGS
 leaflet(unique_gage_scott_sf) |> 
   addTiles() |> 
     addCircleMarkers(
@@ -434,7 +446,7 @@ leaflet(unique_gage_scott_sf) |>
   - Shasta R NR Montague CA - 11517000
   - Shasta R NR Yreka CA - 11517500
   
-```{r}
+```{r, include=FALSE}
 shasta_mont <- dataRetrieval::readNWISdv(11517000, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
@@ -463,9 +475,9 @@ all_usgs_shasta <- bind_rows(shasta_mont, shasta_yreka) |>
   glimpse()
 ```
 
-### Map Plot Shasta USGS
 
-```{r}
+
+```{r, include=FALSE}
 shasta_usgs_dates <- all_usgs_shasta |> 
   group_by(gage_number) |> 
   summarise(min_date = min(date), max_date = max(date))
@@ -477,7 +489,11 @@ unique_gage_shasta<- all_usgs_shasta |>
 
 unique_gage_shas_sf <- unique_gage_shasta |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+
+```{r eval=FALSE, include=FALSE}
+### Map Plot Shasta USGS
 leaflet(unique_gage_shas_sf) |> 
   addTiles() |> 
     addCircleMarkers(
@@ -487,7 +503,7 @@ leaflet(unique_gage_shas_sf) |>
 
 ### Date coverage plot
 
-```{r}
+```{r, echo=FALSE}
 all_usgs_shasta |> ggplot(aes(x = year(date), y = value, color = gage_number)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) +
@@ -512,7 +528,7 @@ date_range_summary_shasta <- all_usgs_shasta |>
 
   - 11522500 SALMON R A SOMES BAR CA
   
-```{r}
+```{r, include=FALSE}
 salmon_usgs_gage <- dataRetrieval::readNWISdv(11522500, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
@@ -526,9 +542,8 @@ salmon_usgs_gage <- dataRetrieval::readNWISdv(11522500, "00060") |>
          )
 ```
 
-### Map Plot Salmon USGS
 
-```{r}
+```{r, include=FALSE}
 salmon_gage_dates <- salmon_usgs_gage |> 
   group_by(gage_number) |> 
   summarise(min_date = min(date), max_date = max(date))
@@ -539,7 +554,11 @@ unique_gage_data_salmon <- salmon_usgs_gage |>
 
 unique_gage_data_salmon_sf <- unique_gage_data_salmon |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+
+```{r eval=FALSE, include=FALSE}
+### Map Plot Salmon USGS
 leaflet(unique_gage_data_salmon_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
@@ -547,15 +566,16 @@ leaflet(unique_gage_data_salmon_sf) |>
 
 ### Date coverage plot
 
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 salmon_usgs_gage |> ggplot(aes(x = year(date), y = value)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) 
   theme_minimal()
 ```
+
 ### Date range summary
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 date_range_summary_salmon <- salmon_usgs_gage |> 
   group_by(gage_number) |> 
   summarize(
@@ -568,9 +588,9 @@ date_range_summary_salmon <- salmon_usgs_gage |>
 
 ## Sprague 
 
-Sprague River Near Chiloquin, OR - 11501000
+  * Sprague River Near Chiloquin, OR - 11501000
 
-```{r}
+```{r, include=FALSE}
 sprague_usgs_gage <- dataRetrieval::readNWISdv(11501000, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
@@ -584,9 +604,7 @@ sprague_usgs_gage <- dataRetrieval::readNWISdv(11501000, "00060") |>
          )
 ```
 
-### Map plot Sprague
-
-```{r}
+```{r, include=FALSE}
 sprague_gage_dates <- sprague_usgs_gage |> 
   group_by(gage_number) |> 
   summarise(min_date = min(date), max_date = max(date))
@@ -597,7 +615,11 @@ unique_gage_data_sprague <- sprague_usgs_gage |>
 
 unique_gage_data_sprague_sf <- unique_gage_data_sprague |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+
+```{r eval=FALSE, include=FALSE}
+### Map plot Sprague
 leaflet(unique_gage_data_sprague_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
@@ -605,15 +627,16 @@ leaflet(unique_gage_data_sprague_sf) |>
 
 ### Date coverage plot
 
-```{r, echo=TRUE}
+```{r echo=FALSE}
 sprague_usgs_gage |> ggplot(aes(x = year(date), y = value)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) 
   theme_minimal()
 ```
+
 ### Date range summary
 
-```{r, echo=FALSE}
+```{r echo=FALSE}
 date_range_summary_sprague <- sprague_usgs_gage |> 
   group_by(gage_number) |> 
   summarize(
@@ -631,7 +654,7 @@ List of USGS gages in Klamath watershed:
   - Indian C NR Douglas City CA - 11525670
   - Indian C NR Happy Camp CA - 11521500
   
-```{r}
+```{r, include=FALSE}
 indian_usgs_doug <- dataRetrieval::readNWISdv(11525670, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
@@ -659,9 +682,8 @@ all_indian_usgs_gages <- bind_rows(indian_usgs_doug, indian_usgs_happy) |>
   glimpse()
 ```
 
-### Map Plot Klamath USGS Gages - TODO check on location of this stream 
 
-```{r}
+```{r, echo=FALSE}
 # Filter to keep only one unique gage per location
 indian_gage_dates <- all_indian_usgs_gages |> 
   group_by(gage_number) |> 
@@ -673,14 +695,19 @@ unique_gage_data_indian <- all_indian_usgs_gages |>
 
 unique_gage_indian <- unique_gage_data_indian |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+
+```{r eval=FALSE, include=FALSE}
+### Map Plot Klamath USGS Gages - TODO check on location of this stream 
 leaflet(unique_gage_indian) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
 ```
+
 ### Date coverage
 
-```{r}
+```{r, echo=FALSE}
 all_indian_usgs_gages |> ggplot(aes(x = date, y = value, color = gage_number)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) +
@@ -782,7 +809,6 @@ other_usgs_or7 <- dataRetrieval::readNWISdv(11504290, "00060") |>
 all_or_usgs_gages <- bind_rows(other_usgs_or1, other_usgs_or2, other_usgs_or3, other_usgs_or4, other_usgs_or5, other_usgs_or6, other_usgs_or7) |>
   glimpse()
 ```
-### Map Plot Trinity USGS Gages
 
 ```{r, echo=FALSE}
 # Filter to keep only one unique gage per location
@@ -798,7 +824,11 @@ unique_gage_or <- all_or_usgs_gages |>
 
 unique_gage_or_sf <- unique_gage_or |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+
+```{r eval=FALSE, include=FALSE}
+### Map Plot Trinity USGS Gages
 leaflet(unique_gage_or_sf) |> 
   addTiles() |> 
     addCircleMarkers(
@@ -808,7 +838,7 @@ leaflet(unique_gage_or_sf) |>
 
 ### Date coverage
 
-```{r, include=FALSE}
+```{r, echo=FALSE}
 all_or_usgs_gages |> ggplot(aes(x = date, y = value, color = gage_number)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) +
@@ -829,9 +859,10 @@ date_range_summary_or <- all_or_usgs_gages |>
   glimpse()
 ```
 
-## Combing all streams 
+
 
 ```{r, include=FALSE}
+## Combing all streams 
 kl_basin <- bind_rows(unique_gage_data_kl, unique_gage_trinity, unique_gage_scott, unique_gage_shasta, unique_gage_data_salmon, unique_gage_data_sprague, unique_gage_data_indian, unique_gage_or)
 
 #clean field names
@@ -845,7 +876,7 @@ kl_basin_table <- kl_basin |>
 
 ```
 
-```{r, echo=FALSE}
+```{r eval=FALSE, include=FALSE}
 kl_basin_sf <- kl_basin_table |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
@@ -856,9 +887,10 @@ leaflet(kl_basin_sf) |>
   )
 ```
 
-Save clean table
 
-```{r}
+
+```{r, include=FALSE}
+#Save clean table
 # write.csv(kl_basin_table, "data/
 ```
 
