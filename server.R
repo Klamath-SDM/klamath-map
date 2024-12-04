@@ -102,7 +102,7 @@ shinyServer(function(input, output, session) {
         )
     } else {
       proxy |>
-        clearGroup("Srteams")
+        clearGroup("Streams")
     }
   })
   
