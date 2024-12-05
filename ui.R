@@ -57,10 +57,10 @@ ui <- fluidPage(
         </ul>"
             ),
             p(class = "legend-description", "For more information on Flow data exploration click",
-              tags$a(href = 'https://github.com/Klamath-SDM/KlamathEDA/blob/add-flow-temp-shiny/data-raw/flow_data/explore_flow_gages.Rmd', 
+              tags$a(href = 'https://github.com/Klamath-SDM/klamath-map/blob/add-gages/data-raw/flow_data_exploration/explore_flow_gages.md', 
                      "here", target = "_blank"), 
               ". For more information on Temperature data exploration click",
-              tags$a(href = 'https://github.com/Klamath-SDM/KlamathEDA/blob/add-flow-temp-shiny/data-raw/temperature_data/explore_temp_gages.Rmd', 
+              tags$a(href = 'https://github.com/Klamath-SDM/klamath-map/blob/add-gages/data-raw/temperature_data_exploration/explore_temp_gages.md', 
                      "here", target = "_blank"))
           ),
           
