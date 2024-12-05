@@ -68,6 +68,8 @@ redd_carcass_survey <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   filter(!is.na(downstream_long)) |>
   glimpse()
 
+
+
 # creating buffers to find intersection with stream lines
 upstream_points <- st_as_sf(redd_carcass_survey, coords = c("upstream_long", "upstream_lat"), crs = 4326)
 downstream_points <- st_as_sf(redd_carcass_survey, coords = c("downstream_long", "downstream_lat"), crs = 4326)
@@ -78,6 +80,11 @@ downstream_buffer <- st_buffer(downstream_points, dist = buffer_distance)
 
 # Combine the upstream and downstream buffers into a single buffer
 combined_buffer <- st_union(upstream_buffer, downstream_buffer)
+
+
+# TEST -- 
+redd_test <- st_read("data-raw/redd_suervey_coho_USGWS_test/redd_survey_coho_USFWS.shp")
+redd_test <- st_transform(redd_test, crs = 4326)
 
 
 

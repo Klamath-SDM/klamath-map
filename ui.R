@@ -46,6 +46,10 @@ ui <- fluidPage(
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
           checkboxInput("show_streams", "Klamath Basin Streams", value = TRUE),
           
+          # redd_survey TEST ---
+          checkboxInput("show_redd_test", "Redd Survey Reaches", value = TRUE),
+          
+          
           # Gages and Temperature Loggers
           tags$div(
             class = "legend-item",
@@ -107,30 +111,31 @@ ui <- fluidPage(
           hr(),
           
           # Survey Type
-          tags$div(
-            class = "legend-item",
-            checkboxInput("show_upstream_buffer",
-                          "Survey Extent - Redd/Carcass (Upstream)",
-                          value = TRUE),
-            # htmltools::HTML(
-            #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
-            # ),
-            p(class = "legend-description", "[Placeholder for legend].")
-          ),
-          hr(),
+          # tags$div(
+          #   class = "legend-item",
+          #   checkboxInput("show_upstream_buffer",
+          #                 "Survey Extent - Redd/Carcass (Upstream)",
+          #                 value = TRUE),
+          #   # htmltools::HTML(
+          #   #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
+          #   # ),
+          #   p(class = "legend-description", "[Placeholder for legend].")
+          # ),
+          # hr(),
+          # 
+          # tags$div(
+          #   class = "legend-item",
+          #   checkboxInput("show_downstream_buffer",
+          #                 "Survey Extent - Redd/Carcass (Downstream)",
+          #                 value = TRUE),
+          #   # htmltools::HTML(
+          #   #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
+          #   # ),
+          #   p(class = "legend-description", "[Placeholder for legend].")
+          # ),
+          # hr(),
           
-          tags$div(
-            class = "legend-item",
-            checkboxInput("show_downstream_buffer",
-                          "Survey Extent - Redd/Carcass (Downstream)",
-                          value = TRUE),
-            # htmltools::HTML(
-            #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
-            # ),
-            p(class = "legend-description", "[Placeholder for legend].")
-          ),
-          hr(),
-          
+        
           # USGS Dam Removal Map Layers
           tags$div(
             class = "legend-item",

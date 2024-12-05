@@ -85,6 +85,31 @@ shinyServer(function(input, output, session) {
         clearGroup("Sub-Basin Outline")
     }
   })
+  
+  # TEST ---
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_redd_test) {
+      color_palette <- colorFactor(palette = c("red", "blue", "green", "purple"), domain = redd_test$Label)
+      
+      proxy |>
+        addPolylines(
+          data = redd_test,
+          color = ~color_palette(Label),
+          weight = 2,
+          opacity = 0.8,
+          fillOpacity = 0.2,
+          label = ~paste(Label, "Reach"),
+          popup = ~paste("<em>Reach Temp-name</em><br>", "Reach-Temp Name:", Label),
+          group = "Redd-Test"
+        )
+    } else {
+      proxy |>
+        clearGroup("Redd-Test")
+    }
+  })
+  
+  
   # Observer to manage stream lines
   observe({
     proxy <- leafletProxy("mainMap")
@@ -199,40 +224,43 @@ shinyServer(function(input, output, session) {
   })
   
   # Observer for redd and carcass data
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_upstream_buffer) {
-        proxy |> addPolygons( data = upstream_buffer,
-                              color = "green",
-                              weight = 2,
-                              opacity = 0.8,
-                              fillOpacity = 0.2,
-                              # label = ~paste(NAME, "Basin"),
-                              # popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
-                              group = "Upstream Buffer"
-        )
-    } else {
-      proxy |>
-        clearGroup("Upstream Buffer ")
-    }
-  })
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_downstream_buffer) {
-      proxy |> addPolygons( data = downstream_buffer,
-                            color = "red",
-                            weight = 2,
-                            opacity = 0.8,
-                            fillOpacity = 0.2,
-                            # label = ~paste(NAME, "Basin"),
-                            # popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
-                            group = "Downstream Buffer"
-      )
-    } else {
-      proxy |>
-        clearGroup("Downstream Buffer ")
-    }
-  })
+  # observe({
+  #   proxy <- leafletProxy("mainMap")
+  #   if (input$show_upstream_buffer) {
+  #       proxy |> addPolygons( data = upstream_buffer,
+  #                             color = "green",
+  #                             weight = 2,
+  #                             opacity = 0.8,
+  #                             fillOpacity = 0.2,
+  #                             # label = ~paste(NAME, "Basin"),
+  #                             # popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
+  #                             group = "Upstream Buffer"
+  #       )
+  #   } else {
+  #     proxy |>
+  #       clearGroup("Upstream Buffer ")
+  #   }
+  # })
+  # observe({
+  #   proxy <- leafletProxy("mainMap")
+  #   if (input$show_downstream_buffer) {
+  #     proxy |> addPolygons( data = downstream_buffer,
+  #                           color = "red",
+  #                           weight = 2,
+  #                           opacity = 0.8,
+  #                           fillOpacity = 0.2,
+  #                           # label = ~paste(NAME, "Basin"),
+  #                           # popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
+  #                           group = "Downstream Buffer"
+  #     )
+  #   } else {
+  #     proxy |>
+  #       clearGroup("Downstream Buffer ")
+  #   }
+  # })
+  
+
+  
   
   # Observer for surveyed river extent
   # observe({
