@@ -543,7 +543,7 @@ salmon_usgs_gage <- dataRetrieval::readNWISdv(11522500, "00060") |>
 ```
 
 
-```{r, include=FALSE}
+```{r, include=FALSE, message=FALSE}
 salmon_gage_dates <- salmon_usgs_gage |> 
   group_by(gage_number) |> 
   summarise(min_date = min(date), max_date = max(date))
@@ -566,7 +566,7 @@ leaflet(unique_gage_data_salmon_sf) |>
 
 ### Date coverage plot
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 salmon_usgs_gage |> ggplot(aes(x = year(date), y = value)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) 
@@ -575,7 +575,7 @@ salmon_usgs_gage |> ggplot(aes(x = year(date), y = value)) +
 
 ### Date range summary
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 date_range_summary_salmon <- salmon_usgs_gage |> 
   group_by(gage_number) |> 
   summarize(

@@ -3,10 +3,7 @@ title: "Klamath Basin Flow Gage EDA"
 author: "Badhia Yunes Katz"
 date: "`r Sys.Date()`"
 output: 
-  html_document:
-    toc_depth: 2
-    theme: flatly
-    code_folding: hide
+  github_document
 ---
 
 ```{r, include = FALSE}
@@ -188,7 +185,30 @@ unique_gage_main <- mainsteam |>
 
 unique_gage_main_sf <- unique_gage_main |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+### Date coverage
+
+```{r, echo=FALSE}
+mainsteam |> ggplot(aes(x = date, y = value, color = as.character(gage_number))) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  facet_wrap(~gage_number) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date by Gage Number",
+       y = "Temperature")
+
+
+mainsteam |> 
+  ggplot(aes(x = date, y = value, color = gage_number)) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date - all Gages",
+       y = "Temperature")
+```
+
+```{r eval=FALSE, include=FALSE}
 leaflet(unique_gage_main_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
@@ -238,7 +258,31 @@ unique_gage_trinity <- trinity |>
 
 unique_gage_trinity_sf <- unique_gage_trinity |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+### Date coverage
+
+```{r, echo=FALSE}
+trinity |> ggplot(aes(x = date, y = value, color = as.character(gage_number))) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  facet_wrap(~gage_number) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date by Gage Number",
+       y = "Temperature")
+
+
+trinity |> 
+  ggplot(aes(x = date, y = value, color = gage_number)) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date - all Gages",
+       y = "Temperature")
+```
+
+
+```{r eval=FALSE, include=FALSE}
 leaflet(unique_gage_trinity_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
@@ -374,7 +418,30 @@ unique_gage_kl_lake_data <- kl_lake_temp_points |>
 
 unique_gage_kl_lake_sf <- unique_gage_kl_lake_data |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+### Date coverage
+
+```{r, echo=FALSE}
+kl_lake_temp_points |> ggplot(aes(x = date, y = value, color = as.character(gage_number))) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  facet_wrap(~gage_number) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date by Gage Number",
+       y = "Temperature")
+
+
+kl_lake_temp_points |> 
+  ggplot(aes(x = date, y = value, color = gage_number)) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date - all Gages",
+       y = "Temperature")
+```
+
+```{r eval=FALSE, include=FALSE}
 leaflet(unique_gage_kl_lake_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
@@ -472,11 +539,35 @@ unique_gage_lost_data <- lost_points |>
 
 unique_gage_lost_sf <- unique_gage_lost_data |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+### Date coverage
+
+```{r, echo=FALSE}
+lost_points |> ggplot(aes(x = date, y = value, color = as.character(gage_number))) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  facet_wrap(~gage_number) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date by Gage Number",
+       y = "Temperature")
+
+
+lost_points |> 
+  ggplot(aes(x = date, y = value, color = gage_number)) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date - all Gages",
+       y = "Temperature")
+```
+
+```{r eval=FALSE, include=FALSE}
 leaflet(unique_gage_lost_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
 ```
+
 ### Other streams
 
   - SPRAGUE RIVER NEAR CHILOQUIN, OR	11501000
@@ -607,7 +698,7 @@ sand_ck  <- dataRetrieval::readNWISdv(11492550, "00010") |>
 other_points <- bind_rows(sprague, william, wood, canal, iron_res, link_rv, jackson, irving, link_rv_dam, sand_ck)
 ```
 
-```{r}
+```{r, echo=FALSE}
 other_points_dates <- other_points |> 
   group_by(gage_number) |> 
   summarise(min_date = min(date), max_date = max(date))
@@ -618,15 +709,40 @@ unique_gage_other <- other_points |>
 
 unique_gage_other_sf <- unique_gage_other |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+```
 
+### Date coverage
+
+```{r, echo=FALSE}
+other_points |> ggplot(aes(x = date, y = value, color = as.character(gage_number))) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  facet_wrap(~gage_number) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date by Gage Number",
+       y = "Temperature")
+
+
+other_points |> 
+  ggplot(aes(x = date, y = value, color = gage_number)) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  theme_minimal() +
+  labs(title = "Temperature vs Date - all Gages",
+       y = "Temperature")
+```
+
+
+```{r eval=FALSE, include=FALSE}
 leaflet(unique_gage_other_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
 ```
 
+
+```{r, include=FALSE}
 ### all gages
 
-```{r}
 # binding all points 
 kl_basin_temp <- bind_rows(unique_gage_main, unique_gage_trinity, unique_gage_kl_lake_data, unique_gage_lost_data, unique_gage_other) |> glimpse()
 
@@ -639,7 +755,7 @@ kl_basin_temp_table <- kl_basin_temp |>
   glimpse()
 ```
 
-```{r, echo=FALSE}
+```{r eval=FALSE, include=FALSE}
 kl_basin_temp_sf <- kl_basin_temp_table |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
@@ -651,6 +767,6 @@ leaflet(kl_basin_temp_sf) |>
 ```
 
 Save clean table
-```{r}
-write.csv(kl_basin_temp_table, "shiny/data/temp_data.csv")
+```{r, include=FALSE}
+# write.csv(kl_basin_temp_table, "shiny/data/temp_data.csv")
 ```
