@@ -1,7 +1,8 @@
-Klamath Basin Flow Gage EDA
+Klamath Basin Temperature Gage Exploration
 ================
-Badhia Yunes Katz
-2024-12-04
+Badhia Yunes Katz - FlowWest
+
+USGS Temperature gage exploration - Klamath River Basin
 
 ### Klamath Main Steam
 

@@ -1,5 +1,6 @@
 ---
-title: "Klamath Basin Flow Gage EDA"
+title: "Klamath Basin Flow Gage Exploration"
+author: "Badhia Yunes Katz - FlowWest"
 output: 
   github_document
 ---

@@ -1,7 +1,6 @@
 ---
-title: "Klamath Basin Flow Gage EDA"
-author: "Badhia Yunes Katz"
-date: "`r Sys.Date()`"
+title: "Klamath Basin Temperature Gage Exploration"
+author: "Badhia Yunes Katz - FlowWest"
 output: 
   github_document
 ---
@@ -29,6 +28,8 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
                   "#9986A5", "#EAD3BF", "#AA9486", "#B6854D", "#798E87" # Isle of dogs 2 altered slightly
 )
 ```
+
+USGS Temperature gage exploration - Klamath River Basin
 
 
 ### Klamath Main Steam
