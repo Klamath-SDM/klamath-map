@@ -86,7 +86,8 @@ combined_buffer <- st_union(upstream_buffer, downstream_buffer)
 redd_test <- st_read("data-raw/redd_suervey_coho_USGWS_test/redd_survey_coho_USFWS.shp")
 redd_test <- st_transform(redd_test, crs = 4326)
 
-
+redd_test <- st_read("data-raw/redd_suervey_coho_USGWS/redd_carcass_fall_chinook.shp")
+redd_test <- st_transform(redd_test, crs = 4326)
 
 # survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
 #   clean_names() |>
