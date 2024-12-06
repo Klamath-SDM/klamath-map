@@ -60,44 +60,32 @@ hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |>
   clean_names() |> 
   select(-c(google_earth_location)) 
 
-# Redd and Carcass ----
+# Redd and Carcass Surveys----
 
-redd_carcass_survey <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
+# shapefile 1
+survey_shapefile_1 <- st_read("data-raw/redd_suervey_coho_USGWS/redd_survey_coho_USFWS.shp") 
+survey_shapefile_1 <- st_transform(survey_shapefile_1, crs = 4326) 
+# shapefile 2
+survey_shapefile_2 <- st_read("data-raw/redd_suervey_coho_USGWS/redd_carcass_fall_chinook.shp") |> select(-Shape_Leng)
+survey_shapefile_2 <- st_transform(survey_shapefile_2, crs = 4326)
+# combining shapefiles
+combined_survey_shapefile <- rbind(survey_shapefile_1, survey_shapefile_2)
+
+#metadata
+survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   clean_names() |>
-  select(-c(upstream_rkm, upstream_google_earth, downstream_google_earth, has_holding, has_carcass, had_redd, link)) |>
-  filter(!is.na(downstream_long)) |>
+  select(-c(upstream_google_earth, upstream_rkm, upstream_google_earth, downstream_google_earth, downstream_lat, downstream_long)) |>
+  mutate(Id = id) |> 
+  select(-id) |> 
+  # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |>
+  # filter(!is.na(latitude)) |>
   glimpse()
 
+# join shapefile and metadata
+redd_carcass_survey <- survey_type |> 
+  left_join(combined_survey_shapefile, by = "Id") |> 
+  glimpse()
 
-
-# creating buffers to find intersection with stream lines
-upstream_points <- st_as_sf(redd_carcass_survey, coords = c("upstream_long", "upstream_lat"), crs = 4326)
-downstream_points <- st_as_sf(redd_carcass_survey, coords = c("downstream_long", "downstream_lat"), crs = 4326)
-# Buffer around the upstream and downstream points
-buffer_distance <- 90 
-upstream_buffer <- st_buffer(upstream_points, dist = buffer_distance)
-downstream_buffer <- st_buffer(downstream_points, dist = buffer_distance)
-
-# Combine the upstream and downstream buffers into a single buffer
-combined_buffer <- st_union(upstream_buffer, downstream_buffer)
-
-
-# TEST -- 
-redd_test <- st_read("data-raw/redd_suervey_coho_USGWS_test/redd_survey_coho_USFWS.shp")
-redd_test <- st_transform(redd_test, crs = 4326)
-
-redd_test <- st_read("data-raw/redd_suervey_coho_USGWS/redd_carcass_fall_chinook.shp")
-redd_test <- st_transform(redd_test, crs = 4326)
-
-# survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
-#   clean_names() |>
-#   select(-c(upstream_google_earth, upstream_rkm, upstream_google_earth, downstream_google_earth)) |>
-#   # mutate(latitude = downstream_lat,
-#   #        longitude = downstream_long,
-#   #        adult_survey_type = data_type) |>
-#   # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |>
-#   # filter(!is.na(latitude)) |>
-#   glimpse()
 
 # survey_spatial <- survey_type |>
 #   # rowwise() |>
