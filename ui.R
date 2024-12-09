@@ -145,7 +145,7 @@ ui <- fluidPage(
           tags$div(
               class = "legend-item",
               checkboxInput("show_survey_points", "Redd/Carcass Survey Points", value = TRUE),
-              HTML("<legend-bypass.png' style='width: 20px; height: 20px;' /> Survey Extent")
+              HTML("<li><img src='legend-bypass.png' style='width: 20px; height: 20px;' />Survey Extent")
             ),
 
             hr(),

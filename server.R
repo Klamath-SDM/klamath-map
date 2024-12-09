@@ -127,9 +127,9 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = streams,
           color = "blue",
-          weight = 3,
+          weight = 2,
           opacity = 0.8,
-          fillOpacity = 0.2,
+          fillOpacity = 0.5,
           label = ~paste(Label, "Stream"),
           popup = ~paste("<em>Stream</em><br>", "Stream Name:", Label),
           group = "Streams"
@@ -181,7 +181,7 @@ shinyServer(function(input, output, session) {
           lng = ~longitude, lat = ~latitude,
           icon = ~rst_markers["single"],
           popup = ~paste("<em>RST Trap</em><br>", "Trap Name:", rst_name,
-                         "<br><button onclick='Shiny.setInputValue(\"more_info\", \"", rst_name, "\")'>More Info</button>"),
+                         "<br><button onclick='window.open(\"", link, "\", \"_blank\")'>More Info</button>"),
           label = ~htmltools::HTML("<em>RST Trap</em>"),
           group = "Rotary Screw Traps"
         )
@@ -255,7 +255,9 @@ shinyServer(function(input, output, session) {
       proxy |> addMarkers(data = survey_points, 
                           lng = ~longitude, lat = ~latitude,
                           icon = ~rst_markers["square"],
-                          popup = ~paste("<em>Redd/Carcas Surveys</em><br>", "Survey Type:", data_type),
+                          popup = ~paste("<em>Redd/Carcas Surveys</em><br>", "Survey Type:", data_type, "<br>Survery year(s):", temporal_coverage,
+                                         "<br>Species:", species,
+                                         "<br>Source:", agency),
                           label = ~htmltools::HTML("<em>Redd/Carcas Surveys</em>"), 
                           group = "Redd/Carcas Surveys")
     } else {
@@ -273,6 +275,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
+                         popup = ~paste("<em>Dams to be Removed</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Dams to be Removed</em>"), 
                          group = "Dams to be Removed")
     } else {
@@ -291,6 +295,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
+                         popup = ~paste("<em>Dams</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Dams</em>"), 
                          group = "Dams")
     } else {
@@ -322,6 +328,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
+                         popup = ~paste("<em>Copco Reservoir</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Copco Reservoir</em>"), 
                          group = "Copco Reservoir")
     } else {
@@ -339,6 +347,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
+                         popup = ~paste("<em>Estuary Bed Sediments</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Estuary Bed Sediments</em>"), 
                          group = "Estuary Bed Sediments")
     } else {
@@ -355,6 +365,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
+                         popup = ~paste("<em>JCBoyle Reservoir Bed Sediment Cores</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>JCBoyle Reservoir Bed Sediment Cores</em>"),
                          group = "JCBoyle Reservoir Bed Sediment Cores")
     } else {
@@ -371,6 +383,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
+                         popup = ~paste("<em>Iron Gate Reservoir Bed Sediment Cores</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Iron Gate Reservoir</em>"),
                          group = "Iron Gate Reservoir Bed Sediment Cores")
     } else {
@@ -388,6 +402,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5, 
+                         popup = ~paste("<em>Geomorphic Reaches</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Geomorphic Reaches</em>"),
                          group = "Geomorphic Reaches")
     } else {
@@ -404,7 +420,9 @@ shinyServer(function(input, output, session) {
                          color = "yellow", 
                          fillOpacity = 0.7, 
                          weight = 2, 
-                         radius = 5, 
+                         radius = 5,
+                         popup = ~paste("<em>Sediment Bug Samples</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                    label = ~htmltools::HTML("<em>Sediment Bug Samples</em>"), 
                    group = "Sediment Bug Samples")
     } else {
@@ -422,6 +440,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5, 
+                         popup = ~paste("<em>Stream Gages</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                    label = ~htmltools::HTML("<em>Stream Gages</em>"), 
                    group = "Stream Gages")
     } else {
@@ -439,6 +459,8 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5, 
+                         popup = ~paste("<em>Tributary Fingerprinting Samples</em>",
+                                        "<br>Source: USGS Dam Removal Map"),
                    label = ~htmltools::HTML("<em>Tributary Fingerprinting Samples</em>"),  
                    group = "Tributary Fingerprinting Samples")
     } else {

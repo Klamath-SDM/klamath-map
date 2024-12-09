@@ -60,7 +60,7 @@ hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |>
   select(-c(google_earth_location)) 
 
 # Redd and Carcass Surveys----
-
+# TODO still need to add the lines
 ## Survey Lines
 # shapefile 1
 survey_shapefile_1 <- st_read("data-raw/redd_suervey_coho_USGWS/redd_survey_coho_USFWS.shp") 
