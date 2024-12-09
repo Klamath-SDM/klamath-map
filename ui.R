@@ -46,9 +46,6 @@ ui <- fluidPage(
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
           checkboxInput("show_streams", "Klamath Basin Streams", value = TRUE),
           
-          # redd_survey TEST ---
-          checkboxInput("show_redd_test", "Redd Survey Reaches", value = TRUE),
-          
           
           # Gages and Temperature Loggers
           tags$div(
@@ -135,7 +132,24 @@ ui <- fluidPage(
           # ),
           # hr(),
           
-        
+          # redd_survey lines ---
+          # tags$div(
+          #   class = "legend-item",
+          #   checkboxInput("show_survey_lines", "Redd/Carcass Survey Extent", value = TRUE),
+          #   HTML("<img src='icon-spiral.png' style='width: 20px; height: 20px;' /> Survey Extent")
+          # ),
+          # 
+          # hr(),
+          
+          # redd_survey points ---
+          tags$div(
+              class = "legend-item",
+              checkboxInput("show_survey_points", "Redd/Carcass Survey Points", value = TRUE),
+              HTML("<legend-bypass.png' style='width: 20px; height: 20px;' /> Survey Extent")
+            ),
+
+            hr(),
+          
           # USGS Dam Removal Map Layers
           tags$div(
             class = "legend-item",

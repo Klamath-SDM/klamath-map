@@ -86,29 +86,38 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # TEST ---
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_redd_test) {
-      color_palette <- colorFactor(palette = c("red", "blue", "green", "purple"), domain = redd_test$Label)
-      
-      proxy |>
-        addPolylines(
-          data = redd_test,
-          color = ~color_palette(Label),
-          weight = 2,
-          opacity = 0.8,
-          fillOpacity = 0.2,
-          label = ~paste(Label, "Reach"),
-          popup = ~paste("<em>Reach Temp-name</em><br>", "Reach-Temp Name:", Label),
-          group = "Redd-Test"
-        )
-    } else {
-      proxy |>
-        clearGroup("Redd-Test")
-    }
-  })
   
+  # observe({
+  #   proxy <- leafletProxy("mainMap")
+  #   if (input$show_survey_lines) {
+  #     # Check if geometry is valid
+  #     if (!is.null(survey_lines)) {
+  #       # Create a color palette
+  #       color_palette <- colorFactor(
+  #         palette = c("red", "blue", "green", "purple"), 
+  #         domain = survey_lines$data_type
+  #       )
+  #       
+  #       # Add polylines to the map
+  #       proxy |>
+  #         addPolylines(
+  #           data = survey_lines,
+  #           color = ~color_palette(data_type),
+  #           weight = 2,
+  #           opacity = 0.8,
+  #           label = ~paste(data_type, "Reach"),
+  #           popup = ~paste(
+  #             "<em>Reach Temp-name</em><br>", 
+  #             "Reach-Temp Name:", data_type
+  #           ),
+  #           group = "Redd-Test"
+  #         )
+  #     }
+  #   } else {
+  #     # Clear the group if the checkbox is unchecked
+  #     proxy |> clearGroup("Redd-Test")
+  #   }
+  # })
   
   # Observer to manage stream lines
   observe({
@@ -224,44 +233,7 @@ shinyServer(function(input, output, session) {
   })
   
   # Observer for redd and carcass data
-  # observe({
-  #   proxy <- leafletProxy("mainMap")
-  #   if (input$show_upstream_buffer) {
-  #       proxy |> addPolygons( data = upstream_buffer,
-  #                             color = "green",
-  #                             weight = 2,
-  #                             opacity = 0.8,
-  #                             fillOpacity = 0.2,
-  #                             # label = ~paste(NAME, "Basin"),
-  #                             # popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
-  #                             group = "Upstream Buffer"
-  #       )
-  #   } else {
-  #     proxy |>
-  #       clearGroup("Upstream Buffer ")
-  #   }
-  # })
-  # observe({
-  #   proxy <- leafletProxy("mainMap")
-  #   if (input$show_downstream_buffer) {
-  #     proxy |> addPolygons( data = downstream_buffer,
-  #                           color = "red",
-  #                           weight = 2,
-  #                           opacity = 0.8,
-  #                           fillOpacity = 0.2,
-  #                           # label = ~paste(NAME, "Basin"),
-  #                           # popup = ~paste("<em>Sub-Basin</em><br>", "Sub-Basin Name:", NAME),
-  #                           group = "Downstream Buffer"
-  #     )
-  #   } else {
-  #     proxy |>
-  #       clearGroup("Downstream Buffer ")
-  #   }
-  # })
-  
 
-  
-  
   # Observer for surveyed river extent
   # observe({
   #   proxy <- leafletProxy("mainMap")
@@ -276,6 +248,21 @@ shinyServer(function(input, output, session) {
   #       clearGroup("Survey extent")
   #   }
   # })
+  
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_survey_points) {
+      proxy |> addMarkers(data = survey_points, 
+                          lng = ~longitude, lat = ~latitude,
+                          icon = ~rst_markers["square"],
+                          popup = ~paste("<em>Redd/Carcas Surveys</em><br>", "Survey Type:", data_type),
+                          label = ~htmltools::HTML("<em>Redd/Carcas Surveys</em>"), 
+                          group = "Redd/Carcas Surveys")
+    } else {
+      proxy |>
+        clearGroup("Redd/Carcas Surveys")
+    }
+  })
   
   # Observer for USGS Dam Removal Map
   observe({
@@ -458,7 +445,5 @@ shinyServer(function(input, output, session) {
       proxy |> clearGroup("Tributary Fingerprinting Samples")
     }
   })
-  
-  
 })
 

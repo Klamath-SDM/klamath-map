@@ -24,7 +24,6 @@ temperature <- read_csv(here::here('data-raw', 'temp_data.csv'))
 flow <- read_csv(here::here('data-raw', 'flow_table.csv')) 
   # sf::st_as_sf(coords = c("longitude","latitude"))
 
-# TODO Add in data for the Klamath Basin
 
 # Import RST data
 # rst_trap_locations <- readRDS("data/rst_trap_locations.Rds")
@@ -62,6 +61,7 @@ hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |>
 
 # Redd and Carcass Surveys----
 
+## Survey Lines
 # shapefile 1
 survey_shapefile_1 <- st_read("data-raw/redd_suervey_coho_USGWS/redd_survey_coho_USFWS.shp") 
 survey_shapefile_1 <- st_transform(survey_shapefile_1, crs = 4326) 
@@ -71,10 +71,13 @@ survey_shapefile_2 <- st_transform(survey_shapefile_2, crs = 4326)
 # combining shapefiles
 combined_survey_shapefile <- rbind(survey_shapefile_1, survey_shapefile_2)
 
-#metadata
-survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
+
+#metadata of those on shapefiles
+survey_lines_metadata <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   clean_names() |>
-  select(-c(upstream_google_earth, upstream_rkm, upstream_google_earth, downstream_google_earth, downstream_lat, downstream_long)) |>
+  filter(id >= 1 & id <= 7 | id >= 18 & id <= 20) |> 
+  select(-c(upstream_google_earth, upstream_rkm, downstream_google_earth, 
+            downstream_lat, downstream_long, upstream_lat, upstream_long)) |>
   mutate(Id = id) |> 
   select(-id) |> 
   # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |>
@@ -82,10 +85,23 @@ survey_type <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   glimpse()
 
 # join shapefile and metadata
-redd_carcass_survey <- survey_type |> 
-  left_join(combined_survey_shapefile, by = "Id") |> 
-  glimpse()
+survey_lines <- survey_lines_metadata |> 
+  left_join(combined_survey_shapefile, by = "Id") 
+print(st_crs(combined_survey_shapefile))
+print(st_geometry_type(combined_survey_shapefile))
 
+
+# survey points
+survey_points <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
+  clean_names() |>
+  filter(id >= 14 & id <= 17 | id >= 21 & id <= 27,
+         !is.na(upstream_lat)) |> 
+  select(-c(upstream_google_earth, upstream_rkm, downstream_google_earth, downstream_lat, downstream_long)) |>
+  mutate(Id = id) |> 
+  select(-id) |> 
+  rename(latitude = upstream_lat,
+         longitude = upstream_long) |>
+  glimpse()
 
 # survey_spatial <- survey_type |>
 #   # rowwise() |>
@@ -164,7 +180,8 @@ rst_markers <- iconList(
   "X" = makeIcon("icon-x.png", "icon-x.png", 14, 14, 7, 7),
   "circle-T" = makeIcon("icon-circle-t.png", "icon-circle-t.png", 18, 18, 9, 9),
   "circle-F" = makeIcon("icon-circle-f.png", "icon-circle-f.png", 18, 18, 9, 9),
-  "circle-TF" = makeIcon("icon-circle-tf.png", "icon-circle-tf.png", 18, 18, 9, 9)
+  "circle-TF" = makeIcon("icon-circle-tf.png", "icon-circle-tf.png", 18, 18, 9, 9),
+  "square" = makeIcon("legend-bypass.png", "legend-bypass.png", 18, 18, 9, 9)
 )
 reach_markers <- iconList(
   "001" = makeIcon("icon-circle-001.png", "icon-circle-001.png", 18, 18, 9, 9),
