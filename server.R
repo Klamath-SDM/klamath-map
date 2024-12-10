@@ -276,6 +276,7 @@ shinyServer(function(input, output, session) {
                          weight = 2, 
                          radius = 5,
                          popup = ~paste("<em>Dams to be Removed</em>",
+                                        "<br>Dam Name:", DAM_NAME,
                                         "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Dams to be Removed</em>"), 
                          group = "Dams to be Removed")
@@ -296,6 +297,7 @@ shinyServer(function(input, output, session) {
                          weight = 2, 
                          radius = 5,
                          popup = ~paste("<em>Dams</em>",
+                                        "<br>Dam Name:", DAM_NAME,
                                         "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Dams</em>"), 
                          group = "Dams")
@@ -403,6 +405,7 @@ shinyServer(function(input, output, session) {
                          weight = 2, 
                          radius = 5, 
                          popup = ~paste("<em>Geomorphic Reaches</em>",
+                                        "<br>Name:", Name,
                                         "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Geomorphic Reaches</em>"),
                          group = "Geomorphic Reaches")
@@ -421,7 +424,7 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
-                         popup = ~paste("<em>Sediment Bug Samples</em>",
+                         popup = ~paste("<em>Invertebrate and Bed Sediment Samples</em>",
                                         "<br>Source: USGS Dam Removal Map"),
                    label = ~htmltools::HTML("<em>Sediment Bug Samples</em>"), 
                    group = "Sediment Bug Samples")
