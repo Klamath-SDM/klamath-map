@@ -2,9 +2,7 @@ The goal of this markdown is to have Klamath River basin USGS gages (temperature
 
 
 ```{r, include=FALSE}
-library(googleCloudStorageR)
 library(tidyverse)
-library(SRJPEdata)
 library(lubridate)
 library(sf)
 library(leaflet)

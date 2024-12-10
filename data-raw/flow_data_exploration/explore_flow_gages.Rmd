@@ -12,9 +12,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   comment = "#>", 
   fig.width=8, fig.height=5)
-library(googleCloudStorageR)
 library(tidyverse)
-library(SRJPEdata)
 library(lubridate)
 library(sf)
 library(leaflet)
