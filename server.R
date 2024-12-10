@@ -257,7 +257,11 @@ shinyServer(function(input, output, session) {
                           icon = ~rst_markers["square"],
                           popup = ~paste("<em>Redd/Carcas Surveys</em><br>", "Survey Type:", data_type, "<br>Survery year(s):", temporal_coverage,
                                          "<br>Species:", species,
-                                         "<br>Source:", agency),
+                                         "<br>Source:", agency,
+                                         "<br><button onclick=\"window.open('", 
+                                         ifelse(Id >= 14 & Id <= 17, "klamath_fish_kill_2002.pdf", 
+                                                ifelse(Id >= 21 & Id <= 27, "klamath_spawning_2008.pdf", "#")), 
+                                         "','_blank')\">Most Recent Report</button>"),
                           label = ~htmltools::HTML("<em>Redd/Carcas Surveys</em>"), 
                           group = "Redd/Carcas Surveys")
     } else {
