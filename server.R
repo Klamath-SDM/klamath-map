@@ -84,9 +84,28 @@ shinyServer(function(input, output, session) {
       proxy |>
         clearGroup("Sub-Basin Outline")
     }
-  })
   
-  
+  # Highlight the selected basin if a valid selection is made
+  selected_river <- input$zoom_select_river
+  if (selected_river != "(Default View)" && selected_river %in% sub_basin$NAME) {
+    proxy |>
+      clearGroup("highlight") |>  # Clear previous highlight
+      addPolygons(
+        data = sub_basin[sub_basin$NAME == selected_river, ],  # Filter for selected basin
+        color = "green",  # Highlight color
+        weight = 4,
+        opacity = 1,
+        fillColor = "yellow",
+        fillOpacity = 0.5,
+        label = ~paste(NAME, "Basin"),
+        popup = ~paste("<em>Highlighted Basin</em><br>", "Sub-Basin Name:", NAME),
+        group = "highlight"  # Group for managing the highlight
+      )
+  } else {
+    proxy |>
+      clearGroup("highlight")  # Remove highlight if no valid selection
+  }
+})
   # observe({
   #   proxy <- leafletProxy("mainMap")
   #   if (input$show_survey_lines) {
