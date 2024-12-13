@@ -106,37 +106,69 @@ shinyServer(function(input, output, session) {
       clearGroup("highlight")  # Remove highlight if no valid selection
   }
 })
-  # observe({
-  #   proxy <- leafletProxy("mainMap")
-  #   if (input$show_survey_lines) {
-  #     # Check if geometry is valid
-  #     if (!is.null(survey_lines)) {
-  #       # Create a color palette
-  #       color_palette <- colorFactor(
-  #         palette = c("red", "blue", "green", "purple"), 
-  #         domain = survey_lines$data_type
-  #       )
-  #       
-  #       # Add polylines to the map
-  #       proxy |>
-  #         addPolylines(
-  #           data = survey_lines,
-  #           color = ~color_palette(data_type),
-  #           weight = 2,
-  #           opacity = 0.8,
-  #           label = ~paste(data_type, "Reach"),
-  #           popup = ~paste(
-  #             "<em>Reach Temp-name</em><br>", 
-  #             "Reach-Temp Name:", data_type
-  #           ),
-  #           group = "Redd-Test"
-  #         )
-  #     }
-  #   } else {
-  #     # Clear the group if the checkbox is unchecked
-  #     proxy |> clearGroup("Redd-Test")
-  #   }
-  # })
+  
+  # Redd/Carcass Survey
+  color_palette <- colorFactor(
+    palette = "Set1",  # Use a predefined palette (e.g., "Set1", "Dark2")
+    domain = survey_lines_1$survey_reach_number  # The column to base colors on
+  )
+  
+  observe({
+    proxy <- leafletProxy("mainMap")
+    
+    if (input$show_survey_layers) {
+      # Add polylines 1 to the map
+      proxy |>
+        addPolylines(
+          data = survey_lines_1,
+          color = "orange", 
+          weight = 2.5,
+          opacity = 1,
+          label = ~paste("Adult Survey"),
+          popup = ~paste("<em>Adult Surveys</em><br>", "Survey Type:", data_type,
+                         "<br>Lead Agency:", agency, "<br>Temporal Coverage:", temporal_coverage),
+          group = "Survey Layers"
+        )
+      
+      # Add polylines 2 to the map
+      proxy |>
+        addPolylines(
+          data = survey_lines_2,
+          # color = ~color_palette(survey_reach_number),
+          color = "orange",
+          weight = 2.5,
+          opacity = 1,
+          label = ~paste("Adult Survey"),
+          popup = ~paste("<em>Adult Surveys</em><br>", "Survey Type:", data_type, 
+                         "<br>Survey Reach Number/Name:", survey_reach_number,
+                         "<br>Lead Agency:", agency, "<br>Temporal Coverage:", temporal_coverage),
+          group = "Survey Layers"
+        )
+      
+      # Add survey points to the map
+      proxy |>
+        addMarkers(
+          data = survey_points, 
+          lng = ~longitude, lat = ~latitude,
+          icon = ~rst_markers["square"],
+          popup = ~paste("<em>Redd/Carcass Surveys</em><br>", 
+                         "Survey Type:", data_type, 
+                         "<br>Survey Year(s):", temporal_coverage,
+                         "<br>Species:", species,
+                         "<br>Source:", agency,
+                         "<br><button onclick=\"window.open('", 
+                         ifelse(Id >= 14 & Id <= 17, "klamath_fish_kill_2002.pdf", 
+                                ifelse(Id >= 21 & Id <= 27, "klamath_spawning_2008.pdf", "#")), 
+                         "','_blank')\">Most Recent Report</button>"),
+          label = ~htmltools::HTML("<em>Redd/Carcass Surveys</em>"), 
+          group = "Survey Layers"
+        )
+    } else {
+      # Clear all groups if the checkbox is unchecked
+      proxy |>
+        clearGroup("Survey Layers")
+    }
+  })
   
   # Observer to manage stream lines
   observe({
@@ -268,26 +300,6 @@ shinyServer(function(input, output, session) {
   #   }
   # })
   
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_survey_points) {
-      proxy |> addMarkers(data = survey_points, 
-                          lng = ~longitude, lat = ~latitude,
-                          icon = ~rst_markers["square"],
-                          popup = ~paste("<em>Redd/Carcas Surveys</em><br>", "Survey Type:", data_type, "<br>Survery year(s):", temporal_coverage,
-                                         "<br>Species:", species,
-                                         "<br>Source:", agency,
-                                         "<br><button onclick=\"window.open('", 
-                                         ifelse(Id >= 14 & Id <= 17, "klamath_fish_kill_2002.pdf", 
-                                                ifelse(Id >= 21 & Id <= 27, "klamath_spawning_2008.pdf", "#")), 
-                                         "','_blank')\">Most Recent Report</button>"),
-                          label = ~htmltools::HTML("<em>Redd/Carcas Surveys</em>"), 
-                          group = "Redd/Carcas Surveys")
-    } else {
-      proxy |>
-        clearGroup("Redd/Carcas Surveys")
-    }
-  })
   
   # Observer for USGS Dam Removal Map
   observe({

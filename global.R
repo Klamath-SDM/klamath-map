@@ -60,22 +60,36 @@ hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |>
   select(-c(google_earth_location)) 
 
 # Redd and Carcass Surveys----
-# TODO still need to add the lines
 ## Survey Lines
-# shapefile 1
+# shapefile 1 ---
 survey_shapefile_1 <- st_read("data-raw/redd_suervey_coho_USGWS/redd_survey_coho_USFWS.shp") 
 survey_shapefile_1 <- st_transform(survey_shapefile_1, crs = 4326) 
-# shapefile 2
+#metadata of those on shapefiles
+survey_lines_metadata_1 <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
+  clean_names() |>
+  filter(id >= 1 & id <= 7) |> 
+  select(-c(upstream_google_earth, upstream_rkm, downstream_google_earth, 
+            downstream_lat, downstream_long, upstream_lat, upstream_long)) |>
+  mutate(Id = id) |> 
+  select(-id) |> 
+  # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |>
+  # filter(!is.na(latitude)) |>
+  glimpse()
+# join shapefile and metadata
+survey_lines_1 <- survey_shapefile_1 |> 
+  left_join(survey_lines_metadata_1, by = "Id") 
+
+print(st_crs(survey_shapefile_1))
+print(st_geometry_type(survey_shapefile_1))
+
+
+# shapefile 2 ---
 survey_shapefile_2 <- st_read("data-raw/redd_suervey_coho_USGWS/redd_carcass_fall_chinook.shp") |> select(-Shape_Leng)
 survey_shapefile_2 <- st_transform(survey_shapefile_2, crs = 4326)
-# combining shapefiles
-combined_survey_shapefile <- rbind(survey_shapefile_1, survey_shapefile_2)
-
-
 #metadata of those on shapefiles
-survey_lines_metadata <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
+survey_lines_metadata_2 <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   clean_names() |>
-  filter(id >= 1 & id <= 7 | id >= 18 & id <= 20) |> 
+  filter(id >= 18 & id <= 20) |> 
   select(-c(upstream_google_earth, upstream_rkm, downstream_google_earth, 
             downstream_lat, downstream_long, upstream_lat, upstream_long)) |>
   mutate(Id = id) |> 
@@ -85,10 +99,12 @@ survey_lines_metadata <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   glimpse()
 
 # join shapefile and metadata
-survey_lines <- survey_lines_metadata |> 
-  left_join(combined_survey_shapefile, by = "Id") 
-print(st_crs(combined_survey_shapefile))
-print(st_geometry_type(combined_survey_shapefile))
+# join shapefile and metadata
+survey_lines_2 <- survey_shapefile_2 |> 
+  left_join(survey_lines_metadata_2, by = "Id") 
+
+print(st_crs(survey_shapefile_2))
+print(st_geometry_type(survey_shapefile_2))
 
 
 # survey points

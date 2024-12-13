@@ -133,21 +133,12 @@ ui <- fluidPage(
           # hr(),
           
           # redd_survey lines ---
-          # tags$div(
-          #   class = "legend-item",
-          #   checkboxInput("show_survey_lines", "Redd/Carcass Survey Extent", value = TRUE),
-          #   HTML("<img src='icon-spiral.png' style='width: 20px; height: 20px;' /> Survey Extent")
-          # ),
-          # 
-          # hr(),
-          
-          # redd_survey points ---
           tags$div(
-              class = "legend-item",
-              checkboxInput("show_survey_points", "Redd/Carcass Survey Points", value = TRUE),
-              HTML("<li><img src='legend-bypass.png' style='width: 20px; height: 20px;' />Survey Extent")
-            ),
-
+            class = "legend-item",
+            checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = TRUE),
+            htmltools::HTML("<img src='legend-habitat-2.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey"),
+            htmltools::HTML("<div style='display: block; margin-top: 5px;'><img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey</div>"),
+          ),
             hr(),
           
           # USGS Dam Removal Map Layers
