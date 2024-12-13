@@ -124,11 +124,13 @@ shinyServer(function(input, output, session) {
           color = "orange", 
           weight = 2.5,
           opacity = 1,
-          label = ~paste("Adult Survey"),
-          popup = ~paste("<em>Adult Surveys</em><br>", "Survey Type:", data_type,
-                         "<br>Lead Agency:", agency, "<br>Temporal Coverage:", temporal_coverage),
+          label = ~paste("Redd/Carcass Survey"),
+          popup = ~paste("<em>Redd/Carcass Surveys</em><br>", "Survey Type:", data_type,
+                         "<br>Lead Agency:", agency, "<br>Temporal Coverage:", temporal_coverage,
+                         "<br><button onclick=\"window.open('mainstem_redd_2001_2005.pdf', '_blank')\">Most Recent Report</button>"),
           group = "Survey Layers"
         )
+      
       
       # Add polylines 2 to the map
       proxy |>
@@ -138,10 +140,11 @@ shinyServer(function(input, output, session) {
           color = "orange",
           weight = 2.5,
           opacity = 1,
-          label = ~paste("Adult Survey"),
-          popup = ~paste("<em>Adult Surveys</em><br>", "Survey Type:", data_type, 
+          label = ~paste("Redd/Carcass Survey"),
+          popup = ~paste("<em>Redd/Carcass Surveys</em><br>", "Survey Type:", data_type, 
                          "<br>Survey Reach Number/Name:", survey_reach_number,
-                         "<br>Lead Agency:", agency, "<br>Temporal Coverage:", temporal_coverage),
+                         "<br>Lead Agency:", agency, "<br>Temporal Coverage:", temporal_coverage,
+                         "<br><button onclick=\"window.open('klamath-spawn-update-15nov2024.pdf', '_blank')\">Most Recent Report</button>"),
           group = "Survey Layers"
         )
       
