@@ -17,7 +17,7 @@ library(janitor)
 ###############
 
 ### Klamath basin outline ### ----
-kl_basin_outline <- st_read("data-raw/R8_FAC_Klamath_Basin_WFL1/R8_FAC_Klamath_Basin_WFL1.shp")
+kl_basin_outline <- st_read("data-raw/klamath_basin_outline/R8_FAC_Klamath_Basin_WFL1.shp")
 kl_basin_outline <- st_transform(kl_basin_outline, crs = 4326)
 
 ### Sub-basin boundaries #### ----
@@ -30,9 +30,10 @@ streams <- st_read("data-raw/klamath_basin_river_lines/Merged_Rivers.shp")
 streams <- st_transform(streams, crs = 4326)
 
 ### Temperature and flow data ### ----
-temperature <- read_csv(here::here('data-raw', 'temp_data.csv')) 
+# these csvs were generated on KlamathEDA repo. The csv names were temp_data and flow_table. Names were changed here for consistency
+temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) 
 # sf::st_as_sf(coords = c("longitude","latitude")) 
-flow <- read_csv(here::here('data-raw', 'flow_table.csv')) 
+flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) 
 # sf::st_as_sf(coords = c("longitude","latitude"))
 
 ### RST data ### ----
@@ -56,8 +57,9 @@ hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |>
 
 ### Redd and Carcass Surveys ### ----
 ## Survey Lines
+# These line shapefiles were manually created in arcgis to represent the survey extents
 # shapefile 1 ---
-survey_shapefile_1 <- st_read("data-raw/redd_suervey_coho_USGWS/redd_survey_coho_USFWS.shp") 
+survey_shapefile_1 <- st_read("data-raw/redd_carcass_survey/shapefiles/redd_survey_coho_USFWS.shp") 
 survey_shapefile_1 <- st_transform(survey_shapefile_1, crs = 4326) 
 #metadata of those on shapefiles
 survey_lines_metadata_1 <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
@@ -78,7 +80,7 @@ print(st_crs(survey_shapefile_1))
 print(st_geometry_type(survey_shapefile_1))
 
 # shapefile 2 ---
-survey_shapefile_2 <- st_read("data-raw/redd_suervey_coho_USGWS/redd_carcass_fall_chinook.shp") |> select(-Shape_Leng)
+survey_shapefile_2 <- st_read("data-raw/redd_carcass_survey/shapefiles/redd_carcass_fall_chinook.shp") |> select(-Shape_Leng)
 survey_shapefile_2 <- st_transform(survey_shapefile_2, crs = 4326)
 #metadata of those on shapefiles
 survey_lines_metadata_2 <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
