@@ -31,15 +31,18 @@ streams <- st_transform(streams, crs = 4326)
 
 ### Temperature and flow data ### ----
 # these csvs were generated on KlamathEDA repo. The csv names were temp_data and flow_table. Names were changed here for consistency
-temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) 
+temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) |> 
+  mutate(data_type = "temperature") 
 # sf::st_as_sf(coords = c("longitude","latitude")) 
-flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) 
+flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) |> 
+  mutate(data_type = "flow")
 # sf::st_as_sf(coords = c("longitude","latitude"))
 
 ### RST data ### ----
 rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |> 
-  clean_names() |> 
-  select(rst_name, operator, latitude, longitude, link) |> 
+  clean_names() |>
+  mutate(data_type = "RST data") |>
+  select(data_type, watershed, rst_name, operator, latitude, longitude, link) |>
   glimpse()
 
 ### Habitat extent data ### ----
@@ -149,7 +152,7 @@ fingerprinting <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/
 
  
 # ##################
-# # ICON DEFINITIONS 
+### ICON DEFINITIONS ----
 # ##################
 # 
 rst_markers <- iconList(

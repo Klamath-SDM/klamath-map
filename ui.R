@@ -1,5 +1,6 @@
 library(shiny)
 library(leaflet)
+library(DT)
 
 ui <- fluidPage(
   titlePanel("Klamath SDM Map"),
@@ -207,7 +208,26 @@ ui <- fluidPage(
                           )
       )
     )
+  ),
+
+
+# Data Explorer Tab
+tabPanel(
+  "Data Explorer",
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("data_type", "Select Data Type:",
+                  choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
+      hr()
+    ),
+    mainPanel(
+      DTOutput("data_table")  
+    )
   )
 )
+
 )
-# next steps - add another section to compile literature and their locations 
+  )
+
+# next steps - add action button to table so that when you click it directs you to that data on map
+# add another dropdown to filter by watershed, maybe other ciretia too

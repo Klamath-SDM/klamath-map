@@ -508,5 +508,30 @@ shinyServer(function(input, output, session) {
       proxy |> clearGroup("Tributary Fingerprinting Samples")
     }
   })
+  
+  # Data Explorer
+  observe({
+    data_selected <- input$data_type
+    if (data_selected == "Flow Data") {
+      output$data_table <- renderDT({
+        datatable(flow)  # flow data
+      })
+    } else if (data_selected == "Temperature Data") {
+      output$data_table <- renderDT({
+        datatable(temperature)  # temperature data
+      })
+    } else if (data_selected == "Habitat Data") {
+      output$data_table <- renderDT({
+        datatable(habitat_data)  # habitat data
+      })
+    } else if (data_selected == "RST Data") {
+      output$data_table <- renderDT({
+        datatable(rst_sites)  # RST data
+      })
+    } else {
+      output$data_table <- renderDT({
+        datatable(data.frame())  # Empty table if no data type is selected
+      })
+    }
+  })
 })
-
