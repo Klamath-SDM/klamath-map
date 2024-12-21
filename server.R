@@ -525,34 +525,33 @@ shinyServer(function(input, output, session) {
       data_to_show <- rst_sites
     }
     
-    # Filter data by watershed if needed
+    # watershed dropdown - still need to fix
     if (watershed_selected != "All") {
       data_to_show <- data_to_show[data_to_show$latitude == river_coords[[watershed_selected]][2] & 
                                      data_to_show$longitude == river_coords[[watershed_selected]][1], ]
     }
-    # Render the table with Action column
+    # Action column - still need to fix
     output$data_table <- renderDT({
       data_to_show$Action <- paste('<button class="action-btn" data-latitude="', data_to_show$latitude, '" data-longitude="', data_to_show$longitude, '">Go to Map</button>')
       datatable(data_to_show, escape = FALSE, options = list(
-        scrollY = "400px",  # Set vertical scroll height
-        scrollX = TRUE,     # Allow horizontal scroll if needed
-        paging = TRUE        # Enable paging if table is too large
+        scrollY = "400px",  
+        scrollX = TRUE,     
+        paging = TRUE        
       ))
     })
   })
   
-  # Listen for the click on "Go to Map" button
-  observeEvent(input$data_table_cell_clicked, {
-    # Check if a "Go to Map" button was clicked
-    if (!is.null(input$data_table_cell_clicked)) {
-      selected_row <- input$data_table_cell_clicked$row
-      # Extract latitude and longitude from the selected row
-      selected_lat <- input$data_table_cell_clicked$lat
-      selected_lon <- input$data_table_cell_clicked$lon
-      
-      # Use leafletProxy to zoom to the selected data point on the map
-      leafletProxy("mainMap") %>%
-        setView(lng = selected_lon, lat = selected_lat, zoom = 10)
-    }
-  })
+  # "Go to Map" button
+  # observeEvent(input$data_table_cell_clicked, {
+  #  
+  #   if (!is.null(input$data_table_cell_clicked)) {
+  #     selected_row <- input$data_table_cell_clicked$row
+  # 
+  #     selected_lat <- input$data_table_cell_clicked$latitude
+  #     selected_lon <- input$data_table_cell_clicked$longitude
+  #   
+  #     leafletProxy("mainMap") %>%
+  #       setView(lng = selected_lon, lat = selected_lat, zoom = 10)
+  #   }
+  # })
 })

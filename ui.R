@@ -234,4 +234,4 @@ tabPanel(
   )
 )
 # next steps - add action button to table so that when you click it directs you to that data on map
-# add another dropdown to filter by watershed, maybe other ciretia too
+# add another dropdown to filter by watershed, maybe other criteria too
