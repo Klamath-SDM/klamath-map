@@ -49,6 +49,7 @@ rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |>
 habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
   clean_names() |>
   mutate(longitude = as.numeric(longtidue)) |>
+  rename(watershed = river) |> 
   select(-longtidue) |>
   glimpse()
 

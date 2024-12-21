@@ -218,16 +218,20 @@ tabPanel(
     sidebarPanel(
       selectInput("data_type", "Select Data Type:",
                   choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
+      selectInput("watershed", "Select Watershed:",
+                  choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
       hr()
     ),
-    mainPanel(
-      DTOutput("data_table")  
+   mainPanel(
+          # Wrap the table in a div with a set height
+          div(style = "height: 500px; overflow-y: scroll;",
+              DTOutput("data_table") 
     )
   )
 )
 
 )
   )
-
+)
 # next steps - add action button to table so that when you click it directs you to that data on map
 # add another dropdown to filter by watershed, maybe other ciretia too

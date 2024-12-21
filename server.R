@@ -512,26 +512,47 @@ shinyServer(function(input, output, session) {
   # Data Explorer
   observe({
     data_selected <- input$data_type
+    watershed_selected <- input$watershed
+    
+    data_to_show <- NULL
     if (data_selected == "Flow Data") {
-      output$data_table <- renderDT({
-        datatable(flow)  # flow data
-      })
+      data_to_show <- flow
     } else if (data_selected == "Temperature Data") {
-      output$data_table <- renderDT({
-        datatable(temperature)  # temperature data
-      })
+      data_to_show <- temperature
     } else if (data_selected == "Habitat Data") {
-      output$data_table <- renderDT({
-        datatable(habitat_data)  # habitat data
-      })
+      data_to_show <- habitat_data
     } else if (data_selected == "RST Data") {
-      output$data_table <- renderDT({
-        datatable(rst_sites)  # RST data
-      })
-    } else {
-      output$data_table <- renderDT({
-        datatable(data.frame())  # Empty table if no data type is selected
-      })
+      data_to_show <- rst_sites
+    }
+    
+    # Filter data by watershed if needed
+    if (watershed_selected != "All") {
+      data_to_show <- data_to_show[data_to_show$latitude == river_coords[[watershed_selected]][2] & 
+                                     data_to_show$longitude == river_coords[[watershed_selected]][1], ]
+    }
+    # Render the table with Action column
+    output$data_table <- renderDT({
+      data_to_show$Action <- paste('<button class="action-btn" data-latitude="', data_to_show$latitude, '" data-longitude="', data_to_show$longitude, '">Go to Map</button>')
+      datatable(data_to_show, escape = FALSE, options = list(
+        scrollY = "400px",  # Set vertical scroll height
+        scrollX = TRUE,     # Allow horizontal scroll if needed
+        paging = TRUE        # Enable paging if table is too large
+      ))
+    })
+  })
+  
+  # Listen for the click on "Go to Map" button
+  observeEvent(input$data_table_cell_clicked, {
+    # Check if a "Go to Map" button was clicked
+    if (!is.null(input$data_table_cell_clicked)) {
+      selected_row <- input$data_table_cell_clicked$row
+      # Extract latitude and longitude from the selected row
+      selected_lat <- input$data_table_cell_clicked$lat
+      selected_lon <- input$data_table_cell_clicked$lon
+      
+      # Use leafletProxy to zoom to the selected data point on the map
+      leafletProxy("mainMap") %>%
+        setView(lng = selected_lon, lat = selected_lat, zoom = 10)
     }
   })
 })
