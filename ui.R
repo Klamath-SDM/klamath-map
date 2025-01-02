@@ -17,7 +17,7 @@ ui <- fluidPage(
       
       sidebarLayout(
         sidebarPanel(
-          h5("This map was developed to support the Klamath SDM effort led by US Bureau of Reclamation."),
+          h5("There is a wealth of data about water and ecological resources in the Klamath Basin collected over multiple decades by many entities. The high volume and dispersed nature of these data make it challenging to quickly determine data availability. This map was developed to support the Klamath Basin Science Collaborative by summarizing the data being collected in the Basin."),
           br(),
           
           # Select Input for Zooming to Rivers
@@ -171,12 +171,13 @@ ui <- fluidPage(
         )
       )
 ),
+
    
     # Additional Resources Tab
-    tabPanel(
-      "Additional Resources",
-      tags$div(class = "reference-content",
-               HTML("<p><strong>Additional resources</strong></p>"),
+tabPanel(
+  "Additional Resources",
+  tags$div(class = "reference-content",
+           HTML("<p><strong>Additional resources</strong></p>"),
                tags$ul(
                  tags$li(
                    tags$a(
@@ -190,25 +191,24 @@ ui <- fluidPage(
                      href = "chinook-salmon-migration-timing.pdf",
                      target = "_blank",
                      "Chinook Migration Timing Conceptual Map"
-                   )
-                 ),
+                     )
+                   ),
                  tags$li(
                    tags$a(
                      href = "https://klamathtribeswaterquality.com/reports/",
                      target = "_blank",
                      "The Klamath Tribes Water Quality Report Repository"
-                   )
-               ),
+                     )
+                   ),
                           tags$li(
                             tags$a(
                               href = "flow_model_resources.pdf",
                               target = "_blank",
-                              "Flow Model Resources"
+                              "Flow Model Resources")
                             )
-                          )
-      )
-    )
-  ),
+               )
+               )
+      ),
 
 
 # Data Explorer Tab
@@ -223,15 +223,12 @@ tabPanel(
       hr()
     ),
    mainPanel(
-          # Wrap the table in a div with a set height
-          div(style = "height: 500px; overflow-y: scroll;",
-              DTOutput("data_table") 
-    )
+     div(style = "height: 500px; overflow-y: scroll;",
+         DTOutput("data_table"))
+          )
+   )
   )
 )
-
-)
-  )
 )
 # next steps - add action button to table so that when you click it directs you to that data on map
 # add another dropdown to filter by watershed, maybe other criteria too
