@@ -77,8 +77,7 @@ ui <- fluidPage(
           <li><img src='icon-diamond.png' /> Single Trap</li>
           <li><img src='icon-diamond-stack.png' /> Multiple Traps</li>
         </ul>"
-            ),
-            p(class = "legend-description", "Private rotary screw trap sites are illustrated as general vicinities (half mile radius).")
+            )
           ),
           
           hr(),
