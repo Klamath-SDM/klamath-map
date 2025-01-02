@@ -25,7 +25,7 @@ ui <- fluidPage(
             "zoom_select_river", 
             "Zoom to Basin",
             c(
-              "(Default View)",
+              "(Default View)", sort(c(
               "Williamson",
               "Sprague",
               "Upper Klamath Lake",
@@ -38,7 +38,7 @@ ui <- fluidPage(
               "South Fork Trinity",
               "Lost"
             )
-          ),
+          ))),
           
           hr(),
           
