@@ -46,24 +46,24 @@ shinyServer(function(input, output, session) {
   })
   
   # Observer to manage Klamath Basin outline display
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_basin_outline) {
-      proxy |>
-        addPolygons(
-          data = kl_basin_outline,
-          color = "blue",  
-          weight = 2,     
-          opacity = 0.8,   
-          fillOpacity = 0.2,  
-          label = "Klamath River Basin",
-          group = "Basin Outline"
-        )
-    } else {
-      proxy |>
-        clearGroup("Basin Outline")
-    }
-  })
+  # observe({
+  #   proxy <- leafletProxy("mainMap")
+  #   if (input$show_basin_outline) {
+  #     proxy |>
+  #       addPolygons(
+  #         data = kl_basin_outline,
+  #         color = "blue",  
+  #         weight = 2,     
+  #         opacity = 0.8,   
+  #         fillOpacity = 0.2,  
+  #         label = "Klamath River Basin",
+  #         group = "Basin Outline"
+  #       )
+  #   } else {
+  #     proxy |>
+  #       clearGroup("Basin Outline")
+  #   }
+  # })
   
   # Observer to manage sub-basin outline display
   observe({

@@ -43,7 +43,7 @@ ui <- fluidPage(
           hr(),
           
           # Basin Outline
-          checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = TRUE),
+          # checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = TRUE),
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
           checkboxInput("show_streams", "Klamath Basin Streams", value = TRUE),
           
@@ -144,7 +144,7 @@ ui <- fluidPage(
           # USGS Dam Removal Map Layers
           tags$div(
             class = "legend-item",
-            checkboxInput("show_usgs_dam_layers", "USGS Dam Removal Map Layers", value = TRUE),
+            checkboxInput("show_usgs_dam_layers", "USGS Dam Removal Monitoring Map Layers", value = TRUE),
             conditionalPanel(
               condition = "input.show_usgs_dam_layers == true",
               checkboxInput("show_dams_tb_removed", HTML("<span style='color:red;'>&#9673;</span> Dams to be Removed"), value = TRUE),
