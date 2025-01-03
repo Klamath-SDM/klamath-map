@@ -26,27 +26,26 @@ ui <- fluidPage(
             "Zoom to Basin",
             c(
               "(Default View)", sort(c(
-              "Williamson",
-              "Sprague",
-              "Upper Klamath Lake",
-              "Butte",
-              "Shasta",
-              "Scott",
-              "Lower Klamath",
-              "Salmon",
-              "Trinity",
-              "South Fork Trinity",
-              "Lost"
-            )
-          ))),
+                "Williamson",
+                "Sprague",
+                "Upper Klamath Lake",
+                "Butte",
+                "Shasta",
+                "Scott",
+                "Lower Klamath",
+                "Salmon",
+                "Trinity",
+                "South Fork Trinity",
+                "Lost"
+              )
+              ))),
           
           hr(),
           
           # Basin Outline
-          # checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = TRUE),
+           # checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = TRUE),
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
           checkboxInput("show_streams", "Klamath Basin Streams", value = TRUE),
-          
           
           # Gages and Temperature Loggers
           tags$div(
@@ -54,9 +53,9 @@ ui <- fluidPage(
             checkboxInput("show_temp_loggers", "Gages and Temperature Loggers", value = TRUE),
             HTML(
               "<ul class='legend-list'>
-          <li><img src='icon-circle-f.png' /> USGS flow gage</li>
-          <li><img src='icon-circle-t.png' /> USGS temperature gage</li>
-        </ul>"
+                <li><img src='icon-circle-f.png' /> USGS flow gage</li>
+                <li><img src='icon-circle-t.png' /> USGS temperature gage</li>
+              </ul>"
             ),
             p(class = "legend-description", "For more information on Flow data exploration click",
               tags$a(href = 'https://github.com/Klamath-SDM/klamath-map/blob/add-gages/data-raw/flow_data_exploration/explore_flow_gages.md', 
@@ -74,9 +73,9 @@ ui <- fluidPage(
             checkboxInput("show_rst", "Rotary Screw Traps", value = TRUE),
             HTML(
               "<ul class='legend-list'>
-          <li><img src='icon-diamond.png' /> Single Trap</li>
-          <li><img src='icon-diamond-stack.png' /> Multiple Traps</li>
-        </ul>"
+                <li><img src='icon-diamond.png' /> Single Trap</li>
+                <li><img src='icon-diamond-stack.png' /> Multiple Traps</li>
+              </ul>"
             )
           ),
           
@@ -97,8 +96,8 @@ ui <- fluidPage(
             checkboxInput("show_habitat_data", "Habitat Models", value = TRUE),
             HTML(
               "<ul class='legend-list'>
-          <li><img src='icon-x.png' /> Habitat Data</li>
-        </ul>"
+                <li><img src='icon-x.png' /> Habitat Data</li>
+              </ul>"
             ),
             p(class = "legend-description", "For more detailed data exploration information click",
               tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.md', 
@@ -107,39 +106,15 @@ ui <- fluidPage(
           
           hr(),
           
-          # Survey Type
-          # tags$div(
-          #   class = "legend-item",
-          #   checkboxInput("show_upstream_buffer",
-          #                 "Survey Extent - Redd/Carcass (Upstream)",
-          #                 value = TRUE),
-          #   # htmltools::HTML(
-          #   #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
-          #   # ),
-          #   p(class = "legend-description", "[Placeholder for legend].")
-          # ),
-          # hr(),
-          # 
-          # tags$div(
-          #   class = "legend-item",
-          #   checkboxInput("show_downstream_buffer",
-          #                 "Survey Extent - Redd/Carcass (Downstream)",
-          #                 value = TRUE),
-          #   # htmltools::HTML(
-          #   #   "<img src='legend-habitat-2.png' /> Survey Extent Redd and Carcass Surveys"
-          #   # ),
-          #   p(class = "legend-description", "[Placeholder for legend].")
-          # ),
-          # hr(),
-          
-          # redd_survey lines ---
+          # Redd/Carcass Survey Layers
           tags$div(
             class = "legend-item",
             checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = TRUE),
             htmltools::HTML("<img src='legend-habitat-2.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey"),
-            htmltools::HTML("<div style='display: block; margin-top: 5px;'><img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey</div>"),
+            htmltools::HTML("<div style='display: block; margin-top: 5px;'><img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey</div>")
           ),
-            hr(),
+          
+          hr(),
           
           # USGS Dam Removal Map Layers
           tags$div(
@@ -147,7 +122,7 @@ ui <- fluidPage(
             checkboxInput("show_usgs_dam_layers", "USGS Dam Removal Monitoring Map Layers", value = TRUE),
             conditionalPanel(
               condition = "input.show_usgs_dam_layers == true",
-              checkboxInput("show_dams_tb_removed", HTML("<span style='color:red;'>&#9673;</span> Dams to be Removed"), value = TRUE),
+              checkboxInput("show_dams_tb_removed", HTML("<span style='color:red;'>&#9673;</span> Removed Dams"), value = TRUE),
               checkboxInput("show_dams", HTML("<span style='color:blue;'>&#9673;</span> Existing Dams"), value = TRUE),
               checkboxInput("show_kl_corridor", HTML("<span style='color:green;'>&#9673;</span> Klamath River Corridor"), value = TRUE),
               checkboxInput("show_copco_res", HTML("<span style='color:orange;'>&#9673;</span> Copco Reservoir Bed Sediment Cores"), value = TRUE),
@@ -162,21 +137,20 @@ ui <- fluidPage(
           ),
           p(class = "legend-description", "These layers were sourced from",
             tags$a(href = 'https://ca.water.usgs.gov/apps/klamath-dam-removal-monitoring.html', 
-                   "USGS Dam Removal Monitorning Map", target = "_blank"))
+                   "USGS Dam Removal Monitoring Map", target = "_blank"))
         ),
         
         mainPanel(
           leafletOutput("mainMap")
         )
       )
-),
-
-   
+    ),
+    
     # Additional Resources Tab
-tabPanel(
-  "Additional Resources",
-  tags$div(class = "reference-content",
-           HTML("<p><strong>Additional resources</strong></p>"),
+    tabPanel(
+      "Additional Resources",
+      tags$div(class = "reference-content",
+               HTML("<p><strong>Additional resources</strong></p>"),
                tags$ul(
                  tags$li(
                    tags$a(
@@ -190,44 +164,44 @@ tabPanel(
                      href = "chinook-salmon-migration-timing.pdf",
                      target = "_blank",
                      "Chinook Migration Timing Conceptual Map"
-                     )
-                   ),
+                   )
+                 ),
                  tags$li(
                    tags$a(
                      href = "https://klamathtribeswaterquality.com/reports/",
                      target = "_blank",
                      "The Klamath Tribes Water Quality Report Repository"
-                     )
-                   ),
-                          tags$li(
-                            tags$a(
-                              href = "flow_model_resources.pdf",
-                              target = "_blank",
-                              "Flow Model Resources")
-                            )
+                   )
+                 ),
+                 tags$li(
+                   tags$a(
+                     href = "flow_model_resources.pdf",
+                     target = "_blank",
+                     "Flow Model Resources")
+                 )
                )
-               )
-      ),
-
-
-# Data Explorer Tab
-tabPanel(
-  "Data Explorer",
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("data_type", "Select Data Type:",
-                  choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
-      selectInput("watershed", "Select Watershed:",
-                  choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
-      hr()
+      )
     ),
-   mainPanel(
-     div(style = "height: 500px; overflow-y: scroll;",
-         DTOutput("data_table"))
-          )
-   )
+    
+    # Data Explorer Tab
+    tabPanel(
+      "Data Explorer",
+      sidebarLayout(
+        sidebarPanel(
+          selectInput("data_type", "Select Data Type:",
+                      choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
+          selectInput("watershed", "Select Watershed:",
+                      choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
+          hr()
+        ),
+        mainPanel(
+          div(style = "height: 500px; overflow-y: scroll;",
+              DTOutput("data_table"))
+        )
+      )
+    )
   )
 )
-)
+
 # next steps - add action button to table so that when you click it directs you to that data on map
 # add another dropdown to filter by watershed, maybe other criteria too

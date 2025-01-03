@@ -510,6 +510,9 @@ shinyServer(function(input, output, session) {
   })
   
   # Data Explorer
+  clicked_coords <- reactiveValues(lat = NULL, lng = NULL)
+  
+  # Data Explorer Logic
   observe({
     data_selected <- input$data_type
     watershed_selected <- input$watershed
@@ -525,19 +528,59 @@ shinyServer(function(input, output, session) {
       data_to_show <- rst_sites
     }
     
-    # watershed dropdown - still need to fix
-    if (watershed_selected != "All") {
-      data_to_show <- data_to_show[data_to_show$latitude == river_coords[[watershed_selected]][2] & 
-                                     data_to_show$longitude == river_coords[[watershed_selected]][1], ]
+    if (!is.null(data_to_show) && watershed_selected != "All") {
+      if ("watershed" %in% names(data_to_show)) {
+        data_to_show <- data_to_show[data_to_show$watershed == watershed_selected, ]
+      }
     }
-    # Action column - still need to fix
+    
+    if (is.null(data_to_show) || nrow(data_to_show) == 0) {
+      output$data_table <- renderDT({
+        datatable(data.frame(Message = "No data available for the selected criteria"), options = list(
+          scrollY = "400px",
+          scrollX = TRUE,
+          paging = FALSE
+        ))
+      })
+      return()
+    }
+    
+    # Add Action column
+    data_to_show$Action <- paste(
+      '<button class="action-btn" data-latitude="', data_to_show$latitude, 
+      '" data-longitude="', data_to_show$longitude, '">Go to Map</button>'
+    )
+    
+    # Render the datatable
     output$data_table <- renderDT({
-      data_to_show$Action <- paste('<button class="action-btn" data-latitude="', data_to_show$latitude, '" data-longitude="', data_to_show$longitude, '">Go to Map</button>')
       datatable(data_to_show, escape = FALSE, options = list(
         scrollY = "400px",  
         scrollX = TRUE,     
         paging = TRUE        
       ))
+    })
+  })
+  
+  # Listen for map click events - TODO need to fix button function
+  observeEvent(input$map_click, {
+    req(input$map_click)
+    coords <- strsplit(input$map_click, ",")[[1]]
+    clicked_coords$lat <- as.numeric(coords[1])
+    clicked_coords$lng <- as.numeric(coords[2])
+    
+    leafletProxy("mainMap") |>
+      setView(lng = clicked_coords$lng, lat = clicked_coords$lat, zoom = 12) |>
+      clearGroup("action-highlight") |>
+      addCircleMarkers(
+        lng = clicked_coords$lng,
+        lat = clicked_coords$lat,
+        radius = 10,
+        color = "red",
+        fillColor = "yellow",
+        fillOpacity = 0.8,
+        group = "action-highlight",
+        label = "Selected Location"
+      )
     })
   })
   
@@ -554,4 +597,3 @@ shinyServer(function(input, output, session) {
   #       setView(lng = selected_lon, lat = selected_lat, zoom = 10)
   #   }
   # })
-})
