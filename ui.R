@@ -110,10 +110,10 @@ ui <- fluidPage(
           tags$div(
             class = "legend-item",
             checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = TRUE),
-            htmltools::HTML("<img src='legend-habitat-2.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey"),
-            htmltools::HTML("<div style='display: block; margin-top: 5px;'><img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey</div>")
+            htmltools::HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Reaches"),
+            htmltools::HTML("<div style='display: block; margin-top: 5px;'><img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Points</div>")
           ),
-          
+          # add description of points vs lines
           hr(),
           
           # USGS Dam Removal Map Layers

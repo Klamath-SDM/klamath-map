@@ -121,7 +121,7 @@ shinyServer(function(input, output, session) {
       proxy |>
         addPolylines(
           data = survey_lines_1,
-          color = "red", 
+          color = "purple", 
           weight = 2.5,
           opacity = 1,
           label = ~paste("Redd/Carcass Survey"),
@@ -137,7 +137,7 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = survey_lines_2,
           # color = ~color_palette(survey_reach_number),
-          color = "orange",
+          color = "purple",
           weight = 2.5,
           opacity = 1,
           label = ~paste("Redd/Carcass Survey"),
