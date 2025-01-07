@@ -75,6 +75,7 @@ survey_lines_metadata_1 <- read_csv(here::here('data-raw','redd_carcass.csv')) |
   select(-id) |> 
   # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |>
   # filter(!is.na(latitude)) |>
+  mutate(species = "coho salmon and fall chinook salmon") |>   #adding this for now to include both reaches as one (id 8-13 too)
   glimpse()
 # join shapefile and metadata
 survey_lines_1 <- survey_shapefile_1 |> 
@@ -92,7 +93,8 @@ survey_lines_metadata_2 <- read_csv(here::here('data-raw','redd_carcass.csv')) |
   filter(id >= 18 & id <= 20) |> 
   select(-c(upstream_google_earth, upstream_rkm, downstream_google_earth, 
             downstream_lat, downstream_long, upstream_lat, upstream_long)) |>
-  mutate(Id = id) |> 
+  mutate(Id = id,
+         temporal_coverage = ifelse(temporal_coverage == "Oct 7 - Late Nov/Early Dec 2024", "2024", temporal_coverage)) |> 
   select(-id) |> 
   # select(-c(upstream_lat, upstream_long, downstream_long, downstream_lat, data_type)) |>
   # filter(!is.na(latitude)) |>
@@ -115,6 +117,10 @@ survey_points <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   select(-id) |> 
   rename(latitude = upstream_lat,
          longitude = upstream_long) |>
+  mutate(temporal_coverage = case_when(
+    temporal_coverage == 2002 ~ "2002 fish kill event",
+    TRUE ~ "2008"),
+    agency = "CDFW") |> 
   glimpse()
 
 ### USGS map layers ### ----

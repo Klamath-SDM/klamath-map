@@ -143,7 +143,7 @@ shinyServer(function(input, output, session) {
           label = ~paste("Redd/Carcass Survey"),
           popup = ~paste("<em>Redd/Carcass Surveys</em><br>", "Survey Type:", data_type, 
                          "<br>Survey Reach Number/Name:", survey_reach_number,
-                         "<br>Lead Agency:", agency, "<br>Temporal Coverage:", temporal_coverage,
+                         "<br>Lead Agency:", agency, "<br>Temporal Coverage:", "2001-present (some differences in reaches between years)",
                          "<br><button onclick=\"window.open('klamath-spawn-update-15nov2024.pdf', '_blank')\">Most Recent Report</button>"),
           group = "Survey Layers"
         )
