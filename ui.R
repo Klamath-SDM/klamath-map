@@ -99,7 +99,7 @@ ui <- fluidPage(
                 <li><img src='icon-x.png' /> Habitat Data</li>
               </ul>"
             ),
-            p(class = "legend-description", "For more detailed data exploration information click",
+            p(class = "legend-description", "Some models were aleady developed, some are being developed now. For more detailed data exploration information click",
               tags$a(href = 'https://github.com/Klamath-SDM/Klamath-map/blob/add-gages/data-raw/habitat_summary.md', 
                      "here", target = "_blank"))
           ),
@@ -147,42 +147,42 @@ ui <- fluidPage(
     ),
     
     # Additional Resources Tab
-    tabPanel(
-      "Additional Resources",
-      tags$div(class = "reference-content",
-               HTML("<p><strong>Additional resources</strong></p>"),
-               tags$ul(
-                 tags$li(
-                   tags$a(
-                     href = "klamath_suckers_infographic.pdf",
-                     target = "_blank",
-                     "Suckers Infographic"
-                   )
-                 ),
-                 tags$li(
-                   tags$a(
-                     href = "chinook-salmon-migration-timing.pdf",
-                     target = "_blank",
-                     "Chinook Migration Timing Conceptual Map"
-                   )
-                 ),
-                 tags$li(
-                   tags$a(
-                     href = "https://klamathtribeswaterquality.com/reports/",
-                     target = "_blank",
-                     "The Klamath Tribes Water Quality Report Repository"
-                   )
-                 ),
-                 tags$li(
-                   tags$a(
-                     href = "flow_model_resources.pdf",
-                     target = "_blank",
-                     "Flow Model Resources")
-                 )
-               )
-      )
-    ),
-    
+    # tabPanel(
+    #   "Additional Resources",
+    #   tags$div(class = "reference-content",
+    #            HTML("<p><strong>Additional resources</strong></p>"),
+    #            tags$ul(
+    #              tags$li(
+    #                tags$a(
+    #                  href = "klamath_suckers_infographic.pdf",
+    #                  target = "_blank",
+    #                  "Suckers Infographic"
+    #                )
+    #              ),
+    #              tags$li(
+    #                tags$a(
+    #                  href = "chinook-salmon-migration-timing.pdf",
+    #                  target = "_blank",
+    #                  "Chinook Migration Timing Conceptual Map"
+    #                )
+    #              ),
+    #              tags$li(
+    #                tags$a(
+    #                  href = "https://klamathtribeswaterquality.com/reports/",
+    #                  target = "_blank",
+    #                  "The Klamath Tribes Water Quality Report Repository"
+    #                )
+    #              ),
+    #              tags$li(
+    #                tags$a(
+    #                  href = "flow_model_resources.pdf",
+    #                  target = "_blank",
+    #                  "Flow Model Resources")
+    #              )
+    #            )
+    #   )
+    # ),
+    # 
     # Data Explorer Tab
     tabPanel(
       "Data Explorer",
@@ -190,7 +190,7 @@ ui <- fluidPage(
         sidebarPanel(
           selectInput("data_type", "Select Data Type:",
                       choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
-          selectInput("watershed", "Select Watershed:",
+          selectInput("watershed", "Select Watershed: (pending function)",
                       choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
           hr()
         ),
