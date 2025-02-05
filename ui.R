@@ -188,15 +188,19 @@ ui <- fluidPage(
       "Data Explorer",
       sidebarLayout(
         sidebarPanel(
+          h5("This tab displays summarized tabular data categorized by data type. Additional filtering options (e.g., watershed, agency, etc.) will be available. The 'Go to Map' button will direct users to the location on the map where the selected data row was collected.
+             This section is still in progress and will undergo multiple iterations."),
+          br(),
           selectInput("data_type", "Select Data Type:",
                       choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
-          selectInput("watershed", "Select Watershed: (pending function)",
-                      choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
-          hr()
+          selectInput("watershed", "Select Watershed: (pending)",
+                      choices = c("All")), 
+                                  # "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
+          # hr()
         ),
         mainPanel(
-          div(style = "height: 500px; overflow-y: scroll;",
-              DTOutput("data_table"))
+          # div(style = "height: 800px; width: 100%; overflow-x: auto;",
+              DTOutput("data_table")
         )
       )
     )
