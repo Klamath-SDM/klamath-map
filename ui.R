@@ -53,8 +53,8 @@ ui <- fluidPage(
             checkboxInput("show_temp_loggers", "Gages and Temperature Loggers", value = TRUE),
             HTML(
               "<ul class='legend-list'>
-                <li><img src='icon-circle-f.png' /> USGS flow gage</li>
-                <li><img src='icon-circle-t.png' /> USGS temperature gage</li>
+                <li><img src='icon-circle-f.png' /> Flow gage</li>
+                <li><img src='icon-circle-t.png' /> Temperature gage</li>
               </ul>"
             ),
             p(class = "legend-description", "For more information on Flow data exploration click",

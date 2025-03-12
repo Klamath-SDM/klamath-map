@@ -203,28 +203,29 @@ shinyServer(function(input, output, session) {
           data = flow,
           lng = ~longitude, lat = ~latitude, 
           icon = ~rst_markers["circle-F"],
-          popup = ~paste("<em>Flow Gage</em><br>", "Gage Number:", gage_number, 
-                         "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data,
-                         "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-                         gage_number, "', '_blank')\">Gage Site</button>"),
-          label = ~htmltools::HTML("<em>USGS Flow Gage</em>"),
-          group = "USGS Gages"
+          popup = ~paste("<em>Flow Gage</em><br>", "Gage Number:", gage_id, 
+                         "<br>Agency:", agency,
+                         "<br>Latest Date:", max_date, "<br>Earliest Date:", min_date),
+                         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+                         # gage_number, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>Flow Gage</em>"),
+          group = "Gages"
         ) |> 
         addMarkers(
           data = temperature,
           lng = ~longitude, lat = ~latitude, 
           icon = ~rst_markers["circle-T"],
           popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_id, 
-                         "<br>Agency:", agency),
-                         # "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data,
+                         "<br>Agency:", agency,
+                         "<br>Latest Date:", max_date, "<br>Earliest Date:", min_date),
                          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
                          # gage_id, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>Temperature Gage</em>"),
-          group = "USGS Gages"
+          group = "Gages"
         )
     } else {
       proxy |>
-        clearGroup("USGS Gages")
+        clearGroup("Gages")
     }
   })
   # Observer to manage RST Traps display

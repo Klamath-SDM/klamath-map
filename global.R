@@ -36,9 +36,42 @@ streams <- st_transform(streams, crs = 4326)
 # temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) |> 
 #   mutate(data_type = "temperature") 
 # # sf::st_as_sf(coords = c("longitude","latitude")) 
-flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) |>
-  mutate(data_type = "flow")
+# flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) |>
+#   mutate(data_type = "flow")
 # # sf::st_as_sf(coords = c("longitude","latitude"))
+#wqx
+flow_wqx <- processed_data_board |> 
+  pins::pin_read("flow_wqx") |> glimpse()
+
+flow_gage_wqx <- processed_data_board |> 
+  pins::pin_read("gage_flow_wqx") |> glimpse()
+
+wqx_flow <- flow_wqx |> 
+  inner_join(flow_gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
+  group_by(gage_id, agency, latitude, longitude) |> 
+  summarise(min_date = min(date), max_date = max(date)) |> 
+  glimpse()
+
+#usgs
+flow_usgs <- processed_data_board |> 
+  pins::pin_read("flow_usgs") |> glimpse()
+
+gage_flow_usgs <- processed_data_board |> 
+  pins::pin_read("gage_flow_usgs") |> glimpse()
+
+all_flow_usgs <- flow_usgs |> 
+  inner_join(gage_flow_usgs, by = c("gage_id", "gage_name", "stream")) |> 
+  mutate(gage_id = as.character(gage_id)) |> 
+  group_by(gage_id, agency, latitude, longitude) |> 
+  summarise(min_date = min(date), max_date = max(date)) |> 
+  glimpse()
+
+
+flow <- bind_rows(all_flow_usgs, wqx_flow) |> 
+  mutate(data_type = "flow") |> 
+  filter(!is.na(longitude)) |> 
+  # st_as_sf(coords = c("longitude","latitude")) |> 
+  glimpse()
 
 # Pulling data from AWS processed data
 #wqx
