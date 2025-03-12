@@ -214,11 +214,12 @@ shinyServer(function(input, output, session) {
           data = temperature,
           lng = ~longitude, lat = ~latitude, 
           icon = ~rst_markers["circle-T"],
-          popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_number, 
-                         "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data,
-                         "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-                         gage_number, "', '_blank')\">Gage Site</button>"),
-          label = ~htmltools::HTML("<em>USGS Temperature Gage</em>"),
+          popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_id, 
+                         "<br>Agency:", agency),
+                         # "<br>Latest Date:", latest_data, "<br>Earliest Date:", earliest_data,
+                         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+                         # gage_id, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>Temperature Gage</em>"),
           group = "USGS Gages"
         )
     } else {

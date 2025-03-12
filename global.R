@@ -11,6 +11,8 @@ library(janitor)
 
 #readRenviron(".Renviron")
 
+# Set up aws bucket
+processed_data_board <- pins::board_s3(bucket = "klamath-sdm", region = "us-east-1", prefix = "water_quality/processed-data/")
 
 ###############
 # DATA IMPORTS 
@@ -31,12 +33,48 @@ streams <- st_transform(streams, crs = 4326)
 
 ### Temperature and flow data ### ----
 # these csvs were generated on KlamathEDA repo. The csv names were temp_data and flow_table. Names were changed here for consistency
-temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) |> 
-  mutate(data_type = "temperature") 
-# sf::st_as_sf(coords = c("longitude","latitude")) 
-flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) |> 
+# temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) |> 
+#   mutate(data_type = "temperature") 
+# # sf::st_as_sf(coords = c("longitude","latitude")) 
+flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) |>
   mutate(data_type = "flow")
-# sf::st_as_sf(coords = c("longitude","latitude"))
+# # sf::st_as_sf(coords = c("longitude","latitude"))
+
+# Pulling data from AWS processed data
+#wqx
+temperature_wqx <- processed_data_board |> 
+  pins::pin_read("temperature_wqx") 
+
+gage_wqx <- processed_data_board |> 
+  pins::pin_read("gage_temperature_wqx")
+
+wqx_temp <- temperature_wqx |> 
+  inner_join(gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
+  group_by(gage_id, agency, latitude, longitude) |> 
+  summarise(min_date = min(date), max_date = max(date)) |> 
+  glimpse()
+
+#usgs
+temperature_usgs <- processed_data_board |> 
+  pins::pin_read("temperature_usgs") 
+
+gage_usgs <- processed_data_board |> 
+  pins::pin_read("gage_temperature_usgs") 
+
+usgs_temp <- temperature_usgs |> 
+  inner_join(gage_usgs, by = c("gage_id", "gage_name", "stream")) |> 
+  mutate(gage_id = as.character(gage_id)) |> 
+  group_by(gage_id, agency, latitude, longitude) |> 
+  summarise(min_date = min(date), max_date = max(date)) |> 
+  glimpse()
+
+
+temperature <- bind_rows(usgs_temp, wqx_temp) |> 
+    mutate(data_type = "temperature") |> 
+  filter(!is.na(longitude)) |> 
+  # st_as_sf(coords = c("longitude","latitude")) |> 
+  glimpse()
+
 
 ### RST data ### ----
 rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |> 
