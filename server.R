@@ -194,10 +194,10 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # Observer to manage temperature and flow gages display
+  
   observe({
     proxy <- leafletProxy("mainMap") 
-    if (input$show_temp_loggers) {
+    if (input$show_water_quality && input$show_flow_gages) {
       proxy |> 
         addMarkers(
           data = flow,
@@ -209,8 +209,17 @@ shinyServer(function(input, output, session) {
                          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
                          # gage_number, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>Flow Gage</em>"),
-          group = "Gages"
-        ) |> 
+          group = "flow") 
+    } else {
+      proxy |>
+        clearGroup("flow")
+    }
+  })
+  
+  observe({
+    proxy <- leafletProxy("mainMap") 
+    if (input$show_water_quality && input$show_temp_gages) {
+      proxy |> 
         addMarkers(
           data = temperature,
           lng = ~longitude, lat = ~latitude, 
@@ -221,11 +230,11 @@ shinyServer(function(input, output, session) {
                          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
                          # gage_id, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>Temperature Gage</em>"),
-          group = "Gages"
+          group = "temperature"
         )
     } else {
       proxy |>
-        clearGroup("Gages")
+        clearGroup("temperature")
     }
   })
   # Observer to manage RST Traps display

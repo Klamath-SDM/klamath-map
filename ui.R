@@ -47,23 +47,34 @@ ui <- fluidPage(
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
           checkboxInput("show_streams", "Klamath Basin Streams", value = TRUE),
           
-          # Gages and Temperature Loggers
+          # Water Quality
           tags$div(
             class = "legend-item",
-            checkboxInput("show_temp_loggers", "Gages and Temperature Loggers", value = TRUE),
-            HTML(
-              "<ul class='legend-list'>
-                <li><img src='icon-circle-f.png' /> Flow gage</li>
-                <li><img src='icon-circle-t.png' /> Temperature gage</li>
-              </ul>"
-            ),
-            p(class = "legend-description", "For more information on Flow data exploration click",
-              tags$a(href = 'https://github.com/Klamath-SDM/klamath-map/blob/add-gages/data-raw/flow_data_exploration/explore_flow_gages.md', 
-                     "here", target = "_blank"), 
-              ". For more information on Temperature data exploration click",
-              tags$a(href = 'https://github.com/Klamath-SDM/klamath-map/blob/add-gages/data-raw/temperature_data_exploration/explore_temp_gages.md', 
-                     "here", target = "_blank"))
+            checkboxInput("show_water_quality", "Water Quality", value = TRUE),
+            conditionalPanel(
+              condition = "input.show_water_quality == true", 
+              checkboxInput("show_temp_gages", HTML("<li><img src='icon-circle-t.png' /> Temperature gage</li>"), value = TRUE),
+              checkboxInput("show_flow_gages", HTML("<li><img src='icon-circle-f.png' /> Flow gage</li>"), value = TRUE)
+            )
           ),
+          
+          p(class = "legend-description", "Legend here"),
+          
+              
+          #                    
+          #   HTML(
+          #     "<ul class='legend-list'>
+          #       <li><img src='icon-circle-f.png' /> Flow gage</li>
+          #       <li><img src='icon-circle-t.png' /> Temperature gage</li>
+          #     </ul>"
+          #   ),
+          #   p(class = "legend-description", "For more information on Flow data exploration click",
+          #     tags$a(href = 'https://github.com/Klamath-SDM/klamath-map/blob/add-gages/data-raw/flow_data_exploration/explore_flow_gages.md', 
+          #            "here", target = "_blank"), 
+          #     ". For more information on Temperature data exploration click",
+          #     tags$a(href = 'https://github.com/Klamath-SDM/klamath-map/blob/add-gages/data-raw/temperature_data_exploration/explore_temp_gages.md', 
+          #            "here", target = "_blank"))
+          # ),
           
           hr(),
           
@@ -194,7 +205,7 @@ ui <- fluidPage(
           selectInput("data_type", "Select Data Type:",
                       choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
           selectInput("watershed", "Select Watershed: (pending)",
-                      choices = c("All")), 
+                      choices = c("All"))
                                   # "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
           # hr()
         ),
