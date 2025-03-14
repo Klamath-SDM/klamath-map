@@ -54,7 +54,9 @@ ui <- fluidPage(
             conditionalPanel(
               condition = "input.show_water_quality == true", 
               checkboxInput("show_temp_gages", HTML("<li><img src='icon-circle-t.png' /> Temperature gage</li>"), value = TRUE),
-              checkboxInput("show_flow_gages", HTML("<li><img src='icon-circle-f.png' /> Flow gage</li>"), value = TRUE)
+              checkboxInput("show_flow_gages", HTML("<li><img src='icon-circle-f.png' /> Flow gage</li>"), value = TRUE),
+              checkboxInput("show_do_gages", HTML("<li><tint> DO gage</li>"), value = TRUE)
+              # checkboxInput("show_ph_gages", HTML("<li><tint> pH gage</li>"), value = TRUE)
             )
           ),
           

@@ -237,6 +237,50 @@ shinyServer(function(input, output, session) {
         clearGroup("temperature")
     }
   })
+  
+  observe({
+    proxy <- leafletProxy("mainMap") 
+    if (input$show_water_quality && input$show_do_gages) {
+      proxy |> 
+        addAwesomeMarkers(
+          data = do,
+          lng = ~longitude, lat = ~latitude, 
+          icon = do_icon,
+          popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_id, 
+                         "<br>Agency:", agency,
+                         "<br>Latest Date:", max_date, "<br>Earliest Date:", min_date),
+          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+          # gage_id, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>Dissolved Oxygen Gage</em>"),
+          group = "dissolved oxygen"
+        )
+    } else {
+      proxy |>
+        clearGroup("dissolved oxygen")
+    }
+  })
+  
+  # observe({
+  #   proxy <- leafletProxy("mainMap") 
+  #   if (input$show_water_quality && input$show_ph_gages) {
+  #     proxy |> 
+  #       addAwesomeMarkers(
+  #         data = ph,
+  #         lng = ~longitude, lat = ~latitude, 
+  #         icon = ph_icon,
+  #         popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_id, 
+  #                        "<br>Agency:", agency,
+  #                        "<br>Latest Date:", max_date, "<br>Earliest Date:", min_date),
+  #         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+  #         # gage_id, "', '_blank')\">Gage Site</button>"),
+  #         label = ~htmltools::HTML("<em>pH Gage</em>"),
+  #         group = "pH"
+  #       )
+  #   } else {
+  #     proxy |>
+  #       clearGroup("pH")
+  #   }
+  # })
   # Observer to manage RST Traps display
   observe({
     if (input$show_rst) {
