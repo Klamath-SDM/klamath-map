@@ -92,7 +92,7 @@ ui <- fluidPage(
       <ul class='legend-list'>
         <span><img src='icon-diamond.png' /> Single Trap</span>
         <li><span><img src='icon-diamond-stack.png' /> Multiple Traps</span>
-      </ul></li>"), value = TRUE),
+      </ul>g</li>"), value = TRUE),
               
               checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = TRUE),
               
