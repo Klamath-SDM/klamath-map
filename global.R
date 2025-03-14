@@ -108,7 +108,7 @@ temperature <- bind_rows(usgs_temp, wqx_temp) |>
   # st_as_sf(coords = c("longitude","latitude")) |> 
   glimpse()
 
-### DO and pH ### ----
+### DO and pH ----
 # Pulling data from AWS processed data
 #wqx
 do_wqx <- processed_data_board |> 
@@ -117,24 +117,64 @@ do_wqx <- processed_data_board |>
 gage_wqx <- processed_data_board |> 
   pins::pin_read("gage_do_wqx") |> glimpse()
 
-do <- do_wqx |> 
+wqx_do <- do_wqx |> 
   inner_join(gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
   group_by(gage_id, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   glimpse()
 
 #usgs
-# do_usgs <- processed_data_board |> 
-#   pins::pin_read("do_usgs") |> glimpse()
-# 
-# gage_ph_usgs <- processed_data_board |> 
-#   pins::pin_read("gage_ph_usgs") |> glimpse()
-# 
-# do <- do_wqx |> 
-#   inner_join(gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
-#   group_by(gage_id, agency, latitude, longitude) |> 
-#   summarise(min_date = min(date), max_date = max(date)) |> 
-#   glimpse()
+do_usgs <- processed_data_board |>
+  pins::pin_read("do_usgs") |> glimpse()
+
+gage_do_usgs <- processed_data_board |>
+  pins::pin_read("gage_do_usgs") |> glimpse()
+
+usgs_do <- do_usgs |>
+  inner_join(gage_do_usgs, by = c("gage_id", "gage_name", "stream")) |>
+  mutate(gage_id = as.character(gage_id)) |> 
+  group_by(gage_id, agency, latitude, longitude) |>
+  summarise(min_date = min(date), max_date = max(date)) |>
+  glimpse()
+# binding usgs and wqx
+do <- bind_rows(usgs_do, wqx_do) |> 
+  mutate(data_type = "dissolved oxygen") |> 
+  filter(!is.na(longitude)) |> 
+  # st_as_sf(coords = c("longitude","latitude")) |> 
+  glimpse()
+
+## pH data
+#wqx
+ph_wqx <- processed_data_board |> 
+  pins::pin_read("ph_wqx") |> glimpse()
+
+gage_ph_wqx <- processed_data_board |> 
+  pins::pin_read("gage_ph_wqx") |> glimpse()
+
+wqx_ph <- ph_wqx |> 
+  inner_join(gage_ph_wqx, by = c("gage_id", "gage_name", "stream")) |> 
+  group_by(gage_id, agency, latitude, longitude) |> 
+  summarise(min_date = min(date), max_date = max(date)) |> 
+  glimpse()
+#usgs
+ph_usgs <- processed_data_board |>
+  pins::pin_read("ph_usgs") |> glimpse()
+
+gage_ph_usgs <- processed_data_board |>
+  pins::pin_read("gage_ph_usgs") |> glimpse()
+
+usgs_ph <- ph_usgs |>
+  inner_join(gage_ph_usgs, by = c("gage_id", "gage_name", "stream")) |>
+  mutate(gage_id = as.character(gage_id)) |> 
+  group_by(gage_id, agency, latitude, longitude) |>
+  summarise(min_date = min(date), max_date = max(date)) |>
+  glimpse()
+# binding usgs and wqx
+ph <- bind_rows(usgs_ph, wqx_ph) |> 
+  mutate(data_type = "ph") |> 
+  filter(!is.na(longitude)) |> 
+  # st_as_sf(coords = c("longitude","latitude")) |> 
+  glimpse()
 
 ### RST data ### ----
 rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |> 
@@ -283,33 +323,17 @@ reach_markers <- iconList(
   "111" = makeIcon("icon-circle-111.png", "icon-circle-111.png", 18, 18, 9, 9)
 )
 
-# wq_markers <- iconList(
-#   "01" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "blue", iconColor = "white"),
-#   "02" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "red", iconColor = "white"),
-#   "03" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "green", iconColor = "white"),
-#   "04" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "orange", iconColor = "white"),
-#   "05" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "purple", iconColor = "white")
-# )
 
 do_icon <- makeAwesomeIcon(
-  icon = "tint",  # "tint" is a water drop symbol
-  library = "fa",  # Use FontAwesome icons
-  markerColor = "blue",  # Change marker color
+  icon = "tint",
+  library = "fa",  
+  markerColor = "blue", 
   iconColor = "white",
   squareMarker = TRUE)
 
 ph_icon <- makeAwesomeIcon(
-  icon = "tint",  # "tint" is a water drop symbol
-  library = "fa",  # Use FontAwesome icons
-  markerColor = "green",  # Change marker color
-  iconColor = "white",
-  squareMarker = TRUE
-)
+  icon = "tint",
+  library = "fa", 
+  markerColor = "green",  
+  iconColor = "white")
 
-# do_markers <- list(
-#   "blue" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "blue", iconColor = "white"),
-#   "red" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "red", iconColor = "white"),
-#   "green" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "green", iconColor = "white"),
-#   "orange" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "orange", iconColor = "white"),
-#   "purple" = makeAwesomeIcon(icon = "tint", library = "fa", markerColor = "purple", iconColor = "white")
-# )

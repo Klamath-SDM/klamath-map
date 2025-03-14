@@ -3,7 +3,7 @@ library(leaflet)
 library(DT)
 
 ui <- fluidPage(
-  titlePanel("Klamath SDM Map"),
+  titlePanel("Klamath Basin Data Viewer"),
   
   # Main Panel with Tabs
   tabsetPanel(
@@ -47,21 +47,23 @@ ui <- fluidPage(
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
           checkboxInput("show_streams", "Klamath Basin Streams", value = TRUE),
           
+          hr(),
           # Water Quality
           tags$div(
             class = "legend-item",
             checkboxInput("show_water_quality", "Water Quality", value = TRUE),
             conditionalPanel(
               condition = "input.show_water_quality == true", 
-              checkboxInput("show_temp_gages", HTML("<li><img src='icon-circle-t.png' /> Temperature gage</li>"), value = TRUE),
-              checkboxInput("show_flow_gages", HTML("<li><img src='icon-circle-f.png' /> Flow gage</li>"), value = TRUE),
-              checkboxInput("show_do_gages", HTML("<li><tint> DO gage</li>"), value = TRUE)
-              # checkboxInput("show_ph_gages", HTML("<li><tint> pH gage</li>"), value = TRUE)
+              checkboxInput("show_temp_gages", HTML("<span><img src='icon-circle-t.png' /> Temperature gage</span>"), value = TRUE),
+              checkboxInput("show_flow_gages", HTML("<span><img src='icon-circle-f.png' /> Flow gage</span>"), value = TRUE),
+              checkboxInput("show_do_gages", HTML("<span><i class='fa fa-tint' style='color: blue; font-size: 16px;'></i> DO gage</span>"), value = TRUE),
+              checkboxInput("show_ph_gages", HTML("<span><i class='fa fa-tint' style='color: green; font-size: 16px;'></i> pH gage</span>"), value = TRUE)
             )
           ),
           
           p(class = "legend-description", "Legend here"),
           
+          hr(),
               
           #                    
           #   HTML(
@@ -78,21 +80,58 @@ ui <- fluidPage(
           #            "here", target = "_blank"))
           # ),
           
-          hr(),
-          
-          # Rotary Screw Traps
+          # # Salmonid Data
           tags$div(
             class = "legend-item",
-            checkboxInput("show_rst", "Rotary Screw Traps", value = TRUE),
-            HTML(
-              "<ul class='legend-list'>
-                <li><img src='icon-diamond.png' /> Single Trap</li>
-                <li><img src='icon-diamond-stack.png' /> Multiple Traps</li>
-              </ul>"
+            checkboxInput("show_salmonid_data", "Salmonid Data", value = TRUE),
+            
+            conditionalPanel(
+              condition = "input.show_salmonid_data == true",
+              
+              checkboxInput("show_rst", HTML("<span>RST Traps</span>
+      <ul class='legend-list'>
+        <span><img src='icon-diamond.png' /> Single Trap</span>
+        <li><span><img src='icon-diamond-stack.png' /> Multiple Traps</span>
+      </ul></li>"), value = TRUE),
+              
+              checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = TRUE),
+              
+              HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Reaches"),
+              
+              HTML("<div style='display: block; margin-top: 5px;'>
+      <img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Points
+    </div>")
             )
-          ),
+            ),
+            
+            p(class = "legend-description", "Legend here"),
+            
+            hr(),
           
-          hr(),
+          # 
+          # # Rotary Screw Traps
+          # tags$div(
+          #   class = "legend-item",
+          #   checkboxInput("show_rst", "Rotary Screw Traps", value = TRUE),
+          #   HTML(
+          #     "<ul class='legend-list'>
+          #       <li><img src='icon-diamond.png' /> Single Trap</li>
+          #       <li><img src='icon-diamond-stack.png' /> Multiple Traps</li>
+          #     </ul>"
+          #   )
+          # ),
+          # 
+          # hr(),
+          # 
+          # # Redd/Carcass Survey Layers
+          # tags$div(
+          #   class = "legend-item",
+          #   checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = TRUE),
+          #   htmltools::HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Reaches"),
+          #   htmltools::HTML("<div style='display: block; margin-top: 5px;'><img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Points</div>")
+          # ),
+          # # add description of points vs lines
+          # hr(),
           
           # Fish Hatcheries
           tags$div(
@@ -119,16 +158,7 @@ ui <- fluidPage(
           
           hr(),
           
-          # Redd/Carcass Survey Layers
-          tags$div(
-            class = "legend-item",
-            checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = TRUE),
-            htmltools::HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Reaches"),
-            htmltools::HTML("<div style='display: block; margin-top: 5px;'><img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Points</div>")
-          ),
-          # add description of points vs lines
-          hr(),
-          
+  
           # USGS Dam Removal Map Layers
           tags$div(
             class = "legend-item",

@@ -244,9 +244,10 @@ shinyServer(function(input, output, session) {
       proxy |> 
         addAwesomeMarkers(
           data = do,
-          lng = ~longitude, lat = ~latitude, 
+          lng = ~jitter(longitude, amount = 0.0020),  
+          lat = ~jitter(latitude, amount = 0.0020), 
           icon = do_icon,
-          popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_id, 
+          popup = ~paste("<em>Dissolved Oxygen Gage</em><br>", "Gage Number:", gage_id, 
                          "<br>Agency:", agency,
                          "<br>Latest Date:", max_date, "<br>Earliest Date:", min_date),
           # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
@@ -260,27 +261,27 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # observe({
-  #   proxy <- leafletProxy("mainMap") 
-  #   if (input$show_water_quality && input$show_ph_gages) {
-  #     proxy |> 
-  #       addAwesomeMarkers(
-  #         data = ph,
-  #         lng = ~longitude, lat = ~latitude, 
-  #         icon = ph_icon,
-  #         popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_id, 
-  #                        "<br>Agency:", agency,
-  #                        "<br>Latest Date:", max_date, "<br>Earliest Date:", min_date),
-  #         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-  #         # gage_id, "', '_blank')\">Gage Site</button>"),
-  #         label = ~htmltools::HTML("<em>pH Gage</em>"),
-  #         group = "pH"
-  #       )
-  #   } else {
-  #     proxy |>
-  #       clearGroup("pH")
-  #   }
-  # })
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_water_quality && input$show_ph_gages) {
+      proxy |>
+        addAwesomeMarkers(
+          data = ph,
+          lng = ~longitude, lat = ~latitude,
+          icon = ph_icon,
+          popup = ~paste("<em>Temperature Gage</em><br>", "Gage Number:", gage_id,
+                         "<br>Agency:", agency,
+                         "<br>Latest Date:", max_date, "<br>Earliest Date:", min_date),
+          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=",
+          # gage_id, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>pH Gage</em>"),
+          group = "pH"
+        )
+    } else {
+      proxy |>
+        clearGroup("pH")
+    }
+  })
   # Observer to manage RST Traps display
   observe({
     if (input$show_rst) {
