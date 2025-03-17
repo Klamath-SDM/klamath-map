@@ -48,7 +48,7 @@ flow_gage_wqx <- processed_data_board |>
 
 wqx_flow <- flow_wqx |> 
   inner_join(flow_gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(gage_id, agency, latitude, longitude) |> 
+  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   glimpse()
 
@@ -62,7 +62,7 @@ gage_flow_usgs <- processed_data_board |>
 all_flow_usgs <- flow_usgs |> 
   inner_join(gage_flow_usgs, by = c("gage_id", "gage_name", "stream")) |> 
   mutate(gage_id = as.character(gage_id)) |> 
-  group_by(gage_id, agency, latitude, longitude) |> 
+  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   glimpse()
 
@@ -83,7 +83,7 @@ gage_wqx <- processed_data_board |>
 
 wqx_temp <- temperature_wqx |> 
   inner_join(gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(gage_id, agency, latitude, longitude) |> 
+  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   glimpse()
 
@@ -97,7 +97,7 @@ gage_usgs <- processed_data_board |>
 usgs_temp <- temperature_usgs |> 
   inner_join(gage_usgs, by = c("gage_id", "gage_name", "stream")) |> 
   mutate(gage_id = as.character(gage_id)) |> 
-  group_by(gage_id, agency, latitude, longitude) |> 
+  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   glimpse()
 
@@ -119,7 +119,7 @@ gage_wqx <- processed_data_board |>
 
 wqx_do <- do_wqx |> 
   inner_join(gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(gage_id, agency, latitude, longitude) |> 
+  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   glimpse()
 
@@ -133,7 +133,7 @@ gage_do_usgs <- processed_data_board |>
 usgs_do <- do_usgs |>
   inner_join(gage_do_usgs, by = c("gage_id", "gage_name", "stream")) |>
   mutate(gage_id = as.character(gage_id)) |> 
-  group_by(gage_id, agency, latitude, longitude) |>
+  group_by(gage_id, gage_name, agency, latitude, longitude) |>
   summarise(min_date = min(date), max_date = max(date)) |>
   glimpse()
 # binding usgs and wqx
@@ -153,7 +153,7 @@ gage_ph_wqx <- processed_data_board |>
 
 wqx_ph <- ph_wqx |> 
   inner_join(gage_ph_wqx, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(gage_id, agency, latitude, longitude) |> 
+  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   glimpse()
 #usgs
@@ -166,7 +166,7 @@ gage_ph_usgs <- processed_data_board |>
 usgs_ph <- ph_usgs |>
   inner_join(gage_ph_usgs, by = c("gage_id", "gage_name", "stream")) |>
   mutate(gage_id = as.character(gage_id)) |> 
-  group_by(gage_id, agency, latitude, longitude) |>
+  group_by(gage_id, gage_name, agency, latitude, longitude) |>
   summarise(min_date = min(date), max_date = max(date)) |>
   glimpse()
 # binding usgs and wqx
