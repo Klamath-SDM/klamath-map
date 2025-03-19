@@ -5,20 +5,62 @@ library(DT)
 ui <- fluidPage(
   tags$head(
     tags$style(HTML("
-      /* Custom Title Panel Styling */
+      /* Apply Helvetica to the entire app */
+       body { 
+    font-family: Helvetica, Arial, sans-serif; 
+    background: linear-gradient(to bottom, #F0F8FF, #004d99);
+
+    background-attachment: fixed; 
+    margin: 0;
+    padding: 0;
+  }
+      
+      /* Title Panel Styling */
       .title-panel {
         font-family: 'Helvetica', sans-serif;  /* Change Font */
         font-size: 30px; /* Change Font Size */
-        font-weight: bold;
+        font-weight: normal;
         color: white;  /* Change Font Color */
         text-align: center;
-        background-color: #004d99;  /* Background Color */
         padding: 20px; /* Adjust Padding */
         border-radius: 8px; /* Rounded Corners */
         box-shadow: 2px 2px 10px rgba(0,0,0,0.2); /* Add Shadow */
         background-image: url('klamath_image.jpg'); /* Background Image */
         background-size: cover;
         background-position: center;
+      }
+      
+      /* Tab Panel Customization */
+      .nav-tabs > li > a {
+        background-color: #f8f9fa; /* Default tab background */
+        color: #333; /* Default tab text color */
+        font-weight: normal;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 8px 8px 0px 0px;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s ease;
+      }
+
+      /* Active Tab Styling */
+      .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #004d99 !important; /* Active tab background */
+        color: white !important; /* Active tab text color */
+        border: 1px solid #004d99 !important;
+      }
+
+      /* Hover Effect on Tabs */
+      .nav-tabs > li > a:hover {
+        background-color: #e0e0e0 !important;
+        color: #000 !important;
+      }
+
+      /* Tab Content Styling */
+      .tab-content {
+        background: white;
+        padding: 20px;
+        border-radius: 0px 8px 8px 8px;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
       }
     "))
   ),
