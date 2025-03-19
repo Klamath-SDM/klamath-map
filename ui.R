@@ -3,7 +3,27 @@ library(leaflet)
 library(DT)
 
 ui <- fluidPage(
-  titlePanel("Klamath Basin Data Viewer"),
+  tags$head(
+    tags$style(HTML("
+      /* Custom Title Panel Styling */
+      .title-panel {
+        font-family: 'Helvetica', sans-serif;  /* Change Font */
+        font-size: 30px; /* Change Font Size */
+        font-weight: bold;
+        color: white;  /* Change Font Color */
+        text-align: center;
+        background-color: #004d99;  /* Background Color */
+        padding: 20px; /* Adjust Padding */
+        border-radius: 8px; /* Rounded Corners */
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2); /* Add Shadow */
+        background-image: url('klamath_image.jpg'); /* Background Image */
+        background-size: cover;
+        background-position: center;
+      }
+    "))
+  ),
+  # Custom Title Panel
+  div(class = "title-panel", "Klamath Basin Data Viewer"),
   
   # Main Panel with Tabs
   tabsetPanel(
