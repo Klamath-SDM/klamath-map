@@ -39,141 +39,71 @@ streams <- st_transform(streams, crs = 4326)
 # flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) |>
 #   mutate(data_type = "flow")
 # # sf::st_as_sf(coords = c("longitude","latitude"))
-#wqx
-flow_wqx <- processed_data_board |> 
-  pins::pin_read("flow_wqx") |> glimpse()
+# flow data
+flow_data <- processed_data_board |> 
+  pins::pin_read("flow_data") |> glimpse()
 
-flow_gage_wqx <- processed_data_board |> 
-  pins::pin_read("gage_flow_wqx") |> glimpse()
+flow_gage <- processed_data_board |> 
+  pins::pin_read("flow_gage") |> glimpse()
 
-wqx_flow <- flow_wqx |> 
-  inner_join(flow_gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
+flow <- flow_data |> 
+  inner_join(flow_gage, by = c("gage_id", "gage_name", "stream")) |> 
   group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
-  glimpse()
-
-#usgs
-flow_usgs <- processed_data_board |> 
-  pins::pin_read("flow_usgs") |> glimpse()
-
-gage_flow_usgs <- processed_data_board |> 
-  pins::pin_read("gage_flow_usgs") |> glimpse()
-
-all_flow_usgs <- flow_usgs |> 
-  inner_join(gage_flow_usgs, by = c("gage_id", "gage_name", "stream")) |> 
-  mutate(gage_id = as.character(gage_id)) |> 
-  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
-  summarise(min_date = min(date), max_date = max(date)) |> 
-  glimpse()
-
-
-flow <- bind_rows(all_flow_usgs, wqx_flow) |> 
   mutate(data_type = "flow") |> 
   filter(!is.na(longitude)) |> 
   # st_as_sf(coords = c("longitude","latitude")) |> 
   glimpse()
 
+
 # Pulling data from AWS processed data
-#wqx
-temperature_wqx <- processed_data_board |> 
-  pins::pin_read("temperature_wqx") |> glimpse()
+# temperature
+temperature_data <- processed_data_board |> 
+  pins::pin_read("temperature_data") |> glimpse()
 
-gage_wqx <- processed_data_board |> 
-  pins::pin_read("gage_temperature_wqx") |> glimpse()
+temperature_gage <- processed_data_board |> 
+  pins::pin_read("temperature_gage") |> glimpse()
 
-wqx_temp <- temperature_wqx |> 
-  inner_join(gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
+temperature <- temperature_data |> 
+  inner_join(temperature_gage, by = c("gage_id", "gage_name", "stream")) |> 
   group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
-  glimpse()
-
-#usgs
-temperature_usgs <- processed_data_board |> 
-  pins::pin_read("temperature_usgs") 
-
-gage_usgs <- processed_data_board |> 
-  pins::pin_read("gage_temperature_usgs") 
-
-usgs_temp <- temperature_usgs |> 
-  inner_join(gage_usgs, by = c("gage_id", "gage_name", "stream")) |> 
-  mutate(gage_id = as.character(gage_id)) |> 
-  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
-  summarise(min_date = min(date), max_date = max(date)) |> 
-  glimpse()
-
-
-temperature <- bind_rows(usgs_temp, wqx_temp) |> 
-    mutate(data_type = "temperature") |> 
+  mutate(data_type = "temperature") |> 
   filter(!is.na(longitude)) |> 
-  # st_as_sf(coords = c("longitude","latitude")) |> 
   glimpse()
+
 
 ### DO and pH ----
 # Pulling data from AWS processed data
-#wqx
-do_wqx <- processed_data_board |> 
-  pins::pin_read("do_wqx") |> glimpse()
 
-gage_wqx <- processed_data_board |> 
-  pins::pin_read("gage_do_wqx") |> glimpse()
+do_data <- processed_data_board |> 
+  pins::pin_read("do_data") |> glimpse()
 
-wqx_do <- do_wqx |> 
-  inner_join(gage_wqx, by = c("gage_id", "gage_name", "stream")) |> 
+do_gage <- processed_data_board |> 
+  pins::pin_read("do_gage") |> glimpse()
+
+do <- do_data |> 
+  inner_join(do_gage, by = c("gage_id", "gage_name", "stream")) |> 
   group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
-  glimpse()
-
-#usgs
-do_usgs <- processed_data_board |>
-  pins::pin_read("do_usgs") |> glimpse()
-
-gage_do_usgs <- processed_data_board |>
-  pins::pin_read("gage_do_usgs") |> glimpse()
-
-usgs_do <- do_usgs |>
-  inner_join(gage_do_usgs, by = c("gage_id", "gage_name", "stream")) |>
-  mutate(gage_id = as.character(gage_id)) |> 
-  group_by(gage_id, gage_name, agency, latitude, longitude) |>
-  summarise(min_date = min(date), max_date = max(date)) |>
-  glimpse()
-# binding usgs and wqx
-do <- bind_rows(usgs_do, wqx_do) |> 
   mutate(data_type = "dissolved oxygen") |> 
   filter(!is.na(longitude)) |> 
-  # st_as_sf(coords = c("longitude","latitude")) |> 
   glimpse()
 
 ## pH data
-#wqx
-ph_wqx <- processed_data_board |> 
-  pins::pin_read("ph_wqx") |> glimpse()
 
-gage_ph_wqx <- processed_data_board |> 
-  pins::pin_read("gage_ph_wqx") |> glimpse()
+ph_data <- processed_data_board |> 
+  pins::pin_read("ph_data") |> glimpse()
 
-wqx_ph <- ph_wqx |> 
-  inner_join(gage_ph_wqx, by = c("gage_id", "gage_name", "stream")) |> 
+do_gage <- processed_data_board |> 
+  pins::pin_read("ph_gage") |> glimpse()
+
+ph <- ph_data |> 
+  inner_join(do_gage, by = c("gage_id", "gage_name", "stream")) |> 
   group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
-  glimpse()
-#usgs
-ph_usgs <- processed_data_board |>
-  pins::pin_read("ph_usgs") |> glimpse()
-
-gage_ph_usgs <- processed_data_board |>
-  pins::pin_read("gage_ph_usgs") |> glimpse()
-
-usgs_ph <- ph_usgs |>
-  inner_join(gage_ph_usgs, by = c("gage_id", "gage_name", "stream")) |>
-  mutate(gage_id = as.character(gage_id)) |> 
-  group_by(gage_id, gage_name, agency, latitude, longitude) |>
-  summarise(min_date = min(date), max_date = max(date)) |>
-  glimpse()
-# binding usgs and wqx
-ph <- bind_rows(usgs_ph, wqx_ph) |> 
   mutate(data_type = "ph") |> 
   filter(!is.na(longitude)) |> 
-  # st_as_sf(coords = c("longitude","latitude")) |> 
   glimpse()
 
 ### RST data ### ----
