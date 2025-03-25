@@ -1,4 +1,24 @@
 shinyServer(function(input, output, session) {
+  observeEvent(input$show_map, {
+    show("map_panel")
+    hide("explorer_panel")
+  })
+  
+  observeEvent(input$show_explorer, {
+    hide("map_panel")
+    show("explorer_panel")
+  })
+  observeEvent(input$go_home_from_map, {
+    show("home_panel")
+    hide("map_panel")
+    hide("explorer_panel")
+  })
+  
+  observeEvent(input$go_home_from_explorer, {
+    show("home_panel")
+    hide("map_panel")
+    hide("explorer_panel")
+  })
   
   # Insert UI component
   insertUI(
