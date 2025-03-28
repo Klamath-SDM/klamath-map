@@ -198,7 +198,6 @@ dams_tb_removed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles
 dams <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams.shp") |> 
   mutate(longitude = st_coordinates(geometry)[, 1],
          latitude = st_coordinates(geometry)[, 2])
-kl_corridor <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Klamath_River_Corridor.shp")
 copco_res <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Copco_Reservoir_bed_sediment_cores.shp") |> 
   mutate(longitude = st_coordinates(geometry)[, 1],
          latitude = st_coordinates(geometry)[, 2])
@@ -215,9 +214,6 @@ geomorphic_reaches <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefi
   mutate(longitude = st_coordinates(geometry)[, 1],
          latitude = st_coordinates(geometry)[, 2])
 sediment_bug <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Sediment_Bug_Samples.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-stream_gages <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_stream_gages.shp") |> 
   mutate(longitude = st_coordinates(geometry)[, 1],
          latitude = st_coordinates(geometry)[, 2])
 fingerprinting <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Tributary_Fingerprinting_Samples.shp") |> 

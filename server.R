@@ -425,20 +425,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # Observer for Klamath River Corridor
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_usgs_dam_layers && input$show_kl_corridor) {
-      proxy |>
-        addPolylines(data = kl_corridor, color = "green", weight = 2, group = "Klamath River Corridor")
-    } else {
-      proxy |>
-        clearGroup("Klamath River Corridor")
-    }
-  })
   # Observer to toggle "Copco Reservoir"
-  
-  
   observe({
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_copco_res) {
@@ -548,25 +535,6 @@ shinyServer(function(input, output, session) {
                    group = "Sediment Bug Samples")
     } else {
       proxy |> clearGroup("Sediment Bug Samples")
-    }
-  })
-  
-  # Observer to toggle "Stream Gages"
-  observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_usgs_dam_layers && input$show_stream_gages) {
-      proxy |>
-        addCircleMarkers(data = stream_gages, 
-                         color = "black", 
-                         fillOpacity = 0.7, 
-                         weight = 2, 
-                         radius = 5, 
-                         popup = ~paste("<em>Stream Gages</em>",
-                                        "<br>Source: USGS Dam Removal Map"),
-                   label = ~htmltools::HTML("<em>Stream Gages</em>"), 
-                   group = "Stream Gages")
-    } else {
-      proxy |> clearGroup("Stream Gages")
     }
   })
   
