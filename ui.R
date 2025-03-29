@@ -219,6 +219,23 @@ ui <- fluidPage(
                          "here", target = "_blank")),
                 hr(),
                 
+                # Species Abundance Map Layers
+                tags$div(
+                  class = "legend-item",
+                  checkboxInput("show_chinook_abundance", "Chinook Salmon Abundance", value = TRUE)
+                ),
+                conditionalPanel(
+                  condition = "input.show_chinook_abundance == true",
+                  tags$div(
+                    style = "margin-left: 20px; display: flex; align-items: center; gap: 10px;",
+                    checkboxInput("show_chinook_abundance_data_detail", 
+                                  HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Reaches"),value = TRUE)
+                                
+                  )
+                ),
+                hr(),
+                
+                
                 # USGS Dam Removal Map Layers
                 tags$div(
                   class = "legend-item",

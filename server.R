@@ -366,6 +366,30 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  
+  # Observer to manage chinook abundance
+
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_chinook_abundance) {
+      proxy |>
+        addPolylines(
+          data = chinook_abundance,
+          color = "purple", 
+          weight = 2.5,
+          opacity = 0.8,
+          fillOpacity = 0.2,
+          # label = ~paste(NAME, "Chinook Abundance"),
+          popup = ~paste("<em>Chinook Salomon Abundance Distribution</em><br>", "Fish run:", Run),
+          group = "Species Distribution"
+        )
+    } else {
+      proxy |>
+        clearGroup("")
+    }
+  })
+  
+  
   # Observer for redd and carcass data
 
   # Observer for surveyed river extent

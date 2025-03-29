@@ -106,14 +106,14 @@ ph <- ph_data |>
   filter(!is.na(longitude)) |> 
   glimpse()
 
-### RST data ### ----
+### RST data  ----
 rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |> 
   clean_names() |>
   mutate(data_type = "RST data") |>
   select(data_type, watershed, rst_name, operator, latitude, longitude, link) |>
   glimpse()
 
-### Habitat extent data ### ----
+### Habitat extent data ----
 habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
   clean_names() |>
   mutate(longitude = as.numeric(longtidue)) |>
@@ -121,7 +121,7 @@ habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |>
   select(-longtidue) |>
   glimpse()
 
-### Hatcheries ### ----
+### Hatcheries ----
 
 hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |> 
   clean_names() |> 
@@ -220,11 +220,20 @@ fingerprinting <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/
   mutate(longitude = st_coordinates(geometry)[, 1],
          latitude = st_coordinates(geometry)[, 2])
 
+### Species Distrubution Shapefiles ----
+chinook_abundance <- read_sf("data-raw/species_distribution/Chinook_Abundance_Linear.shp") 
+chinook_abundance <- st_transform(chinook_abundance, crs = 4326) 
+#   mutate(longitude = st_coordinates(geometry)[, 1],
+#          latitude = st_coordinates(geometry)[, 2]) |> 
+#   glimpse()
 
+centroids <- st_centroid(chinook_abundance)
+chinook_abundance$longitude <- st_coordinates(centroids)[, 1]
+chinook_abundance$latitude  <- st_coordinates(centroids)[, 2]
  
-# ##################
+###################
 ### ICON DEFINITIONS ----
-# ##################
+###################
 # 
 rst_markers <- iconList(
   "single" = makeIcon("icon-diamond.png", "icon-diamond.png", 18, 18, 9, 9),
