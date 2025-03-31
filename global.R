@@ -223,6 +223,8 @@ fingerprinting <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/
 ### Species Distrubution Shapefiles ----
 chinook_abundance <- read_sf("data-raw/species_distribution/Chinook_Abundance_Linear.shp") 
 chinook_abundance <- st_transform(chinook_abundance, crs = 4326) 
+
+chinook_abundance <- st_intersection(chinook_abundance, kl_basin_outline)
 #   mutate(longitude = st_coordinates(geometry)[, 1],
 #          latitude = st_coordinates(geometry)[, 2]) |> 
 #   glimpse()

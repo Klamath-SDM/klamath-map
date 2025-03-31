@@ -229,7 +229,7 @@ ui <- fluidPage(
                   tags$div(
                     style = "margin-left: 20px; display: flex; align-items: center; gap: 10px;",
                     checkboxInput("show_chinook_abundance_data_detail", 
-                                  HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Reaches"),value = TRUE)
+                                  HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Chinook Salmon Abundance"),value = TRUE)
                                 
                   )
                 ),

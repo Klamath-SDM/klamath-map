@@ -369,23 +369,27 @@ shinyServer(function(input, output, session) {
   
   # Observer to manage chinook abundance
 
+  run_palette <- colorFactor(
+    palette = "Set1",  # You can use any RColorBrewer palette or define your own
+    domain = unique(chinook_abundance$Run)
+  )
+  
   observe({
     proxy <- leafletProxy("mainMap")
     if (input$show_chinook_abundance) {
       proxy |>
         addPolylines(
           data = chinook_abundance,
-          color = "purple", 
+          color = ~run_palette(Run),
           weight = 2.5,
           opacity = 0.8,
-          fillOpacity = 0.2,
-          # label = ~paste(NAME, "Chinook Abundance"),
-          popup = ~paste("<em>Chinook Salomon Abundance Distribution</em><br>", "Fish run:", Run),
+          label = ~paste("Run:", Run),
+          popup = ~paste("<em>Chinook Salmon Abundance Distribution</em><br><strong>Run:</strong> ", Run),
           group = "Species Distribution"
         )
     } else {
       proxy |>
-        clearGroup("")
+        clearGroup("Species Distribution")
     }
   })
   
@@ -618,10 +622,10 @@ shinyServer(function(input, output, session) {
     }
     
     # Add Action column
-    data_to_show$Action <- paste(
-      '<button class="action-btn" data-latitude="', data_to_show$latitude, 
-      '" data-longitude="', data_to_show$longitude, '">Go to Map</button>'
-    )
+    # data_to_show$Action <- paste(
+    #   '<button class="action-btn" data-latitude="', data_to_show$latitude, 
+    #   '" data-longitude="', data_to_show$longitude, '">Go to Map</button>'
+    # )
     
     # Render the datatable
     output$data_table <- renderDT({
