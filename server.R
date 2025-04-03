@@ -20,6 +20,17 @@ shinyServer(function(input, output, session) {
     hide("explorer_panel")
   })
   
+  observeEvent(input$go_to_explorer_from_map, {
+    show("explorer_panel")
+    hide("map_panel")
+    hide("home_panel")
+  })
+  
+  observeEvent(input$go_to_map_from_explorer, {
+    show("map_panel")
+    hide("explorer_panel")
+  })
+  
   # Insert UI component
   insertUI(
     selector = ".navbar .container-fluid .navbar-collapse",

@@ -86,7 +86,7 @@ ui <- fluidPage(
         column(6,
                actionButton("show_map", 
                             label = tagList(
-                              div(class = "card-title", "🗺️ Monitoring Site Map"),
+                              div(class = "card-title", "Monitoring Site Map"),
                               p("View the interactive map and filter monitoring locations.
                                 There is a wealth of data about water and ecological resources in the Klamath Basin collected over multiple decades by many entities. 
                                 The high volume and dispersed nature of these data make it challenging to quickly determine data availability. 
@@ -98,7 +98,7 @@ ui <- fluidPage(
         column(6,
                actionButton("show_explorer", 
                             label = tagList(
-                              div(class = "card-title", "📊 Data Explorer"),
+                              div(class = "card-title", "Data Explorer"),
                               p("Explore and download tabular data from the Klamath Basin.")
                             ),
                             class = "card-box nav-card"
@@ -109,7 +109,9 @@ ui <- fluidPage(
   
   # MAP PANEL
   div(id = "map_panel", style = "display:none;",
-      actionButton("go_home_from_map", "⬅ Back to Home", class = "btn btn-primary"), 
+      actionButton("go_home_from_map", "⬅ Back to Home", class = "btn btn-primary"),
+      actionButton("go_to_explorer_from_map", "View Tabular Data", class = "btn btn-secondary"),
+    
       fluidRow(
         column(12,
                div(class = "card-box",
@@ -236,7 +238,7 @@ ui <- fluidPage(
                 
                 p(class = "legend-description", "These layers were sourced from",
                   tags$a(href = 'https://gis.data.ca.gov/', 
-                         "California State Geoportal", target = "_blank"))
+                         "California State Geoportal", target = "_blank")
                      ),
                 
                 hr(),
@@ -276,6 +278,8 @@ ui <- fluidPage(
   # DATA EXPLORER PANEL
   div(id = "explorer_panel", style = "display:none;",
       actionButton("go_home_from_explorer", "⬅ Back to Home", class = "btn btn-primary"),
+      actionButton("go_to_map_from_explorer", "View Map Explorer", class = "btn btn-secondary"),
+      
       
     fluidRow(
       column(12,
