@@ -229,11 +229,15 @@ ui <- fluidPage(
                   tags$div(
                     style = "margin-left: 20px;",
                     checkboxInput("show_chinook_abundance", HTML("<span><img src='legend-abundance-1.png' style='width: 20px; height: 20px;'/> Chinook Salmon Abundance</span>"), value = TRUE),
-                    checkboxInput("show_coho_abundance", HTML("<span><img src='legend-abundance-2.png' style='width: 20px; height: 20px;'/> Coho Abundance</span>"), value = TRUE)
+                    checkboxInput("show_coho_abundance", HTML("<span><img src='legend-abundance-2.png' style='width: 20px; height: 20px;'/> Coho Abundance</span>"), value = TRUE),
+                    checkboxInput("show_steelhead_abundance", HTML("<span><img src='legend-abundance-3.png' style='width: 20px; height: 20px;'/> Steelhead Abundance</span>"), value = TRUE)
                     )
                   ),
                 
-                p(class = "legend-description", "Legend here"),
+                p(class = "legend-description", "These layers were sourced from",
+                  tags$a(href = 'https://gis.data.ca.gov/', 
+                         "California State Geoportal", target = "_blank"))
+                     ),
                 
                 hr(),
                 

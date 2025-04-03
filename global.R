@@ -236,8 +236,13 @@ chinook_abundance$latitude  <- st_coordinates(centroids)[, 2]
 url <- "https://services2.arcgis.com/Uq9r85Potqm3MfRV/arcgis/rest/services/biosds183_fnu/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson"
 coho_sf <- st_read(url)
 coho_abundance <- st_transform(coho_sf, crs = 4326) 
-
 coho_abundance <- st_intersection(coho_abundance, kl_basin_outline)
+
+# steelhead
+steelhead_url <- "https://services2.arcgis.com/Uq9r85Potqm3MfRV/arcgis/rest/services/biosds185_fnu/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
+steelhead_sf <- st_read(steelhead_url)
+steelhead_abundance <- st_transform(steelhead_sf, crs = 4326) 
+steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
 
 
 ###################

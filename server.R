@@ -414,6 +414,26 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  observe({
+    proxy <- leafletProxy("mainMap") 
+    if (input$show_fish_abundance && input$show_steelhead_abundance) {
+      proxy |> 
+        addPolylines(
+          data = steelhead_abundance,
+          color = "red",
+          weight = 2.5,
+          opacity = 0.5,
+          label = ~paste("Run:", Run),
+          popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
+                         "<br>Category:", Category),
+          group = "Species Distribution"
+        )
+    } else {
+      proxy |>
+        clearGroup("Species Distribution")
+    }
+  })
+  
   
   # Observer for redd and carcass data
 
