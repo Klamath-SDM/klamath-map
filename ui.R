@@ -87,10 +87,9 @@ ui <- fluidPage(
                actionButton("show_map", 
                             label = tagList(
                               div(class = "card-title", "Monitoring Site Map"),
-                              p("View the interactive map and filter monitoring locations.
-                                There is a wealth of data about water and ecological resources in the Klamath Basin collected over multiple decades by many entities. 
-                                The high volume and dispersed nature of these data make it challenging to quickly determine data availability. 
-                                This map was developed to support the Klamath Basin Science Collaborative by summarizing the data being collected in the Basin.")
+                              p("Explore an interactive map of monitoring locations throughout the Klamath Basin. 
+                                This tool provides a spatial summary of decades of data collection on water and ecological resources. 
+                                Developed to support the Klamath Basin Science Collaborative, the map helps users visualize what data exist, where they were collected, and by whom")
                             ),
                             class = "card-box nav-card"
                )
@@ -98,8 +97,11 @@ ui <- fluidPage(
         column(6,
                actionButton("show_explorer", 
                             label = tagList(
-                              div(class = "card-title", "Data Explorer"),
-                              p("Explore and download tabular data from the Klamath Basin.")
+                              div(class = "card-title", "Data Catalog"),
+                              p("Access a curated catalog of water and ecological datasets from across the Klamath Basin. 
+                                This tabular resource was created to streamline access to disparate data sources and support collaborative decision-making. 
+                                It compiles key monitoring efforts by various agencies, providing context, filters, and download options. 
+                                (this Catalog is yet to be added)")
                             ),
                             class = "card-box nav-card"
                )
