@@ -219,21 +219,24 @@ ui <- fluidPage(
                          "here", target = "_blank")),
                 hr(),
                 
-                # Species Abundance Map Layers
+                # Species Abundance Map Layers ---
                 tags$div(
                   class = "legend-item",
-                  checkboxInput("show_chinook_abundance", "Chinook Salmon Abundance", value = TRUE)
-                ),
+                  checkboxInput("show_fish_abundance", "Fish Abundance", value = TRUE)
+                  ),
                 conditionalPanel(
-                  condition = "input.show_chinook_abundance == true",
+                  condition = "input.show_fish_abundance == true",
                   tags$div(
-                    style = "margin-left: 20px; display: flex; align-items: center; gap: 10px;",
-                    checkboxInput("show_chinook_abundance_data_detail", 
-                                  HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Chinook Salmon Abundance"),value = TRUE)
-                                
-                  )
-                ),
+                    style = "margin-left: 20px;",
+                    checkboxInput("show_chinook_abundance", HTML("<span><img src='legend-abundance-1.png' style='width: 20px; height: 20px;'/> Chinook Salmon Abundance</span>"), value = TRUE),
+                    checkboxInput("show_coho_abundance", HTML("<span><img src='legend-abundance-2.png' style='width: 20px; height: 20px;'/> Coho Abundance</span>"), value = TRUE)
+                    )
+                  ),
+                
+                p(class = "legend-description", "Legend here"),
+                
                 hr(),
+                
                 
                 
                 # USGS Dam Removal Map Layers

@@ -370,21 +370,42 @@ shinyServer(function(input, output, session) {
   # Observer to manage chinook abundance
 
   run_palette <- colorFactor(
-    palette = "Set1",  # You can use any RColorBrewer palette or define your own
+    palette = "Set1",  
     domain = unique(chinook_abundance$Run)
   )
   
   observe({
-    proxy <- leafletProxy("mainMap")
-    if (input$show_chinook_abundance) {
-      proxy |>
+    proxy <- leafletProxy("mainMap") 
+    if (input$show_fish_abundance && input$show_chinook_abundance) {
+      proxy |> 
         addPolylines(
           data = chinook_abundance,
-          color = ~run_palette(Run),
+          color = "blue",
           weight = 2.5,
-          opacity = 0.8,
+          opacity = 0.5,
           label = ~paste("Run:", Run),
-          popup = ~paste("<em>Chinook Salmon Abundance Distribution</em><br><strong>Run:</strong> ", Run),
+          popup = ~paste("<em>Chinook Salmon Abundance Distribution</em><br><strong>Run:</strong> ", Run, 
+                         "<br>Category:", Category),
+          group = "Species Distribution"
+        )
+    } else {
+      proxy |>
+        clearGroup("Species Distribution")
+    }
+  })
+  
+  observe({
+    proxy <- leafletProxy("mainMap") 
+    if (input$show_fish_abundance && input$show_coho_abundance) {
+      proxy |> 
+        addPolylines(
+          data = coho_abundance,
+          color = "orange",
+          weight = 2.5,
+          opacity = 0.5,
+          label = ~paste("Run:", Run),
+          popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
+                         "<br>Category:", Category),
           group = "Species Distribution"
         )
     } else {
