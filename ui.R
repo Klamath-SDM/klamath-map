@@ -72,9 +72,21 @@ ui <- fluidPage(
       overflow-wrap: break-word;
     }
 
-    .card-box {
-      height: 100%; 
+    .card-row {
+      display: flex;
+      gap: 20px;
     }
+
+    .card-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-card {
+      flex: 1;
+    }
+    
     "))
   ),
   
@@ -82,8 +94,8 @@ ui <- fluidPage(
 
   # Navigation cards
   div(id = "home_panel", style = "margin-top: 30px;",
-      fluidRow(
-        column(6,
+      div(class = "card-row",
+          div(class = "card-col",
                actionButton("show_map", 
                             label = tagList(
                               div(class = "card-title", "Monitoring Site Map"),
@@ -94,7 +106,7 @@ ui <- fluidPage(
                             class = "card-box nav-card"
                )
         ),
-        column(6,
+        div(class = "card-col",
                actionButton("show_explorer", 
                             label = tagList(
                               div(class = "card-title", "Data Catalog"),
