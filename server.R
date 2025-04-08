@@ -1,41 +1,4 @@
 shinyServer(function(input, output, session) {
-  layer_refresh <- reactiveVal(0)
-  
-  observeEvent(input$show_map, {
-    show("map_panel")
-    hide("explorer_panel")
-    hide("home_panel")
-    isolate(layer_refresh(layer_refresh() + 1))
-  })
-  
-  # observeEvent(input$show_explorer, {
-  #   hide("map_panel")
-  #   show("explorer_panel")
-  # })
-  observeEvent(input$go_home_from_map, {
-    show("home_panel")
-    hide("map_panel")
-    hide("explorer_panel")
-  })
-  
-  observeEvent(input$go_home_from_explorer, {
-    show("home_panel")
-    hide("map_panel")
-    hide("explorer_panel")
-  })
-  
-  observeEvent(input$go_to_explorer_from_map, {
-    show("explorer_panel")
-    hide("map_panel")
-    hide("home_panel")
-  })
-  
-  observeEvent(input$go_to_map_from_explorer, {
-    show("map_panel")
-    hide("explorer_panel")
-    isolate(layer_refresh(layer_refresh() + 1))
-  })
-  
   # Insert UI component
   insertUI(
     selector = ".navbar .container-fluid .navbar-collapse",
@@ -52,7 +15,7 @@ shinyServer(function(input, output, session) {
       addTiles() |>
       setView(lng = -122, lat = 41, zoom = 8) 
   })
-  
+
   # Define coordinates for each river
   river_coords <- list(
     "Williamson" = c(-121.89, 42.937),          
@@ -103,7 +66,7 @@ shinyServer(function(input, output, session) {
   
   # Observer to manage sub-basin outline display
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_sub_basin_outline) {
       proxy |>
@@ -151,7 +114,7 @@ shinyServer(function(input, output, session) {
   )
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     
     if (input$show_survey_layers) {
@@ -213,7 +176,7 @@ shinyServer(function(input, output, session) {
   
   # Observer to manage stream lines
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_streams) {
       proxy |>
@@ -235,7 +198,7 @@ shinyServer(function(input, output, session) {
   
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap") 
     if (input$show_water_quality && input$show_flow_gages) {
       proxy |> 
@@ -258,7 +221,7 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap") 
     if (input$show_water_quality && input$show_temp_gages) {
       proxy |> 
@@ -282,7 +245,7 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap") 
     if (input$show_water_quality && input$show_do_gages) {
       proxy |> 
@@ -307,7 +270,7 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_water_quality && input$show_ph_gages) {
       proxy |>
@@ -331,7 +294,7 @@ shinyServer(function(input, output, session) {
   })
   # Observer to manage RST Traps display
   observe({
-    layer_refresh() 
+     
     if (input$show_rst) {
       leafletProxy("mainMap") |>
         addMarkers(
@@ -351,7 +314,7 @@ shinyServer(function(input, output, session) {
   
   # Observer Hatcheries
   observe({
-    layer_refresh() 
+     
     if (input$show_hatcheries) {
       leafletProxy("mainMap") |>
         addMarkers(
@@ -373,7 +336,7 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_habitat_data) {
       proxy |> addMarkers(
@@ -401,7 +364,7 @@ shinyServer(function(input, output, session) {
   )
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap") 
     if (input$show_fish_abundance && input$show_chinook_abundance) {
       proxy |> 
@@ -422,7 +385,7 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap") 
     if (input$show_fish_abundance && input$show_coho_abundance) {
       proxy |> 
@@ -443,7 +406,7 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap") 
     if (input$show_fish_abundance && input$show_steelhead_abundance) {
       proxy |> 
@@ -484,7 +447,7 @@ shinyServer(function(input, output, session) {
   
   # Observer for USGS Dam Removal Map
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_dams_tb_removed) {
         proxy |> addCircleMarkers(data = dams_tb_removed, 
@@ -505,7 +468,7 @@ shinyServer(function(input, output, session) {
   
   # Observer for toggling dams
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_dams) {
       proxy |>
@@ -527,7 +490,7 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Copco Reservoir"
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_copco_res) {
       proxy |>
@@ -547,7 +510,7 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Estuary Bed Sediments"
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_estuary_bedsed) {
       proxy |>
@@ -566,7 +529,7 @@ shinyServer(function(input, output, session) {
   })
   # Observer to toggle "JCBoyle Reservoir Bed Sediment Cores"
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_jc_boyle_reservoir_bedsed) {
       proxy |>
@@ -585,7 +548,7 @@ shinyServer(function(input, output, session) {
   })
   # Observer to toggle "Iron Gate Reservoir bed sediment cores"
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_ig_reservoir_bedsed) {
       proxy |>
@@ -605,7 +568,7 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Geomorphic Reaches"
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_geomorphic_reaches) {
       proxy |>
@@ -626,7 +589,7 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Sediment Bug Samples"
   observe({
-    layer_refresh() 
+     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_sediment_bug) {
       proxy |>
@@ -646,7 +609,6 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Tributary Fingerprinting Samples"
   observe({
-    layer_refresh() 
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_fingerprinting) {
       proxy |>

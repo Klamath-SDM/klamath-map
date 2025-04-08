@@ -4,135 +4,85 @@ library(leaflet)
 library(DT)
 
 ui <- fluidPage(
-  useShinyjs(),
-  
   tags$head(
     tags$style(HTML("
-      body { 
-        font-family: Helvetica, Arial, sans-serif; 
-        background: linear-gradient(to bottom, #F0F8FF, #004d99);
-        background-attachment: fixed; 
-        margin: 0;
-        padding: 0;
-      }
-
-      .title-panel {
-        font-size: 30px;
-        font-weight: bold;
-        color: white;
-        text-align: center;
-        padding: 70px;
-        border-radius: 8px;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
-        background-image: url('klamath_image_1.jpg');
-        background-size: cover;
-        background-position: center;
-      }
-
-      .card-box {
-        background-color: white;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      }
-
-      .card-title {
-        font-weight: bold;
-        font-size: 18px;
-        margin-bottom: 10px;
-        color: #004d99;
-      }
-
-      .nav-card {
-        background-color: white;
-        text-align: left;
-        cursor: pointer;
-        border: none;
-        width: 100%;
-      }
-
-      .nav-card:hover {
-        box-shadow: 0 0 12px rgba(0,0,0,0.2);
-      }
-
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .legend-description {
-        font-style: italic;
-      }
-      
-      .nav-card p {
-      white-space: normal !important;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    }
-
-    .card-row {
-      display: flex;
-      gap: 20px;
-    }
-
-    .card-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .nav-card {
-      flex: 1;
-    }
-    
-    "))
+       /* Apply Helvetica to the entire app */
+        body { 
+     font-family: Helvetica, Arial, sans-serif; 
+     background: linear-gradient(to bottom, #F0F8FF, #004d99);
+ 
+     background-attachment: fixed; 
+     margin: 0;
+     padding: 0;
+   }
+       
+       /* Title Panel Styling */
+       .title-panel {
+         font-family: 'Helvetica', sans-serif;  /* Change Font */
+         font-size: 30px; /* Change Font Size */
+         font-weight: normal;
+         color: white;  /* Change Font Color */
+         text-align: center;
+         padding: 55px; /* Adjust Padding */
+         border-radius: 8px; /* Rounded Corners */
+         box-shadow: 2px 2px 10px rgba(0,0,0,0.2); /* Add Shadow */
+         background-image: url('klamath_image_1.jpg'); /* Background Image */
+         background-size: cover;
+         background-position: center;
+       }
+       
+       /* Tab Panel Customization */
+       .nav-tabs > li > a {
+         background-color: #f8f9fa; /* Default tab background */
+         color: #333; /* Default tab text color */
+         font-weight: normal;
+         font-size: 16px;
+         padding: 10px 20px;
+         border-radius: 8px 8px 0px 0px;
+         border: 1px solid #ccc;
+         transition: background-color 0.3s ease;
+       }
+ 
+       /* Active Tab Styling */
+       .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+         background-color: #004d99 !important; /* Active tab background */
+         color: white !important; /* Active tab text color */
+         border: 1px solid #004d99 !important;
+       }
+ 
+       /* Hover Effect on Tabs */
+       .nav-tabs > li > a:hover {
+         background-color: #e0e0e0 !important;
+         color: #000 !important;
+       }
+ 
+       /* Tab Content Styling */
+       .tab-content {
+         background: white;
+         padding: 20px;
+         border-radius: 0px 8px 8px 8px;
+         box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+       }
+     "))
   ),
   
   div(class = "title-panel", "Klamath Basin Data Viewer"),
 
-  # Navigation cards
-  div(id = "home_panel", style = "margin-top: 30px;",
-      div(class = "card-row",
-          div(class = "card-col",
-               actionButton("show_map", 
-                            label = tagList(
-                              div(class = "card-title", "Monitoring Site Map"),
-                              p("Explore an interactive map of monitoring locations throughout the Klamath Basin. 
-                                This tool provides a spatial summary of decades of data collection on water and ecological resources. 
-                                Developed to support the Klamath Basin Science Collaborative, the map helps users visualize what data exist, where they were collected, and by whom")
-                            ),
-                            class = "card-box nav-card"
-               )
-        ),
-        div(class = "card-col",
-               actionButton("show_explorer", 
-                            label = tagList(
-                              div(class = "card-title", "Data Catalog"),
-                              p("Access a curated catalog of water and ecological datasets from across the Klamath Basin. 
-                                This tabular resource was created to streamline access to disparate data sources and support collaborative decision-making. 
-                                It compiles key monitoring efforts by various agencies, providing context, filters, and download options. 
-                                (this Catalog is yet to be added)")
-                            ),
-                            class = "card-box nav-card"
-               )
-        )
-      )
-  ),
   
   # MAP PANEL
-  div(id = "map_panel", style = "display:none;",
-      actionButton("go_home_from_map", "⬅ Back to Home", class = "btn btn-primary"),
-      actionButton("go_to_explorer_from_map", "View Tabular Data", class = "btn btn-secondary"),
-    
-      fluidRow(
-        column(12,
-               div(class = "card-box",
-                   sidebarLayout(
-                     sidebarPanel(
-                       # h5("There is a wealth of data about water and ecological resources in the Klamath Basin collected over multiple decades by many entities. The high volume and dispersed nature of these data make it challenging to quickly determine data availability. This map was developed to support the Klamath Basin Science Collaborative by summarizing the data being collected in the Basin."),
-                       br(),
+  tabsetPanel(
+    tabPanel(
+      "Monitoring Site Map",
+      tags$head(
+        tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+        tags$script(src = "scripts/lightbox/js/lightbox.js"),
+        tags$link(rel = "stylesheet", type = "text/css", href = "scripts/lightbox/css/lightbox.css")
+      ),
+      
+      sidebarLayout(
+        sidebarPanel(
+          h5("There is a wealth of data about water and ecological resources in the Klamath Basin collected over multiple decades by many entities. The high volume and dispersed nature of these data make it challenging to quickly determine data availability. This map was developed to support the Klamath Basin Science Collaborative by summarizing the data being collected in the Basin."),
+          br(),
                 
                 # Select Input for Zooming to Rivers
                 selectInput(
@@ -284,35 +234,29 @@ ui <- fluidPage(
               leafletOutput("mainMap", height = "1000px")
             )
           )
-        )
-      )
-    )
-  ),
+      ),
 
   # DATA EXPLORER PANEL
-  div(id = "explorer_panel", style = "display:none;",
-      actionButton("go_home_from_explorer", "⬅ Back to Home", class = "btn btn-primary"),
-      actionButton("go_to_map_from_explorer", "View Map Explorer", class = "btn btn-secondary"),
-      
-      
-    fluidRow(
-      column(12,
-        div(class = "card-box",
-          sidebarLayout(
-            sidebarPanel(
-              h5("This tab displays summarized tabular data categorized by data type."),
-              br(),
-              selectInput("data_type", "Select Data Type:",
-                choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
-              selectInput("watershed", "Select Watershed: (pending)", choices = c("All"))
-            ),
-            mainPanel(
-              DTOutput("data_table")
+  tabPanel(
+    "Data Explorer",
+    sidebarLayout(
+      sidebarPanel(
+        h5("This tab displays summarized tabular data categorized by data type. Additional filtering options (e.g., watershed, agency, etc.) will be available. The 'Go to Map' button will direct users to the location on the map where the selected data row was collected.
+              This section is still in progress and will undergo multiple iterations."),
+        br(),
+        selectInput("data_type", "Select Data Type:",
+                    choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
+        selectInput("watershed", "Select Watershed: (pending)",
+                    choices = c("All"))
+        # "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
+        # hr()
+      ),
+      mainPanel(
+        # div(style = "height: 800px; width: 100%; overflow-x: auto;",
+        DTOutput("data_table")
             )
           )
         )
       )
-    )
-  )
 )
 
