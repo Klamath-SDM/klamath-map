@@ -6,7 +6,6 @@ library(DT)
 ui <- fluidPage(
   tags$head(
     tags$style(HTML("
-       /* Apply Helvetica to the entire app */
         body { 
      font-family: Helvetica, Arial, sans-serif; 
      background: linear-gradient(to bottom, #F0F8FF, #004d99);
@@ -16,25 +15,24 @@ ui <- fluidPage(
      padding: 0;
    }
        
-       /* Title Panel Styling */
        .title-panel {
-         font-family: 'Helvetica', sans-serif;  /* Change Font */
-         font-size: 30px; /* Change Font Size */
+         font-family: 'Helvetica', sans-serif;  
+         font-size: 30px; 
          font-weight: normal;
-         color: white;  /* Change Font Color */
+         color: white;  
          text-align: center;
-         padding: 55px; /* Adjust Padding */
-         border-radius: 8px; /* Rounded Corners */
-         box-shadow: 2px 2px 10px rgba(0,0,0,0.2); /* Add Shadow */
-         background-image: url('klamath_image_1.jpg'); /* Background Image */
+         padding: 55px; 
+         border-radius: 8px; 
+         box-shadow: 2px 2px 10px rgba(0,0,0,0.2); 
+         background-image: url('klamath_image_1.jpg'); 
          background-size: cover;
          background-position: center;
        }
        
        /* Tab Panel Customization */
        .nav-tabs > li > a {
-         background-color: #f8f9fa; /* Default tab background */
-         color: #333; /* Default tab text color */
+         background-color: #f8f9fa; 
+         color: #333;
          font-weight: normal;
          font-size: 16px;
          padding: 10px 20px;
@@ -245,7 +243,8 @@ ui <- fluidPage(
               This section is still in progress and will undergo multiple iterations."),
         br(),
         selectInput("data_type", "Select Data Type:",
-                    choices = c("Select Data Type", "Flow Data", "Temperature Data", "Habitat Data", "RST Data")),
+                    choices = c("Select Data Type", "Flow", "Temperature", "Dissolved Oxygen", "pH", "Habitat", "Hatcheries", 
+                                "Rotary Screw Traps", "Chinook Abundance")),
         selectInput("watershed", "Select Watershed: (pending)",
                     choices = c("All"))
         # "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),

@@ -107,19 +107,130 @@ shinyServer(function(input, output, session) {
   }
 })
   
+  # Observer to manage stream lines
+  observe({
+     
+    proxy <- leafletProxy("mainMap")
+    if (input$show_streams) {
+      proxy |>
+        addPolylines(
+          data = streams,
+          color = "blue",
+          weight = 2,
+          opacity = 0.8,
+          fillOpacity = 0.5,
+          label = ~paste(Label, "Stream"),
+          popup = ~paste("<em>Stream</em><br>", "Stream Name:", Label),
+          group = "Streams"
+        )
+    } else {
+      proxy |>
+        clearGroup("Streams")
+    }
+  })
+  
+  
+  observe({
+    proxy <- leafletProxy("mainMap") 
+    if (input$show_water_quality && input$show_flow_gages) {
+      proxy |> 
+        addMarkers(
+          data = flow,
+          lng = ~longitude, lat = ~latitude, 
+          icon = ~rst_markers["circle-F"],
+          popup = ~paste("<em>Flow Gage</em><br>", "<strong>Gage Number:</strong>", gage_id, 
+                         "<br><strong>Gage Name:</strong>", gage_name,
+                         "<br><strong>Agency:</strong>", agency,
+                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
+                         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+                         # gage_number, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>Flow Gage</em>"),
+          group = "flow") 
+    } else {
+      proxy |>
+        clearGroup("flow")
+    }
+  })
+  
+  observe({
+    proxy <- leafletProxy("mainMap") 
+    if (input$show_water_quality && input$show_temp_gages) {
+      proxy |> 
+        addMarkers(
+          data = temperature,
+          lng = ~longitude, lat = ~latitude, 
+          icon = ~rst_markers["circle-T"],
+          popup = ~paste("<em>Temperature Gage</em><br>", "<strong>Gage Number:</strong>", gage_id,
+                         "<br><strong>Gage Name:</strong>", gage_name,
+                         "<br><strong>Agency:</strong>", agency,
+                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
+                         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+                         # gage_id, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>Temperature Gage</em>"),
+          group = "temperature"
+        )
+    } else {
+      proxy |>
+        clearGroup("temperature")
+    }
+  })
+  
+  observe({
+    proxy <- leafletProxy("mainMap") 
+    if (input$show_water_quality && input$show_do_gages) {
+      proxy |> 
+        addAwesomeMarkers(
+          data = do,
+          lng = ~jitter(longitude, amount = 0.0020),  
+          lat = ~jitter(latitude, amount = 0.0020), 
+          icon = do_icon,
+          popup = ~paste("<em>Dissolved Oxygen Gage</em><br>", "<strong>Gage Number:</strong>", gage_id, 
+                         "<br><strong>Gage Name:</strong>", gage_name,
+                         "<br><strong>Agency:</strong>", agency,
+                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
+          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
+          # gage_id, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>Dissolved Oxygen Gage</em>"),
+          group = "dissolved oxygen"
+        )
+    } else {
+      proxy |>
+        clearGroup("dissolved oxygen")
+    }
+  })
+  
+  observe({
+    proxy <- leafletProxy("mainMap")
+    if (input$show_water_quality && input$show_ph_gages) {
+      proxy |>
+        addAwesomeMarkers(
+          data = ph,
+          lng = ~longitude, lat = ~latitude,
+          icon = ph_icon,
+          popup = ~paste("<em>pH Gage</em>", "<br><strong>Gage Number:</strong>", gage_id,
+                         "<br><strong>Gage Name:</strong>", gage_name,
+                         "<br><strong>Agency:</strong>", agency,
+                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
+          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=",
+          # gage_id, "', '_blank')\">Gage Site</button>"),
+          label = ~htmltools::HTML("<em>pH Gage</em>"),
+          group = "pH"
+        )
+    } else {
+      proxy |>
+        clearGroup("pH")
+    }
+  })
+  
   # Redd/Carcass Survey
   color_palette <- colorFactor(
     palette = "Set1",  # Use a predefined palette (e.g., "Set1", "Dark2")
     domain = survey_lines_1$survey_reach_number  # The column to base colors on
   )
   
-  observe({
-     
-    proxy <- leafletProxy("mainMap")
-    
-    if (input$show_survey_layers) {
-      # Add polylines 1 to the map
-      proxy |>
+  observe({ proxy <- leafletProxy("mainMap")
+  if (input$show_salmonid_data && input$show_survey_layers) {
+    proxy |>
         addPolylines(
           data = survey_lines_1,
           color = "purple", 
@@ -174,129 +285,12 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # Observer to manage stream lines
-  observe({
-     
-    proxy <- leafletProxy("mainMap")
-    if (input$show_streams) {
-      proxy |>
-        addPolylines(
-          data = streams,
-          color = "blue",
-          weight = 2,
-          opacity = 0.8,
-          fillOpacity = 0.5,
-          label = ~paste(Label, "Stream"),
-          popup = ~paste("<em>Stream</em><br>", "Stream Name:", Label),
-          group = "Streams"
-        )
-    } else {
-      proxy |>
-        clearGroup("Streams")
-    }
-  })
   
-  
-  observe({
-     
-    proxy <- leafletProxy("mainMap") 
-    if (input$show_water_quality && input$show_flow_gages) {
-      proxy |> 
-        addMarkers(
-          data = flow,
-          lng = ~longitude, lat = ~latitude, 
-          icon = ~rst_markers["circle-F"],
-          popup = ~paste("<em>Flow Gage</em><br>", "<strong>Gage Number:</strong>", gage_id, 
-                         "<br><strong>Gage Name:</strong>", gage_name,
-                         "<br><strong>Agency:</strong>", agency,
-                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
-                         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-                         # gage_number, "', '_blank')\">Gage Site</button>"),
-          label = ~htmltools::HTML("<em>Flow Gage</em>"),
-          group = "flow") 
-    } else {
-      proxy |>
-        clearGroup("flow")
-    }
-  })
-  
-  observe({
-     
-    proxy <- leafletProxy("mainMap") 
-    if (input$show_water_quality && input$show_temp_gages) {
-      proxy |> 
-        addMarkers(
-          data = temperature,
-          lng = ~longitude, lat = ~latitude, 
-          icon = ~rst_markers["circle-T"],
-          popup = ~paste("<em>Temperature Gage</em><br>", "<strong>Gage Number:</strong>", gage_id,
-                         "<br><strong>Gage Name:</strong>", gage_name,
-                         "<br><strong>Agency:</strong>", agency,
-                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
-                         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-                         # gage_id, "', '_blank')\">Gage Site</button>"),
-          label = ~htmltools::HTML("<em>Temperature Gage</em>"),
-          group = "temperature"
-        )
-    } else {
-      proxy |>
-        clearGroup("temperature")
-    }
-  })
-  
-  observe({
-     
-    proxy <- leafletProxy("mainMap") 
-    if (input$show_water_quality && input$show_do_gages) {
-      proxy |> 
-        addAwesomeMarkers(
-          data = do,
-          lng = ~jitter(longitude, amount = 0.0020),  
-          lat = ~jitter(latitude, amount = 0.0020), 
-          icon = do_icon,
-          popup = ~paste("<em>Dissolved Oxygen Gage</em><br>", "<strong>Gage Number:</strong>", gage_id, 
-                         "<br><strong>Gage Name:</strong>", gage_name,
-                         "<br><strong>Agency:</strong>", agency,
-                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
-          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-          # gage_id, "', '_blank')\">Gage Site</button>"),
-          label = ~htmltools::HTML("<em>Dissolved Oxygen Gage</em>"),
-          group = "dissolved oxygen"
-        )
-    } else {
-      proxy |>
-        clearGroup("dissolved oxygen")
-    }
-  })
-  
-  observe({
-     
-    proxy <- leafletProxy("mainMap")
-    if (input$show_water_quality && input$show_ph_gages) {
-      proxy |>
-        addAwesomeMarkers(
-          data = ph,
-          lng = ~longitude, lat = ~latitude,
-          icon = ph_icon,
-          popup = ~paste("<em>pH Gage</em>", "<br><strong>Gage Number:</strong>", gage_id,
-                         "<br><strong>Gage Name:</strong>", gage_name,
-                         "<br><strong>Agency:</strong>", agency,
-                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
-          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=",
-          # gage_id, "', '_blank')\">Gage Site</button>"),
-          label = ~htmltools::HTML("<em>pH Gage</em>"),
-          group = "pH"
-        )
-    } else {
-      proxy |>
-        clearGroup("pH")
-    }
-  })
   # Observer to manage RST Traps display
   observe({
-     
-    if (input$show_rst) {
-      leafletProxy("mainMap") |>
+    proxy <- leafletProxy("mainMap")
+    if (input$show_salmonid_data && input$show_rst) {
+      proxy |>
         addMarkers(
           data = rst_sites,
           lng = ~longitude, lat = ~latitude,
@@ -314,9 +308,9 @@ shinyServer(function(input, output, session) {
   
   # Observer Hatcheries
   observe({
-     
-    if (input$show_hatcheries) {
-      leafletProxy("mainMap") |>
+    proxy <- leafletProxy("mainMap")
+    if (input$show_salmonid_data && input$show_hatcheries) {
+      proxy |>
         addMarkers(
           data = hatcheries,
           lng = ~longitude, lat = ~latitude,
@@ -336,10 +330,10 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-     
     proxy <- leafletProxy("mainMap")
-    if (input$show_habitat_data) {
-      proxy |> addMarkers(
+    if (input$show_salmonid_data && input$show_habitat_data) {
+      proxy |>
+        addMarkers(
         data = habitat_data,
         lng = ~longitude, lat = ~latitude,
         icon = ~rst_markers["X"],
@@ -635,14 +629,22 @@ shinyServer(function(input, output, session) {
     watershed_selected <- input$watershed
     
     data_to_show <- NULL
-    if (data_selected == "Flow Data") {
+    if (data_selected == "Flow") {
       data_to_show <- flow
-    } else if (data_selected == "Temperature Data") {
+    } else if (data_selected == "Temperature") {
       data_to_show <- temperature
-    } else if (data_selected == "Habitat Data") {
+    } else if (data_selected == "Dissolved Oxygen") {
+      data_to_show <- do
+    } else if (data_selected == "pH") {
+      data_to_show <- ph
+    } else if (data_selected == "Habitat") {
       data_to_show <- habitat_data
-    } else if (data_selected == "RST Data") {
+    } else if (data_selected == "Hatcheries") {
+      data_to_show <- hatcheries
+    } else if (data_selected == "Rotary Screw Traps") {
       data_to_show <- rst_sites
+    } else if (data_selected == "Chinook Abundance") {
+      data_to_show <- chinook_abundance #TODO maybe bind all anbundance (chinook, coho and steelhead)
     }
     
     if (!is.null(data_to_show) && watershed_selected != "All") {
