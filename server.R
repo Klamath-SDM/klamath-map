@@ -637,14 +637,14 @@ shinyServer(function(input, output, session) {
       data_to_show <- do
     } else if (data_selected == "pH") {
       data_to_show <- ph
-    } else if (data_selected == "Habitat") {
+    } else if (data_selected == "Habitat Models") {
       data_to_show <- habitat_data
     } else if (data_selected == "Hatcheries") {
       data_to_show <- hatcheries
     } else if (data_selected == "Rotary Screw Traps") {
       data_to_show <- rst_sites
-    } else if (data_selected == "Chinook Abundance") {
-      data_to_show <- chinook_abundance #TODO maybe bind all anbundance (chinook, coho and steelhead)
+    } else if (data_selected == "Fish Abundance") {
+      data_to_show <- abundance 
     }
     
     if (!is.null(data_to_show) && watershed_selected != "All") {

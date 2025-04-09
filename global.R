@@ -248,6 +248,8 @@ steelhead_sf <- st_read(steelhead_url)
 steelhead_abundance <- st_transform(steelhead_sf, crs = 4326) 
 steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
 
+abundance <- bind_rows(coho_abundance |> st_drop_geometry(), steelhead_abundance |> st_drop_geometry()) |> 
+  select(-c(MILES2, Shape__Length, FID, AREA, PERIMETER, KBBND_, KBBND_ID, Shape__Are, Shape__Len)) 
 
 ###################
 ### ICON DEFINITIONS ----
