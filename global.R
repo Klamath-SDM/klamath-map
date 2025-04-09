@@ -14,6 +14,28 @@ library(janitor)
 # Set up aws bucket
 processed_data_board <- pins::board_s3(bucket = "klamath-sdm", region = "us-east-1", prefix = "water_quality/processed-data/")
 
+# function to assign sub-basin to datasets 
+assign_sub_basin <- function(data, sub_basin, is_point = TRUE, lon_col = "longitude", lat_col = "latitude", sub_basin_col = "NAME") {
+  if (is_point) {
+    sf_data <- st_as_sf(data, coords = c(lon_col, lat_col), crs = 4326)
+  } else {
+    sf_data <- st_as_sf(data)  
+  }
+
+  sf_data <- sf_data |> 
+    st_transform(st_crs(sub_basin)) |> 
+    st_join(sub_basin[sub_basin_col]) |> 
+    rename(sub_basin = !!sub_basin_col)
+  
+  if (is_point) {
+    coords <- st_coordinates(sf_data)
+    sf_data[[lon_col]] <- coords[, 1]
+    sf_data[[lat_col]] <- coords[, 2]
+  }
+  st_drop_geometry(sf_data)
+}
+
+
 ###############
 # DATA IMPORTS 
 ###############
@@ -69,8 +91,18 @@ temperature <- temperature_data |>
   group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "temperature") |> 
-  filter(!is.na(longitude)) |> 
-  glimpse()
+  filter(!is.na(longitude)) 
+
+temperature <- assign_sub_basin(temperature, sub_basin) |> glimpse()
+#   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |> 
+#   st_transform(st_crs(sub_basin)) |> 
+#   st_join(sub_basin["NAME"]) |> 
+#   rename(sub_basin = NAME) 
+# coords <- st_coordinates(temperature)
+# temperature$longitude <- coords[, 1]
+# temperature$latitude <- coords[, 2]
+# 
+# temperature |> st_drop_geometry() |> glimpse()
 
 
 ### DO and pH ----

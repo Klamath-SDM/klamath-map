@@ -621,14 +621,44 @@ shinyServer(function(input, output, session) {
   })
   
   # Data Explorer
-  clicked_coords <- reactiveValues(lat = NULL, lng = NULL)
+  observeEvent(input$data_type, {
+    data_selected <- input$data_type
+    data_to_use <- NULL
+    
+    if (data_selected == "Flow") {
+      data_to_use <- flow
+    } else if (data_selected == "Temperature") {
+      data_to_use <- temperature
+    } else if (data_selected == "Dissolved Oxygen") {
+      data_to_use <- do
+    } else if (data_selected == "pH") {
+      data_to_use <- ph
+    } else if (data_selected == "Habitat Models") {
+      data_to_use <- habitat_data
+    } else if (data_selected == "Hatcheries") {
+      data_to_use <- hatcheries
+    } else if (data_selected == "Rotary Screw Traps") {
+      data_to_use <- rst_sites
+    } else if (data_selected == "Fish Abundance") {
+      data_to_use <- abundance 
+    }
+    
+    # Update watershed dropdown with sub_basin names
+    if (!is.null(data_to_use) && "sub_basin" %in% names(data_to_use)) {
+      basins <- sort(unique(na.omit(data_to_use$sub_basin)))
+      updateSelectInput(inputId = "sub_basin", choices = c("All", basins))
+    } else {
+      updateSelectInput(inputId = "sub_basin", choices = "All")
+    }
+  })
   
-  # Data Explorer Logic
+  # Main logic to render the filtered data table
   observe({
     data_selected <- input$data_type
-    watershed_selected <- input$watershed
+    sub_basin_selected <- input$sub_basin
     
     data_to_show <- NULL
+    
     if (data_selected == "Flow") {
       data_to_show <- flow
     } else if (data_selected == "Temperature") {
@@ -647,10 +677,9 @@ shinyServer(function(input, output, session) {
       data_to_show <- abundance 
     }
     
-    if (!is.null(data_to_show) && watershed_selected != "All") {
-      if ("watershed" %in% names(data_to_show)) {
-        data_to_show <- data_to_show[data_to_show$watershed == watershed_selected, ]
-      }
+    # Filter by sub_basin if selected
+    if (!is.null(data_to_show) && sub_basin_selected != "All" && "sub_basin" %in% names(data_to_show)) {
+      data_to_show <- data_to_show[data_to_show$sub_basin == sub_basin_selected, ]
     }
     
     if (is.null(data_to_show) || nrow(data_to_show) == 0) {
@@ -663,7 +692,6 @@ shinyServer(function(input, output, session) {
       })
       return()
     }
-    
     # Add Action column
     # data_to_show$Action <- paste(
     #   '<button class="action-btn" data-latitude="', data_to_show$latitude, 

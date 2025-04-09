@@ -245,9 +245,9 @@ ui <- fluidPage(
         selectInput("data_type", "Select Data Type:",
                     choices = c("Select Data Type", "Flow", "Temperature", "Dissolved Oxygen", "pH", "Habitat Models", "Hatcheries", 
                                 "Rotary Screw Traps", "Fish Abundance")),
-        selectInput("watershed", "Select Watershed: (pending)",
-                    choices = c("All"))
-        # "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost")),
+        selectInput("sub_basin", "Select Watershed: (pending)",
+                    choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", 
+                                "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost"))
         # hr()
       ),
       mainPanel(
