@@ -77,6 +77,7 @@ flow <- flow_data |>
   # st_as_sf(coords = c("longitude","latitude")) |> 
   glimpse()
 
+flow <- assign_sub_basin(flow, sub_basin) |> glimpse()
 
 # Pulling data from AWS processed data
 # temperature
@@ -122,21 +123,24 @@ do <- do_data |>
   filter(!is.na(longitude)) |> 
   glimpse()
 
-## pH data
+do <- assign_sub_basin(do, sub_basin) |> glimpse()
 
+## pH data
 ph_data <- processed_data_board |> 
   pins::pin_read("ph_data") |> glimpse()
 
-do_gage <- processed_data_board |> 
+ph_gage <- processed_data_board |> 
   pins::pin_read("ph_gage") |> glimpse()
 
 ph <- ph_data |> 
-  inner_join(do_gage, by = c("gage_id", "gage_name", "stream")) |> 
+  inner_join(ph_gage, by = c("gage_id", "gage_name", "stream")) |> 
   group_by(gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "ph") |> 
   filter(!is.na(longitude)) |> 
   glimpse()
+
+ph <- assign_sub_basin(ph, sub_basin) |> glimpse()
 
 ### RST data  ----
 rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |> 
@@ -144,6 +148,8 @@ rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |>
   mutate(data_type = "RST data") |>
   select(data_type, watershed, rst_name, operator, latitude, longitude, link) |>
   glimpse()
+
+rst_sites <- assign_sub_basin(rst_sites, sub_basin) |> glimpse()
 
 ### Habitat extent data ----
 habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
@@ -153,11 +159,14 @@ habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |>
   select(-longtidue) |>
   glimpse()
 
-### Hatcheries ----
+habitat_data <- assign_sub_basin(habitat_data, sub_basin) |> glimpse()
 
+### Hatcheries ----
 hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |> 
   clean_names() |> 
   select(-c(google_earth_location)) 
+
+hatcheries <- assign_sub_basin(hatcheries, sub_basin) |> glimpse()
 
 ### Redd and Carcass Surveys ### ----
 ## Survey Lines
@@ -265,12 +274,10 @@ chinook_abundance$longitude <- st_coordinates(centroids)[, 1]
 chinook_abundance$latitude  <- st_coordinates(centroids)[, 2]
 
 #coho 
-# TODO - was not able to source coho layer from Cal State Geoportal, 
-#system seemed to be down after I downloaded chinook abundance. Check in download is possible later
-url <- "https://services2.arcgis.com/Uq9r85Potqm3MfRV/arcgis/rest/services/biosds183_fnu/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson"
-coho_sf <- st_read(url)
+coho_abundance <- read_sf("data-raw/species_distribution/Coho_Abundance_Linear.shp") 
 coho_abundance <- st_transform(coho_sf, crs = 4326) 
 coho_abundance <- st_intersection(coho_abundance, kl_basin_outline)
+
 
 # steelhead 
 # TODO - was not able to source steelhead layer from Cal State Geoportal, 
@@ -283,6 +290,7 @@ steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
 abundance <- bind_rows(coho_abundance |> st_drop_geometry(), steelhead_abundance |> st_drop_geometry()) |> 
   select(-c(MILES2, Shape__Length, FID, AREA, PERIMETER, KBBND_, KBBND_ID, Shape__Are, Shape__Len)) 
 
+# abundance <- assign_sub_basin(abundance, sub_basin) |> glimpse()
 ###################
 ### ICON DEFINITIONS ----
 ###################
