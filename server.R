@@ -6,16 +6,17 @@ shinyServer(function(input, output, session) {
                  tags$li(
                    div(style = "padding: 10px; padding-top: 8px; padding-bottom: 0;",
                        shinyauthr::logoutUI("logout"))
-                 ))
-  )
+                   )
+                 )
+    )
   
   # Render the main map
   output$mainMap <- renderLeaflet({
     leaflet() |>
       addTiles() |>
       setView(lng = -122, lat = 41, zoom = 8) 
-  })
-
+    })
+  
   # Define coordinates for each river
   river_coords <- list(
     "Williamson" = c(-121.89, 42.937),          
@@ -66,7 +67,6 @@ shinyServer(function(input, output, session) {
   
   # Observer to manage sub-basin outline display
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_sub_basin_outline) {
       proxy |>
@@ -84,32 +84,31 @@ shinyServer(function(input, output, session) {
       proxy |>
         clearGroup("Sub-Basin Outline")
     }
-  
-  # Highlight the selected basin if a valid selection is made
-  selected_river <- input$zoom_select_river
-  if (selected_river != "(Default View)" && selected_river %in% sub_basin$NAME) {
-    proxy |>
-      clearGroup("highlight") |>  # Clear previous highlight
-      addPolygons(
-        data = sub_basin[sub_basin$NAME == selected_river, ],  # Filter for selected basin
-        color = "green",  # Highlight color
-        weight = 4,
-        opacity = 1,
-        fillColor = "yellow",
-        fillOpacity = 0.5,
-        label = ~paste(NAME, "Basin"),
-        popup = ~paste("<em>Highlighted Basin</em><br>", "Sub-Basin Name:", NAME),
-        group = "highlight"  # Group for managing the highlight
-      )
-  } else {
-    proxy |>
-      clearGroup("highlight")  # Remove highlight if no valid selection
-  }
-})
+    
+    # Highlight the selected basin if a valid selection is made
+    selected_river <- input$zoom_select_river
+    if (selected_river != "(Default View)" && selected_river %in% sub_basin$NAME) {
+      proxy |>
+        clearGroup("highlight") |>  # Clear previous highlight
+        addPolygons(
+          data = sub_basin[sub_basin$NAME == selected_river, ], # Filter for selected basin
+          color = "green",  # Highlight color
+          weight = 4,
+          opacity = 1,
+          fillColor = "yellow",
+          fillOpacity = 0.5,
+          label = ~paste(NAME, "Basin"),
+          popup = ~paste("<em>Highlighted Basin</em><br>", "Sub-Basin Name:", NAME),
+          group = "highlight"  # Group for managing the highlight
+          ) 
+      } else {
+        proxy |>
+          clearGroup("highlight")  # Remove highlight if no valid selection
+        }
+    })
   
   # Observer to manage stream lines
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_streams) {
       proxy |>
@@ -123,12 +122,11 @@ shinyServer(function(input, output, session) {
           popup = ~paste("<em>Stream</em><br>", "Stream Name:", Label),
           group = "Streams"
         )
-    } else {
-      proxy |>
-        clearGroup("Streams")
-    }
-  })
-  
+      } else {
+        proxy |>
+          clearGroup("Streams")
+        }
+    })
   
   observe({
     proxy <- leafletProxy("mainMap") 
@@ -146,11 +144,11 @@ shinyServer(function(input, output, session) {
                          # gage_number, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>Flow Gage</em>"),
           group = "flow") 
-    } else {
-      proxy |>
-        clearGroup("flow")
-    }
-  })
+      } else {
+        proxy |>
+          clearGroup("flow")
+        }
+    })
   
   observe({
     proxy <- leafletProxy("mainMap") 
@@ -169,11 +167,11 @@ shinyServer(function(input, output, session) {
           label = ~htmltools::HTML("<em>Temperature Gage</em>"),
           group = "temperature"
         )
-    } else {
-      proxy |>
-        clearGroup("temperature")
-    }
-  })
+      } else {
+        proxy |>
+          clearGroup("temperature")
+        }
+    })
   
   observe({
     proxy <- leafletProxy("mainMap") 
@@ -193,11 +191,11 @@ shinyServer(function(input, output, session) {
           label = ~htmltools::HTML("<em>Dissolved Oxygen Gage</em>"),
           group = "dissolved oxygen"
         )
-    } else {
-      proxy |>
-        clearGroup("dissolved oxygen")
-    }
-  })
+      } else {
+        proxy |>
+          clearGroup("dissolved oxygen")
+        }
+    })
   
   observe({
     proxy <- leafletProxy("mainMap")
@@ -216,11 +214,11 @@ shinyServer(function(input, output, session) {
           label = ~htmltools::HTML("<em>pH Gage</em>"),
           group = "pH"
         )
-    } else {
-      proxy |>
-        clearGroup("pH")
-    }
-  })
+      } else {
+        proxy |>
+          clearGroup("pH")
+        }
+    })
   
   # Redd/Carcass Survey
   color_palette <- colorFactor(
@@ -278,13 +276,12 @@ shinyServer(function(input, output, session) {
           label = ~htmltools::HTML("<em>Redd/Carcass Surveys</em>"), 
           group = "Survey Layers"
         )
-    } else {
+      } else {
       # Clear all groups if the checkbox is unchecked
-      proxy |>
-        clearGroup("Survey Layers")
-    }
+        proxy |>
+          clearGroup("Survey Layers")
+        }
   })
-  
   
   # Observer to manage RST Traps display
   observe({
@@ -300,11 +297,11 @@ shinyServer(function(input, output, session) {
           label = ~htmltools::HTML("<em>RST Trap</em>"),
           group = "Rotary Screw Traps"
         )
-    } else {
-      leafletProxy("mainMap") |>
-        clearGroup("Rotary Screw Traps")
-    }
-  })
+      } else {
+        leafletProxy("mainMap") |>
+          clearGroup("Rotary Screw Traps")
+        }
+    })
   
   # Observer Hatcheries
   observe({
@@ -323,11 +320,11 @@ shinyServer(function(input, output, session) {
           label = ~htmltools::HTML("<em>Hatchery</em>"),
           group = "Hatcheries"
         )
-    } else {
-      leafletProxy("mainMap") |>
-        clearGroup("Hatcheries")
-    }
-  })
+      } else {
+        leafletProxy("mainMap") |>
+          clearGroup("Hatcheries")
+        }
+    })
   
   observe({
     proxy <- leafletProxy("mainMap")
@@ -343,11 +340,11 @@ shinyServer(function(input, output, session) {
         ),
         label = ~htmltools::HTML("<em>Habitat Data</em>"),
         group = "Habitat Data"
-      )
-    } else {
-      proxy |> clearGroup("Habitat Data")
-    }
-  })
+        )
+      } else {
+        proxy |> clearGroup("Habitat Data")
+        }
+    })
   
   
   # Observer to manage chinook abundance
@@ -358,7 +355,6 @@ shinyServer(function(input, output, session) {
   )
   
   observe({
-     
     proxy <- leafletProxy("mainMap") 
     if (input$show_fish_abundance && input$show_chinook_abundance) {
       proxy |> 
@@ -370,16 +366,15 @@ shinyServer(function(input, output, session) {
           label = ~paste("Run:", Run),
           popup = ~paste("<em>Chinook Salmon Abundance Distribution</em><br><strong>Run:</strong> ", Run, 
                          "<br>Category:", Category),
-          group = "Species Distribution"
+          group = "Chinook Distribution"
         )
-    } else {
-      proxy |>
-        clearGroup("Species Distribution")
-    }
-  })
+      } else {
+        proxy |>
+          clearGroup("Chinook Distribution")
+        }
+    })
   
   observe({
-     
     proxy <- leafletProxy("mainMap") 
     if (input$show_fish_abundance && input$show_coho_abundance) {
       proxy |> 
@@ -391,16 +386,15 @@ shinyServer(function(input, output, session) {
           label = ~paste("Run:", Run),
           popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
                          "<br>Category:", Category),
-          group = "Species Distribution"
+          group = "Coho Distribution"
         )
-    } else {
-      proxy |>
-        clearGroup("Species Distribution")
-    }
-  })
+      } else {
+        proxy |>
+          clearGroup("Coho Distribution")
+        }
+    })
   
   observe({
-     
     proxy <- leafletProxy("mainMap") 
     if (input$show_fish_abundance && input$show_steelhead_abundance) {
       proxy |> 
@@ -412,13 +406,13 @@ shinyServer(function(input, output, session) {
           label = ~paste("Run:", Run),
           popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
                          "<br>Category:", Category),
-          group = "Species Distribution"
+          group = "Steelhead Distribution"
         )
-    } else {
-      proxy |>
-        clearGroup("Species Distribution")
-    }
-  })
+      } else {
+        proxy |>
+          clearGroup("Steelhead Distribution")
+        }
+    })
   
   
   # Observer for redd and carcass data
@@ -441,7 +435,6 @@ shinyServer(function(input, output, session) {
   
   # Observer for USGS Dam Removal Map
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_dams_tb_removed) {
         proxy |> addCircleMarkers(data = dams_tb_removed, 
@@ -454,15 +447,14 @@ shinyServer(function(input, output, session) {
                                         "<br>Source: USGS Dam Removal Map"),
                          label = ~htmltools::HTML("<em>Dams to be Removed</em>"), 
                          group = "Dams to be Removed")
-    } else {
-      proxy |>
-        clearGroup("Dams to be Removed")
-    }
-  })
+      } else {
+        proxy |>
+          clearGroup("Dams to be Removed")
+        }
+    })
   
   # Observer for toggling dams
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_dams) {
       proxy |>
@@ -484,7 +476,6 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Copco Reservoir"
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_copco_res) {
       proxy |>
@@ -504,7 +495,6 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Estuary Bed Sediments"
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_estuary_bedsed) {
       proxy |>
@@ -523,7 +513,6 @@ shinyServer(function(input, output, session) {
   })
   # Observer to toggle "JCBoyle Reservoir Bed Sediment Cores"
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_jc_boyle_reservoir_bedsed) {
       proxy |>
@@ -542,7 +531,6 @@ shinyServer(function(input, output, session) {
   })
   # Observer to toggle "Iron Gate Reservoir bed sediment cores"
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_ig_reservoir_bedsed) {
       proxy |>
@@ -562,7 +550,6 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Geomorphic Reaches"
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_geomorphic_reaches) {
       proxy |>
@@ -583,7 +570,6 @@ shinyServer(function(input, output, session) {
   
   # Observer to toggle "Sediment Bug Samples"
   observe({
-     
     proxy <- leafletProxy("mainMap")
     if (input$show_usgs_dam_layers && input$show_sediment_bug) {
       proxy |>
@@ -594,12 +580,12 @@ shinyServer(function(input, output, session) {
                          radius = 5,
                          popup = ~paste("<em>Invertebrate and Bed Sediment Samples</em>",
                                         "<br>Source: USGS Dam Removal Map"),
-                   label = ~htmltools::HTML("<em>Sediment Bug Samples</em>"), 
-                   group = "Sediment Bug Samples")
-    } else {
-      proxy |> clearGroup("Sediment Bug Samples")
-    }
-  })
+                         label = ~htmltools::HTML("<em>Sediment Bug Samples</em>"), 
+                         group = "Sediment Bug Samples")
+      } else {
+        proxy |> clearGroup("Sediment Bug Samples")
+        }
+    })
   
   # Observer to toggle "Tributary Fingerprinting Samples"
   observe({
@@ -613,12 +599,12 @@ shinyServer(function(input, output, session) {
                          radius = 5, 
                          popup = ~paste("<em>Tributary Fingerprinting Samples</em>",
                                         "<br>Source: USGS Dam Removal Map"),
-                   label = ~htmltools::HTML("<em>Tributary Fingerprinting Samples</em>"),  
-                   group = "Tributary Fingerprinting Samples")
-    } else {
-      proxy |> clearGroup("Tributary Fingerprinting Samples")
-    }
-  })
+                         label = ~htmltools::HTML("<em>Tributary Fingerprinting Samples</em>"),  
+                         group = "Tributary Fingerprinting Samples")
+      } else {
+        proxy |> clearGroup("Tributary Fingerprinting Samples")
+        }
+    })
   
   # Data Explorer
   observeEvent(input$data_type, {
@@ -703,43 +689,43 @@ shinyServer(function(input, output, session) {
       datatable(data_to_show, escape = FALSE, options = list(
         scrollY = "400px",  
         scrollX = TRUE,     
-        paging = TRUE        
-      ))
+        paging = TRUE 
+        ))
+      })
     })
-  })
   
   # Listen for map click events - TODO need to fix button function
-  observeEvent(input$map_click, {
-    req(input$map_click)
-    coords <- strsplit(input$map_click, ",")[[1]]
-    clicked_coords$lat <- as.numeric(coords[1])
-    clicked_coords$lng <- as.numeric(coords[2])
-    
-    leafletProxy("mainMap") |>
-      setView(lng = clicked_coords$lng, lat = clicked_coords$lat, zoom = 12) |>
-      clearGroup("action-highlight") |>
-      addCircleMarkers(
-        lng = clicked_coords$lng,
-        lat = clicked_coords$lat,
-        radius = 10,
-        color = "red",
-        fillColor = "yellow",
-        fillOpacity = 0.8,
-        group = "action-highlight",
-        label = "Selected Location"
-      )
-    })
+  # observeEvent(input$map_click, {
+  #   req(input$map_click)
+  #   coords <- strsplit(input$map_click, ",")[[1]]
+  #   clicked_coords$lat <- as.numeric(coords[1])
+  #   clicked_coords$lng <- as.numeric(coords[2])
+  # 
+  #   leafletProxy("mainMap") |>
+  #     setView(lng = clicked_coords$lng, lat = clicked_coords$lat, zoom = 12) |>
+  #     clearGroup("action-highlight") |>
+  #     addCircleMarkers(
+  #       lng = clicked_coords$lng,
+  #       lat = clicked_coords$lat,
+  #       radius = 10,
+  #       color = "red",
+  #       fillColor = "yellow",
+  #       fillOpacity = 0.8,
+  #       group = "action-highlight",
+  #       label = "Selected Location"
+  #     )
+  #   })
   })
   
   # "Go to Map" button
   # observeEvent(input$data_table_cell_clicked, {
-  #  
+  # 
   #   if (!is.null(input$data_table_cell_clicked)) {
   #     selected_row <- input$data_table_cell_clicked$row
   # 
   #     selected_lat <- input$data_table_cell_clicked$latitude
   #     selected_lon <- input$data_table_cell_clicked$longitude
-  #   
+  # 
   #     leafletProxy("mainMap") %>%
   #       setView(lng = selected_lon, lat = selected_lat, zoom = 10)
   #   }
