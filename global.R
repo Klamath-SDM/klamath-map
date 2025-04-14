@@ -280,10 +280,7 @@ coho_abundance <- st_intersection(coho_abundance, kl_basin_outline)
 
 
 # steelhead 
-# TODO - was not able to source steelhead layer from Cal State Geoportal, 
-#system seemed to be down after I downloaded chinook abundance. Check in download is possible later
-steelhead_url <- "https://services2.arcgis.com/Uq9r85Potqm3MfRV/arcgis/rest/services/biosds185_fnu/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
-steelhead_sf <- st_read(steelhead_url)
+steelhead_abundance <- read_sf("data-raw/species_distribution/Steelhead_Abundance_Linear.shp") 
 steelhead_abundance <- st_transform(steelhead_sf, crs = 4326) 
 steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
 
