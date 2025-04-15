@@ -59,17 +59,15 @@ ui <- fluidPage(
   padding: 20px;
   border-radius: 0px 8px 8px 8px;
   box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-  }
-                  ")
-             ),
+  }")),
+  
   tags$script(HTML("
     $(document).on('click', '.action-btn', function() {
       var lat = $(this).data('latitude');
       var lng = $(this).data('longitude');
       var coords = lat + ',' + lng;
       Shiny.setInputValue('map_click', coords, {priority: 'event'});
-    });
-  "))
+    });"))
   ),
   
   div(class = "title-panel", "Klamath Basin Data Viewer"),

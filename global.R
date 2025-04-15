@@ -18,23 +18,33 @@ processed_data_board <- pins::board_s3(bucket = "klamath-sdm", region = "us-east
 assign_sub_basin <- function(data, sub_basin, is_point = TRUE, lon_col = "longitude", lat_col = "latitude", sub_basin_col = "NAME") {
   if (is_point) {
     sf_data <- st_as_sf(data, coords = c(lon_col, lat_col), crs = 4326)
-  } else {
-    sf_data <- st_as_sf(data)  
-  }
-
+    } else {
+      sf_data <- st_as_sf(data)  
+      }
   sf_data <- sf_data |> 
     st_transform(st_crs(sub_basin)) |> 
     st_join(sub_basin[sub_basin_col]) |> 
     rename(sub_basin = !!sub_basin_col)
-  
   if (is_point) {
     coords <- st_coordinates(sf_data)
     sf_data[[lon_col]] <- coords[, 1]
     sf_data[[lat_col]] <- coords[, 2]
+    sf_data <- st_drop_geometry(sf_data)
+    }
+  return(sf_data)
   }
-  st_drop_geometry(sf_data)
-}
 
+#function for extracting stream names
+extract_waterbody <- function(names) {
+  names <- gsub("\\bRvr\\b", "River", names, ignore.case = TRUE)
+  names <- gsub("\\br\\b", "River", names, ignore.case = TRUE)
+  
+  names <- stringr::str_extract(names, "(?i)(\\b(?:upper|lower|north|south|east|west|middle|fork|branch)?\\s*(?:\\w+\\s){0,3}(?:Creek|River))")
+  
+  cleaned_names <- gsub("\\b(?:at|HOBO)\\b", "", names, ignore.case = TRUE)
+  result <- trimws(cleaned_names)
+  return(result)
+  }
 
 ###############
 # DATA IMPORTS 
@@ -73,8 +83,9 @@ flow <- flow_data |>
   group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "flow") |> 
+  assign_sub_basin(sub_basin) |>
   filter(!is.na(longitude)) |> 
-  # st_as_sf(coords = c("longitude","latitude")) |> 
+  relocate(sub_basin, data_type, .before = gage_id) |> 
   glimpse()
 
 # Pulling data from AWS processed data
@@ -90,7 +101,9 @@ temperature <- temperature_data |>
   group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "temperature") |> 
-  filter(!is.na(longitude))|> 
+  assign_sub_basin(sub_basin) |>
+  filter(!is.na(longitude)) |> 
+  relocate(sub_basin, data_type, .before = gage_id) |> 
   glimpse()
 
 #   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |> 
@@ -118,7 +131,9 @@ do <- do_data |>
   group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "dissolved oxygen") |> 
+  assign_sub_basin(sub_basin) |>
   filter(!is.na(longitude)) |> 
+  relocate(sub_basin, data_type, .before = gage_id) |> 
   glimpse()
 
 ## pH data - #TODO add stream name to all datasets
@@ -133,7 +148,9 @@ ph <- ph_data |>
   group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "ph") |> 
+  assign_sub_basin(sub_basin) |>
   filter(!is.na(longitude)) |> 
+  relocate(sub_basin, data_type, .before = gage_id) |> 
   glimpse()
 
 ### RST data  ----
@@ -141,7 +158,8 @@ rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |>
   clean_names() |>
   mutate(data_type = "RST data",
          stream = paste(watershed, "River")) |>
-  select(stream, data_type, rst_name, operator, latitude, longitude, link) |>
+  assign_sub_basin(sub_basin) |>
+  select(stream, sub_basin, data_type, rst_name, operator, latitude, longitude, link) |>
   glimpse()
 
 ### Habitat extent data ----
@@ -149,14 +167,20 @@ habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |>
   clean_names() |>
   mutate(longitude = as.numeric(longtidue)) |>
   rename(stream = river) |> 
+  assign_sub_basin(sub_basin) |> 
   select(-longtidue) |>
+  select(stream, sub_basin, everything()) |>
   glimpse()
 
 ### Hatcheries ----
 hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |> 
   clean_names() |> 
-  mutate(stream = paste(watershed, "River")) |> 
+  mutate(stream = paste(watershed, "River"),
+         data_type = "hatchery") |> 
+  rename(agency = operator) |> 
+  assign_sub_basin(sub_basin) |> 
   select(-c(google_earth_location,  watershed)) |> 
+  select(stream, sub_basin, data_type, everything()) |>
   glimpse()
 
 ### Redd and Carcass Surveys ### ----
@@ -181,6 +205,7 @@ survey_lines_metadata_1 <- read_csv(here::here('data-raw','redd_carcass.csv')) |
 survey_lines_1 <- survey_shapefile_1 |> 
   left_join(survey_lines_metadata_1, by = "Id") |> 
   mutate(stream = paste(watershed, "River")) |>
+  assign_sub_basin(sub_basin, is_point = FALSE) |> 
   select(-watershed) |> 
   glimpse()
 
@@ -207,9 +232,9 @@ survey_lines_metadata_2 <- read_csv(here::here('data-raw','redd_carcass.csv')) |
 survey_lines_2 <- survey_shapefile_2 |> 
   left_join(survey_lines_metadata_2, by = "Id") |> 
   mutate(stream = paste(watershed, "River")) |>
+  assign_sub_basin(sub_basin, is_point = FALSE) |> 
   select(-watershed) |> 
   glimpse()
-  
 
 print(st_crs(survey_shapefile_2))
 print(st_geometry_type(survey_shapefile_2))
@@ -229,15 +254,16 @@ survey_points <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
     TRUE ~ "2008"),
     agency = "CDFW",
     stream = paste(watershed, "River")) |>
+  assign_sub_basin(sub_basin) |> 
   select(-watershed) |> 
   glimpse()
 
-all_surveys <- bind_rows(survey_lines_1, survey_lines_2, survey_points) |> 
+all_surveys <- bind_rows(survey_lines_1, survey_lines_2, survey_points) |>
   clean_names() |> 
-  select(-id, -label) |>
-  relocate(stream, .before = everything()) |> 
+  select(-c(id, label)) |> 
+  select(stream, sub_basin, data_type, species, temporal_coverage,everything()) |>
   glimpse()
-# TODO unify field names
+
 ### USGS map layers ### ----
 dams_tb_removed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
   mutate(longitude = st_coordinates(geometry)[, 1],
@@ -277,26 +303,30 @@ chinook_abundance <- st_intersection(chinook_abundance, kl_basin_outline)
 centroids <- st_centroid(chinook_abundance)
 chinook_abundance$longitude <- st_coordinates(centroids)[, 1]
 chinook_abundance$latitude  <- st_coordinates(centroids)[, 2]
+chinook_abundance <- assign_sub_basin(chinook_abundance, sub_basin, is_point = FALSE) 
+
 
 #coho 
 coho_abundance <- read_sf("data-raw/species_distribution/Coho_Abundance_Linear.shp") 
-coho_abundance <- st_transform(coho_sf, crs = 4326) 
+coho_abundance <- st_transform(coho_abundance, crs = 4326)
 coho_abundance <- st_intersection(coho_abundance, kl_basin_outline)
+coho_abundance <- assign_sub_basin(coho_abundance, sub_basin, is_point = FALSE)
 
 # steelhead 
 steelhead_abundance <- read_sf("data-raw/species_distribution/Steelhead_Abundance_Linear.shp") 
-steelhead_abundance <- st_transform(steelhead_sf, crs = 4326) 
+steelhead_abundance <- st_transform(steelhead_abundance, crs = 4326)
 steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
+steelhead_abundance <- assign_sub_basin(steelhead_abundance, sub_basin, is_point = FALSE)
 
 abundance <- bind_rows(coho_abundance |> st_drop_geometry(), steelhead_abundance |> st_drop_geometry()) |> 
-  select(-c(OBJECTID, GlobalID , MILES2, Shape__Length, FID, AREA, PERIMETER, KBBND_, KBBND_ID, 
-            Shape__Are, Shape__Len, Hectares)) |>
   clean_names() |>
-  mutate(stream = extract_waterbody(location)) |>
+  select(-c(miles2, shape_len, fid, area, perimeter, kbbnd, kbbnd_id, shape_are, shape_len_1, global_id)) |>
+  mutate(stream = extract_waterbody(location),
+         data_type = "fish abundance") |> 
   rename(species = c_name,
-         species_scientific_name = s_name) |> 
-  relocate(stream, .before = everything()) |> 
-    glimpse()
+         species_full_name = s_name) |> 
+  select(stream, sub_basin, data_type, location, species, species_full_name, run, everything()) |> 
+  glimpse()
 
 # abundance <- assign_sub_basin(abundance, sub_basin) |> glimpse()
 ###################
