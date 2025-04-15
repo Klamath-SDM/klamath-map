@@ -232,6 +232,8 @@ survey_points <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   select(-watershed) |> 
   glimpse()
 
+all_surveys <- bind_rows(survey_lines_1, survey_lines_2, survey_points)
+# TODO unify field names
 ### USGS map layers ### ----
 dams_tb_removed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
   mutate(longitude = st_coordinates(geometry)[, 1],
@@ -268,7 +270,6 @@ chinook_abundance <- st_transform(chinook_abundance, crs = 4326)
 
 chinook_abundance <- st_intersection(chinook_abundance, kl_basin_outline)
 
-
 centroids <- st_centroid(chinook_abundance)
 chinook_abundance$longitude <- st_coordinates(centroids)[, 1]
 chinook_abundance$latitude  <- st_coordinates(centroids)[, 2]
@@ -278,14 +279,15 @@ coho_abundance <- read_sf("data-raw/species_distribution/Coho_Abundance_Linear.s
 coho_abundance <- st_transform(coho_sf, crs = 4326) 
 coho_abundance <- st_intersection(coho_abundance, kl_basin_outline)
 
-
 # steelhead 
 steelhead_abundance <- read_sf("data-raw/species_distribution/Steelhead_Abundance_Linear.shp") 
 steelhead_abundance <- st_transform(steelhead_sf, crs = 4326) 
 steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
 
 abundance <- bind_rows(coho_abundance |> st_drop_geometry(), steelhead_abundance |> st_drop_geometry()) |> 
-  select(-c(MILES2, Shape__Length, FID, AREA, PERIMETER, KBBND_, KBBND_ID, Shape__Are, Shape__Len)) 
+  select(-c(MILES2, Shape__Length, FID, AREA, PERIMETER, KBBND_, KBBND_ID, Shape__Are, Shape__Len)) |> 
+  mutate(stream = extract_waterbody(Location)) |>
+    glimpse()
 
 # abundance <- assign_sub_basin(abundance, sub_basin) |> glimpse()
 ###################

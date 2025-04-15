@@ -661,6 +661,8 @@ shinyServer(function(input, output, session) {
       data_to_show <- rst_sites
     } else if (data_selected == "Fish Abundance") {
       data_to_show <- abundance 
+    } else if (data_selected == "Redd/Carcass Surveys") {
+      data_to_show <- all_surveys 
     }
     
     # Filter by sub_basin if selected
