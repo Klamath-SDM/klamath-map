@@ -232,7 +232,11 @@ survey_points <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   select(-watershed) |> 
   glimpse()
 
-all_surveys <- bind_rows(survey_lines_1, survey_lines_2, survey_points)
+all_surveys <- bind_rows(survey_lines_1, survey_lines_2, survey_points) |> 
+  clean_names() |> 
+  select(-id, -label) |>
+  relocate(stream, .before = everything()) |> 
+  glimpse()
 # TODO unify field names
 ### USGS map layers ### ----
 dams_tb_removed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
@@ -285,8 +289,13 @@ steelhead_abundance <- st_transform(steelhead_sf, crs = 4326)
 steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
 
 abundance <- bind_rows(coho_abundance |> st_drop_geometry(), steelhead_abundance |> st_drop_geometry()) |> 
-  select(-c(MILES2, Shape__Length, FID, AREA, PERIMETER, KBBND_, KBBND_ID, Shape__Are, Shape__Len)) |> 
-  mutate(stream = extract_waterbody(Location)) |>
+  select(-c(OBJECTID, GlobalID , MILES2, Shape__Length, FID, AREA, PERIMETER, KBBND_, KBBND_ID, 
+            Shape__Are, Shape__Len, Hectares)) |>
+  clean_names() |>
+  mutate(stream = extract_waterbody(location)) |>
+  rename(species = c_name,
+         species_scientific_name = s_name) |> 
+  relocate(stream, .before = everything()) |> 
     glimpse()
 
 # abundance <- assign_sub_basin(abundance, sub_basin) |> glimpse()

@@ -627,12 +627,14 @@ shinyServer(function(input, output, session) {
       data_to_use <- rst_sites
     } else if (data_selected == "Fish Abundance") {
       data_to_use <- abundance 
+    } else if (data_selected == "Redd/Carcass Surveys") {
+      data_to_use <- all_surveys
     }
     
-    # Update watershed dropdown with sub_basin names
+    # Update watershed dropdown with stream names
     if (!is.null(data_to_use) && "stream" %in% names(data_to_use)) {
-      stream <- sort(unique(na.omit(data_to_use$stream)))
-      updateSelectInput(inputId = "stream", choices = c("All", stream))
+      stream_choices <- sort(unique(na.omit(data_to_use$stream)))
+      updateSelectInput(inputId = "stream", choices = c("All", stream_choices))
     } else {
       updateSelectInput(inputId = "stream", choices = "All")
     }
@@ -660,7 +662,7 @@ shinyServer(function(input, output, session) {
     } else if (data_selected == "Rotary Screw Traps") {
       data_to_show <- rst_sites
     } else if (data_selected == "Fish Abundance") {
-      data_to_show <- abundance 
+      data_to_show <- abundance |>  filter(!is.na(stream))
     } else if (data_selected == "Redd/Carcass Surveys") {
       data_to_show <- all_surveys 
     }
