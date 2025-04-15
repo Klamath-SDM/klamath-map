@@ -205,6 +205,7 @@ ui <- fluidPage(
           hr(),
           
           # USGS Dam Removal Map Layers
+          #TODO figure out why mainbox disappears
           tags$div(
             class = "legend-item",
             checkboxInput("show_usgs_dam_layers", "USGS Dam Removal Monitoring Map Layers", value = TRUE)

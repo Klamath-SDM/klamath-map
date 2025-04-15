@@ -606,7 +606,8 @@ shinyServer(function(input, output, session) {
         }
     })
   
-  # Data Explorer
+  # Data Explorer 
+  #TODO - add functionality to the sub-basin field that was added
   observeEvent(input$data_type, {
     data_selected <- input$data_type
     data_to_use <- NULL
