@@ -630,18 +630,18 @@ shinyServer(function(input, output, session) {
     }
     
     # Update watershed dropdown with sub_basin names
-    if (!is.null(data_to_use) && "sub_basin" %in% names(data_to_use)) {
-      basins <- sort(unique(na.omit(data_to_use$sub_basin)))
-      updateSelectInput(inputId = "sub_basin", choices = c("All", basins))
+    if (!is.null(data_to_use) && "stream" %in% names(data_to_use)) {
+      stream <- sort(unique(na.omit(data_to_use$stream)))
+      updateSelectInput(inputId = "stream", choices = c("All", stream))
     } else {
-      updateSelectInput(inputId = "sub_basin", choices = "All")
+      updateSelectInput(inputId = "stream", choices = "All")
     }
   })
   
   # Main logic to render the filtered data table
   observe({
     data_selected <- input$data_type
-    sub_basin_selected <- input$sub_basin
+    stream_selected <- input$stream
     
     data_to_show <- NULL
     
@@ -664,8 +664,8 @@ shinyServer(function(input, output, session) {
     }
     
     # Filter by sub_basin if selected
-    if (!is.null(data_to_show) && sub_basin_selected != "All" && "sub_basin" %in% names(data_to_show)) {
-      data_to_show <- data_to_show[data_to_show$sub_basin == sub_basin_selected, ]
+    if (!is.null(data_to_show) && stream_selected != "All" && "stream" %in% names(data_to_show)) {
+      data_to_show <- data_to_show[data_to_show$stream == stream_selected, ]
     }
     
     if (is.null(data_to_show) || nrow(data_to_show) == 0) {
@@ -700,7 +700,7 @@ shinyServer(function(input, output, session) {
   #   coords <- strsplit(input$map_click, ",")[[1]]
   #   clicked_coords$lat <- as.numeric(coords[1])
   #   clicked_coords$lng <- as.numeric(coords[2])
-  # 
+  #   
   #   leafletProxy("mainMap") |>
   #     setView(lng = clicked_coords$lng, lat = clicked_coords$lat, zoom = 12) |>
   #     clearGroup("action-highlight") |>
@@ -719,13 +719,13 @@ shinyServer(function(input, output, session) {
   
   # "Go to Map" button
   # observeEvent(input$data_table_cell_clicked, {
-  # 
+  #  
   #   if (!is.null(input$data_table_cell_clicked)) {
   #     selected_row <- input$data_table_cell_clicked$row
   # 
   #     selected_lat <- input$data_table_cell_clicked$latitude
   #     selected_lon <- input$data_table_cell_clicked$longitude
-  # 
+  #   
   #     leafletProxy("mainMap") %>%
   #       setView(lng = selected_lon, lat = selected_lat, zoom = 10)
   #   }

@@ -70,14 +70,12 @@ flow_gage <- processed_data_board |>
 
 flow <- flow_data |> 
   inner_join(flow_gage, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
+  group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "flow") |> 
   filter(!is.na(longitude)) |> 
   # st_as_sf(coords = c("longitude","latitude")) |> 
   glimpse()
-
-flow <- assign_sub_basin(flow, sub_basin) |> glimpse()
 
 # Pulling data from AWS processed data
 # temperature
@@ -89,12 +87,12 @@ temperature_gage <- processed_data_board |>
 
 temperature <- temperature_data |> 
   inner_join(temperature_gage, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
+  group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "temperature") |> 
-  filter(!is.na(longitude)) 
+  filter(!is.na(longitude))|> 
+  glimpse()
 
-temperature <- assign_sub_basin(temperature, sub_basin) |> glimpse()
 #   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |> 
 #   st_transform(st_crs(sub_basin)) |> 
 #   st_join(sub_basin["NAME"]) |> 
@@ -117,15 +115,13 @@ do_gage <- processed_data_board |>
 
 do <- do_data |> 
   inner_join(do_gage, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
+  group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "dissolved oxygen") |> 
   filter(!is.na(longitude)) |> 
   glimpse()
 
-do <- assign_sub_basin(do, sub_basin) |> glimpse()
-
-## pH data
+## pH data - #TODO add stream name to all datasets
 ph_data <- processed_data_board |> 
   pins::pin_read("ph_data") |> glimpse()
 
@@ -134,39 +130,34 @@ ph_gage <- processed_data_board |>
 
 ph <- ph_data |> 
   inner_join(ph_gage, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(gage_id, gage_name, agency, latitude, longitude) |> 
+  group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "ph") |> 
   filter(!is.na(longitude)) |> 
   glimpse()
 
-ph <- assign_sub_basin(ph, sub_basin) |> glimpse()
-
 ### RST data  ----
 rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |> 
   clean_names() |>
-  mutate(data_type = "RST data") |>
-  select(data_type, watershed, rst_name, operator, latitude, longitude, link) |>
+  mutate(data_type = "RST data",
+         stream = paste(watershed, "River")) |>
+  select(stream, data_type, rst_name, operator, latitude, longitude, link) |>
   glimpse()
-
-rst_sites <- assign_sub_basin(rst_sites, sub_basin) |> glimpse()
 
 ### Habitat extent data ----
 habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
   clean_names() |>
   mutate(longitude = as.numeric(longtidue)) |>
-  rename(watershed = river) |> 
+  rename(stream = river) |> 
   select(-longtidue) |>
   glimpse()
-
-habitat_data <- assign_sub_basin(habitat_data, sub_basin) |> glimpse()
 
 ### Hatcheries ----
 hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |> 
   clean_names() |> 
-  select(-c(google_earth_location)) 
-
-hatcheries <- assign_sub_basin(hatcheries, sub_basin) |> glimpse()
+  mutate(stream = paste(watershed, "River")) |> 
+  select(-c(google_earth_location,  watershed)) |> 
+  glimpse()
 
 ### Redd and Carcass Surveys ### ----
 ## Survey Lines
@@ -188,7 +179,10 @@ survey_lines_metadata_1 <- read_csv(here::here('data-raw','redd_carcass.csv')) |
   glimpse()
 # join shapefile and metadata
 survey_lines_1 <- survey_shapefile_1 |> 
-  left_join(survey_lines_metadata_1, by = "Id") 
+  left_join(survey_lines_metadata_1, by = "Id") |> 
+  mutate(stream = paste(watershed, "River")) |>
+  select(-watershed) |> 
+  glimpse()
 
 print(st_crs(survey_shapefile_1))
 print(st_geometry_type(survey_shapefile_1))
@@ -211,7 +205,11 @@ survey_lines_metadata_2 <- read_csv(here::here('data-raw','redd_carcass.csv')) |
 
 # join shapefile and metadata
 survey_lines_2 <- survey_shapefile_2 |> 
-  left_join(survey_lines_metadata_2, by = "Id") 
+  left_join(survey_lines_metadata_2, by = "Id") |> 
+  mutate(stream = paste(watershed, "River")) |>
+  select(-watershed) |> 
+  glimpse()
+  
 
 print(st_crs(survey_shapefile_2))
 print(st_geometry_type(survey_shapefile_2))
@@ -229,7 +227,9 @@ survey_points <- read_csv(here::here('data-raw','redd_carcass.csv')) |>
   mutate(temporal_coverage = case_when(
     temporal_coverage == 2002 ~ "2002 fish kill event",
     TRUE ~ "2008"),
-    agency = "CDFW") |> 
+    agency = "CDFW",
+    stream = paste(watershed, "River")) |>
+  select(-watershed) |> 
   glimpse()
 
 ### USGS map layers ### ----

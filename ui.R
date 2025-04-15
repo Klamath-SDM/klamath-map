@@ -61,7 +61,15 @@ ui <- fluidPage(
   box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
   }
                   ")
-             )
+             ),
+  tags$script(HTML("
+    $(document).on('click', '.action-btn', function() {
+      var lat = $(this).data('latitude');
+      var lng = $(this).data('longitude');
+      var coords = lat + ',' + lng;
+      Shiny.setInputValue('map_click', coords, {priority: 'event'});
+    });
+  "))
   ),
   
   div(class = "title-panel", "Klamath Basin Data Viewer"),
@@ -240,7 +248,7 @@ ui <- fluidPage(
         selectInput("data_type", "Select Data Type:",
                     choices = c("Select Data Type", "Flow", "Temperature", "Dissolved Oxygen", "pH", "Habitat Models", "Hatcheries", 
                                 "Rotary Screw Traps", "Fish Abundance")),
-        selectInput("sub_basin", "Select Watershed: (pending)",
+        selectInput("stream", "Select Stream:",
                     choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", 
                                 "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost"))
         # hr()
