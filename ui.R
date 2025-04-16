@@ -247,7 +247,7 @@ ui <- fluidPage(
         selectInput("data_type", "Select Data Type:",
                     choices = c("Select Data Type", "Flow", "Temperature", "Dissolved Oxygen", "pH", "Habitat Models", "Hatcheries", 
                                 "Rotary Screw Traps", "Fish Abundance", "Redd/Carcass Surveys")),
-        selectInput("stream", "Select Stream:",
+        selectInput("sub_basin", "Select Sub-Basin:",
                     choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", 
                                 "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost"))
         # hr()

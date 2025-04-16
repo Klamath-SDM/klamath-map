@@ -633,18 +633,18 @@ shinyServer(function(input, output, session) {
     }
     
     # Update watershed dropdown with stream names
-    if (!is.null(data_to_use) && "stream" %in% names(data_to_use)) {
-      stream_choices <- sort(unique(na.omit(data_to_use$stream)))
-      updateSelectInput(inputId = "stream", choices = c("All", stream_choices))
+    if (!is.null(data_to_use) && "sub_basin" %in% names(data_to_use)) {
+      basins <- sort(unique(na.omit(data_to_use$sub_basin)))
+      updateSelectInput(inputId = "sub_basin", choices = c("All", basins))
     } else {
-      updateSelectInput(inputId = "stream", choices = "All")
+      updateSelectInput(inputId = "sub_basin", choices = "All")
     }
   })
   
   # Main logic to render the filtered data table
   observe({
     data_selected <- input$data_type
-    stream_selected <- input$stream
+    sub_basin_selected <- input$sub_basin
     
     data_to_show <- NULL
     
@@ -669,8 +669,8 @@ shinyServer(function(input, output, session) {
     }
     
     # Filter by sub_basin if selected
-    if (!is.null(data_to_show) && stream_selected != "All" && "stream" %in% names(data_to_show)) {
-      data_to_show <- data_to_show[data_to_show$stream == stream_selected, ]
+    if (!is.null(data_to_show) && sub_basin_selected != "All" && "sub_basin" %in% names(data_to_show)) {
+      data_to_show <- data_to_show[data_to_show$sub_basin == sub_basin_selected, ]
     }
     
     if (is.null(data_to_show) || nrow(data_to_show) == 0) {
