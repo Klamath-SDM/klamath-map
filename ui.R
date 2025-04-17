@@ -131,7 +131,10 @@ ui <- fluidPage(
               )
             ),
           
-          p(class = "legend-description", "Legend here"),
+          p(class = "legend-description", "Data was sources from USGS and WQX gages. It was processed and synthesized using
+            FlowWest KlamathWaterData R package. Find more information",
+          tags$a(href = 'https://github.com/Klamath-SDM/klamathWaterData', 
+                 "here", target = "_blank")),
           
           hr(),
           
@@ -245,7 +248,7 @@ ui <- fluidPage(
               This section is still in progress and will undergo multiple iterations."),
         br(),
         selectInput("data_type", "Select Data Type:",
-                    choices = c("Select Data Type", "Flow", "Temperature", "Dissolved Oxygen", "pH", "Habitat Models", "Hatcheries", 
+                    choices = c("Select Data Type", "All", "Flow", "Temperature", "Dissolved Oxygen", "pH", "Habitat Models", "Hatcheries", 
                                 "Rotary Screw Traps", "Fish Abundance", "Redd/Carcass Surveys")),
         selectInput("sub_basin", "Select Sub-Basin:",
                     choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", 

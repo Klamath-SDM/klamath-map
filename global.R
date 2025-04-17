@@ -304,31 +304,38 @@ centroids <- st_centroid(chinook_abundance)
 chinook_abundance$longitude <- st_coordinates(centroids)[, 1]
 chinook_abundance$latitude  <- st_coordinates(centroids)[, 2]
 chinook_abundance <- assign_sub_basin(chinook_abundance, sub_basin, is_point = FALSE) 
-
+chinook_abundance <- chinook_abundance |> 
+filter(Location %in% valid_streams)
 
 #coho 
 coho_abundance <- read_sf("data-raw/species_distribution/Coho_Abundance_Linear.shp") 
 coho_abundance <- st_transform(coho_abundance, crs = 4326)
 coho_abundance <- st_intersection(coho_abundance, kl_basin_outline)
 coho_abundance <- assign_sub_basin(coho_abundance, sub_basin, is_point = FALSE)
+coho_abundance <- coho_abundance |> 
+filter(Location %in% valid_streams)
 
 # steelhead 
 steelhead_abundance <- read_sf("data-raw/species_distribution/Steelhead_Abundance_Linear.shp") 
 steelhead_abundance <- st_transform(steelhead_abundance, crs = 4326)
 steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
 steelhead_abundance <- assign_sub_basin(steelhead_abundance, sub_basin, is_point = FALSE)
+steelhead_abundance <- steelhead_abundance |> 
+  filter(Location %in% valid_streams)
 
-abundance <- bind_rows(coho_abundance |> st_drop_geometry(), steelhead_abundance |> st_drop_geometry()) |> 
+#TODO clip abundance to klamath main streams  
+abundance <- bind_rows(coho_abundance, steelhead_abundance) |>
   clean_names() |>
-  select(-c(miles2, shape_len, fid, area, perimeter, kbbnd, kbbnd_id, shape_are, shape_len_1, global_id)) |>
+  select(-c(miles2, shape_len, fid, area, perimeter, kbbnd, kbbnd_id, shape_are, shape_len_1, global_id,trend_id, link)) |>
   mutate(stream = extract_waterbody(location),
          data_type = "fish abundance") |> 
   rename(species = c_name,
          species_full_name = s_name) |> 
   select(stream, sub_basin, data_type, location, species, species_full_name, run, everything()) |> 
+  st_drop_geometry() |>
   glimpse()
 
-# abundance <- assign_sub_basin(abundance, sub_basin) |> glimpse()
+
 ###################
 ### ICON DEFINITIONS ----
 ###################

@@ -114,7 +114,7 @@ shinyServer(function(input, output, session) {
       proxy |>
         addPolylines(
           data = streams,
-          color = "blue",
+          color = "lightblue",
           weight = 2,
           opacity = 0.8,
           fillOpacity = 0.5,
@@ -361,11 +361,11 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = chinook_abundance,
           color = "blue",
-          weight = 2.5,
-          opacity = 0.5,
+          weight = 4,
+          opacity = 0.4,
           label = ~paste("Run:", Run),
           popup = ~paste("<em>Chinook Salmon Abundance Distribution</em><br><strong>Run:</strong> ", Run, 
-                         "<br>Category:", Category),
+                         "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
           group = "Chinook Distribution"
         )
       } else {
@@ -381,11 +381,11 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = coho_abundance,
           color = "orange",
-          weight = 2.5,
-          opacity = 0.5,
+          weight = 4,
+          opacity = 0.4,
           label = ~paste("Run:", Run),
           popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
-                         "<br>Category:", Category),
+                         "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
           group = "Coho Distribution"
         )
       } else {
@@ -401,11 +401,11 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = steelhead_abundance,
           color = "red",
-          weight = 2.5,
-          opacity = 0.5,
+          weight = 4,
+          opacity = 0.4,
           label = ~paste("Run:", Run),
           popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
-                         "<br>Category:", Category),
+                         "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
           group = "Steelhead Distribution"
         )
       } else {
