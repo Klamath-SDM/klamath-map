@@ -114,7 +114,7 @@ shinyServer(function(input, output, session) {
       proxy |>
         addPolylines(
           data = streams,
-          color = "lightblue",
+          color = "blue",
           weight = 2,
           opacity = 0.8,
           fillOpacity = 0.5,
@@ -632,12 +632,24 @@ shinyServer(function(input, output, session) {
       data_to_use <- all_surveys
     }
     
-    # Update watershed dropdown with stream names
+    
     if (!is.null(data_to_use) && "sub_basin" %in% names(data_to_use)) {
       basins <- sort(unique(na.omit(data_to_use$sub_basin)))
       updateSelectInput(inputId = "sub_basin", choices = c("All", basins))
     } else {
-      updateSelectInput(inputId = "sub_basin", choices = "All")
+      # Default basins if no dataset selected
+      all_basins <- sort(unique(na.omit(c(
+        flow$sub_basin,
+        temperature$sub_basin,
+        do$sub_basin,
+        ph$sub_basin,
+        habitat_data$sub_basin,
+        hatcheries$sub_basin,
+        rst_sites$sub_basin,
+        abundance$sub_basin,
+        all_surveys$sub_basin
+      ))))
+      updateSelectInput(inputId = "sub_basin", choices = c("All", all_basins))
     }
   })
   
@@ -668,11 +680,26 @@ shinyServer(function(input, output, session) {
       data_to_show <- all_surveys 
     }
     
-    # Filter by sub_basin if selected
+    if (data_selected == "Select Data Type") {
+      data_to_show <- bind_rows(
+        flow,
+        temperature,
+        do,
+        ph,
+        habitat_data,
+        hatcheries,
+        rst_sites,
+        abundance |> filter(!is.na(stream)),
+        all_surveys
+      )
+    }
+    
+    # ---- Filter by sub_basin if needed ----
     if (!is.null(data_to_show) && sub_basin_selected != "All" && "sub_basin" %in% names(data_to_show)) {
       data_to_show <- data_to_show[data_to_show$sub_basin == sub_basin_selected, ]
     }
     
+    # ---- If no data found, display a message ----
     if (is.null(data_to_show) || nrow(data_to_show) == 0) {
       output$data_table <- renderDT({
         datatable(data.frame(Message = "No data available for the selected criteria"), options = list(
