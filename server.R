@@ -361,7 +361,7 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = chinook_abundance,
           color = "blue",
-          weight = 4,
+          weight = 7,
           opacity = 0.4,
           label = ~paste("Run:", Run),
           popup = ~paste("<em>Chinook Salmon Abundance Distribution</em><br><strong>Run:</strong> ", Run, 
@@ -401,7 +401,7 @@ shinyServer(function(input, output, session) {
         addPolylines(
           data = steelhead_abundance,
           color = "red",
-          weight = 4,
+          weight = 1,
           opacity = 0.4,
           label = ~paste("Run:", Run),
           popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
@@ -632,32 +632,20 @@ shinyServer(function(input, output, session) {
       data_to_use <- all_surveys
     }
     
+    # Update watershed dropdown with stream names
     
     if (!is.null(data_to_use) && "sub_basin" %in% names(data_to_use)) {
       basins <- sort(unique(na.omit(data_to_use$sub_basin)))
       updateSelectInput(inputId = "sub_basin", choices = c("All", basins))
-    } else {
-      # Default basins if no dataset selected
-      all_basins <- sort(unique(na.omit(c(
-        flow$sub_basin,
-        temperature$sub_basin,
-        do$sub_basin,
-        ph$sub_basin,
-        habitat_data$sub_basin,
-        hatcheries$sub_basin,
-        rst_sites$sub_basin,
-        abundance$sub_basin,
-        all_surveys$sub_basin
-      ))))
-      updateSelectInput(inputId = "sub_basin", choices = c("All", all_basins))
-    }
-  })
+      } else {
+        updateSelectInput(inputId = "sub_basin", choices = "All")
+        }
+    })
   
-  # Main logic to render the filtered data table
+# Main logic to render the filtered data table
   observe({
     data_selected <- input$data_type
     sub_basin_selected <- input$sub_basin
-    
     data_to_show <- NULL
     
     if (data_selected == "Flow") {
@@ -679,35 +667,21 @@ shinyServer(function(input, output, session) {
     } else if (data_selected == "Redd/Carcass Surveys") {
       data_to_show <- all_surveys 
     }
-    
-    if (data_selected == "Select Data Type") {
-      data_to_show <- bind_rows(
-        flow,
-        temperature,
-        do,
-        ph,
-        habitat_data,
-        hatcheries,
-        rst_sites,
-        abundance |> filter(!is.na(stream)),
-        all_surveys
-      )
-    }
-    
-    # ---- Filter by sub_basin if needed ----
-    if (!is.null(data_to_show) && sub_basin_selected != "All" && "sub_basin" %in% names(data_to_show)) {
-      data_to_show <- data_to_show[data_to_show$sub_basin == sub_basin_selected, ]
-    }
-    
-    # ---- If no data found, display a message ----
-    if (is.null(data_to_show) || nrow(data_to_show) == 0) {
-      output$data_table <- renderDT({
-        datatable(data.frame(Message = "No data available for the selected criteria"), options = list(
-          scrollY = "400px",
-          scrollX = TRUE,
-          paging = FALSE
-        ))
-      })
+  
+  # Filter by sub_basin if selected
+  
+   if (!is.null(data_to_show) && sub_basin_selected != "All" && "sub_basin" %in% names(data_to_show)) {
+    data_to_show <- data_to_show[data_to_show$sub_basin == sub_basin_selected, ]
+  }
+  
+  if (is.null(data_to_show) || nrow(data_to_show) == 0) {
+    output$data_table <- renderDT({
+      datatable(data.frame(Message = "No data available for the selected criteria"), options = list(
+        scrollY = "400px",
+        scrollX = TRUE,
+        paging = FALSE
+      ))
+    })
       return()
     }
     # Add Action column
