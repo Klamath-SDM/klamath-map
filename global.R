@@ -11,7 +11,7 @@ library(janitor)
 
 #readRenviron(".Renviron")
 
-# Set up aws bucket
+# Set up aws bucket - note that login is required in order to connect to aws
 processed_data_board <- pins::board_s3(bucket = "klamath-sdm", region = "us-east-1", prefix = "water_quality/processed-data/")
 
 # function to assign sub-basin to datasets 
@@ -64,14 +64,6 @@ streams <- st_read("data-raw/klamath_basin_river_lines/Merged_Rivers.shp")
 streams <- st_transform(streams, crs = 4326)
 
 ### Temperature and flow data ### ----
-# these csvs were generated on KlamathEDA repo. The csv names were temp_data and flow_table. Names were changed here for consistency
-# temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) |> 
-#   mutate(data_type = "temperature") 
-# # sf::st_as_sf(coords = c("longitude","latitude")) 
-# flow <- read_csv(here::here('data-raw', 'flow_usgs.csv')) |>
-#   mutate(data_type = "flow")
-# # sf::st_as_sf(coords = c("longitude","latitude"))
-# flow data
 flow_data <- processed_data_board |> 
   pins::pin_read("flow_data") |> glimpse()
 
@@ -105,17 +97,6 @@ temperature <- temperature_data |>
   filter(!is.na(longitude)) |> 
   relocate(sub_basin, data_type, .before = gage_id) |> 
   glimpse()
-
-#   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |> 
-#   st_transform(st_crs(sub_basin)) |> 
-#   st_join(sub_basin["NAME"]) |> 
-#   rename(sub_basin = NAME) 
-# coords <- st_coordinates(temperature)
-# temperature$longitude <- coords[, 1]
-# temperature$latitude <- coords[, 2]
-# 
-# temperature |> st_drop_geometry() |> glimpse()
-
 
 ### DO and pH ----
 # Pulling data from AWS processed data
@@ -322,7 +303,6 @@ steelhead_abundance <- assign_sub_basin(steelhead_abundance, sub_basin, is_point
 steelhead_abundance <- steelhead_abundance |>
   filter(Location %in% streams$Label) 
 
-#TODO clip abundance to klamath main streams  
 abundance <- bind_rows(coho_abundance, steelhead_abundance, chinook_abundance) |>
   clean_names() |>
   select(-c(miles2, shape_len, fid, area, perimeter, kbbnd, kbbnd_id, shape_are, shape_len_1, global_id,trend_id, link)) |>
