@@ -5,61 +5,74 @@ library(DT)
 
 ui <- fluidPage(
   tags$head(
-  tags$style(HTML("
-  body { 
-  font-family: Helvetica, Arial, sans-serif; 
-  background: linear-gradient(to bottom, #F0F8FF, #004d99);
-  background-attachment: fixed; 
-  margin: 0;
-  padding: 0;
-  }
-  
-  .title-panel {
-  font-family: 'Helvetica', sans-serif;
-  font-size: 30px; 
-  font-weight: normal;
-  color: white;  
-  text-align: center;
-  padding: 55px; 
-  border-radius: 8px; 
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.2); 
-  background-image: url('klamath_image_1.jpg'); 
-  background-size: cover;
-  background-position: center;
-  }
-  
-  /* Tab Panel Customization */
-  .nav-tabs > li > a {
-  background-color: #f8f9fa; 
-  color: #333;
-  font-weight: normal;
-  font-size: 16px;
-  padding: 10px 20px;
-  border-radius: 8px 8px 0px 0px;
-  border: 1px solid #ccc;
-  transition: background-color 0.3s ease;
-  }
-  
-  /* Active Tab Styling */
-  .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
-  background-color: #004d99 !important; /* Active tab background */
-  color: white !important; /* Active tab text color */
-  border: 1px solid #004d99 !important;
-  }
-  
-  /* Hover Effect on Tabs */
-  .nav-tabs > li > a:hover {
-  background-color: #e0e0e0 !important;
-  color: #000 !important;
-  }
-  
-  /* Tab Content Styling */
-  .tab-content {
-  background: white;
-  padding: 20px;
-  border-radius: 0px 8px 8px 8px;
-  box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-  }")),
+    tags$style(HTML("
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        background: linear-gradient(to bottom, #F0F8FF, #004d99);
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+      }
+
+      .title-panel {
+        position: relative;
+        height: 240px; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .title-panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url('klamath_film_image.jpg') center/cover no-repeat;
+        filter: blur(1px) brightness(0.7);
+        z-index: 1;
+      }
+
+      .title-panel-text {
+        position: relative;
+        z-index: 2;
+        font-size: 36px;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+        padding: 10px 20px;
+      }
+
+      .nav-tabs > li > a {
+        background: #f8f9fa;
+        color: #333;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 8px 8px 0 0;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s;
+      }
+
+      .nav-tabs > li.active > a,
+      .nav-tabs > li.active > a:focus,
+      .nav-tabs > li.active > a:hover {
+        background: #004d99 !important;
+        color: white !important;
+        border-color: #004d99 !important;
+      }
+
+      .nav-tabs > li > a:hover {
+        background: #e0e0e0 !important;
+        color: #000 !important;
+      }
+
+      .tab-content {
+        background: white;
+        padding: 20px;
+        border-radius: 0 8px 8px 8px;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+      }
+    ")),
   
   tags$script(HTML("
     $(document).on('click', '.action-btn', function() {
@@ -70,7 +83,9 @@ ui <- fluidPage(
     });"))
   ),
   
-  div(class = "title-panel", "Klamath Basin Data Viewer"),
+  div(class = "title-panel",
+      div(class = "title-panel-text", "Klamath Basin Monitoring Map")
+),
   
   # MAP PANEL
   tabsetPanel(
