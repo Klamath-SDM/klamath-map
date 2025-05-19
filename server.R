@@ -347,16 +347,16 @@ shinyServer(function(input, output, session) {
     })
   
   
-  # Observer to manage chinook abundance
+  # Observer to manage chinook habitat extent
 
   run_palette <- colorFactor(
     palette = "Set1",  
-    domain = unique(chinook_abundance$Run)
+    domain = unique(chinook_extent$Run)
   )
   
   observe({
     proxy <- leafletProxy("mainMap") 
-    if (input$show_fish_abundance && input$show_chinook_abundance) {
+    if (input$show_habitat_extent && input$show_chinook_extent) {
       proxy |> 
         addPolylines(
           data = chinook_abundance,
@@ -364,7 +364,7 @@ shinyServer(function(input, output, session) {
           weight = 7,
           opacity = 0.4,
           label = ~paste("Run:", Run),
-          popup = ~paste("<em>Chinook Salmon Abundance Distribution</em><br><strong>Run:</strong> ", Run, 
+          popup = ~paste("<em>Chinook Salmon Habitat Extent</em><br><strong>Run:</strong> ", Run, 
                          "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
           group = "Chinook Distribution"
         )
@@ -376,15 +376,15 @@ shinyServer(function(input, output, session) {
   
   observe({
     proxy <- leafletProxy("mainMap") 
-    if (input$show_fish_abundance && input$show_coho_abundance) {
+    if (input$show_habitat_extent && input$show_coho_extent) {
       proxy |> 
         addPolylines(
-          data = coho_abundance,
+          data = coho_extent,
           color = "orange",
           weight = 4,
           opacity = 0.4,
           label = ~paste("Run:", Run),
-          popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
+          popup = ~paste("<em>Coho Habitat Extent</em><br><strong>Run:</strong> ", Run,
                          "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
           group = "Coho Distribution"
         )
@@ -396,15 +396,15 @@ shinyServer(function(input, output, session) {
   
   observe({
     proxy <- leafletProxy("mainMap") 
-    if (input$show_fish_abundance && input$show_steelhead_abundance) {
+    if (input$show_habitat_extent && input$show_steelhead_extent) {
       proxy |> 
         addPolylines(
-          data = steelhead_abundance,
+          data = steelhead_extent,
           color = "red",
           weight = 1,
           opacity = 0.4,
           label = ~paste("Run:", Run),
-          popup = ~paste("<em>Coho Abundance Distribution</em><br><strong>Run:</strong> ", Run,
+          popup = ~paste("<em>Coho Habitat Extent</em><br><strong>Run:</strong> ", Run,
                          "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
           group = "Steelhead Distribution"
         )
@@ -626,8 +626,8 @@ shinyServer(function(input, output, session) {
       data_to_use <- hatcheries
     } else if (data_selected == "Rotary Screw Traps") {
       data_to_use <- rst_sites
-    } else if (data_selected == "Fish Abundance") {
-      data_to_use <- abundance 
+    } else if (data_selected == "Fish Habitat Extent") {
+      data_to_use <- habitat_extent 
     } else if (data_selected == "Redd/Carcass Surveys") {
       data_to_use <- all_surveys
     }
@@ -662,8 +662,8 @@ shinyServer(function(input, output, session) {
       data_to_show <- hatcheries
     } else if (data_selected == "Rotary Screw Traps") {
       data_to_show <- rst_sites
-    } else if (data_selected == "Fish Abundance") {
-      data_to_show <- abundance |>  filter(!is.na(stream))
+    } else if (data_selected == "Fish Habitat Extent") {
+      data_to_show <- habitat_extent |>  filter(!is.na(stream))
     } else if (data_selected == "Redd/Carcass Surveys") {
       data_to_show <- all_surveys 
     }

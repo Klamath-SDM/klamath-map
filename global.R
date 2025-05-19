@@ -276,38 +276,38 @@ fingerprinting <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/
 
 ### Species Distrubution Shapefiles ----
 #chinook
-chinook_abundance <- read_sf("data-raw/species_distribution/Chinook_Abundance_Linear.shp") 
-chinook_abundance <- st_transform(chinook_abundance, crs = 4326) 
+chinook_extent <- read_sf("data-raw/species_distribution/Chinook_Abundance_Linear.shp") 
+chinook_extent <- st_transform(chinook_extent, crs = 4326) 
 
-chinook_abundance <- st_intersection(chinook_abundance, kl_basin_outline)
+chinook_extent <- st_intersection(chinook_extent, kl_basin_outline)
 
-centroids <- st_centroid(chinook_abundance)
-chinook_abundance$longitude <- st_coordinates(centroids)[, 1]
-chinook_abundance$latitude  <- st_coordinates(centroids)[, 2]
-chinook_abundance <- assign_sub_basin(chinook_abundance, sub_basin, is_point = FALSE) 
-chinook_abundance <- chinook_abundance |>
+centroids <- st_centroid(chinook_extent)
+chinook_extent$longitude <- st_coordinates(centroids)[, 1]
+chinook_extent$latitude  <- st_coordinates(centroids)[, 2]
+chinook_extent <- assign_sub_basin(chinook_extent, sub_basin, is_point = FALSE) 
+chinook_extent <- chinook_extent |>
   filter(Location %in% streams$Label) 
 
 #coho 
-coho_abundance <- read_sf("data-raw/species_distribution/Coho_Abundance_Linear.shp") 
-coho_abundance <- st_transform(coho_abundance, crs = 4326)
-coho_abundance <- st_intersection(coho_abundance, kl_basin_outline)
-coho_abundance <- assign_sub_basin(coho_abundance, sub_basin, is_point = FALSE)
-coho_abundance <- coho_abundance |>
+coho_extent <- read_sf("data-raw/species_distribution/Coho_Abundance_Linear.shp") 
+coho_extent <- st_transform(coho_extent, crs = 4326)
+coho_extent <- st_intersection(coho_extent, kl_basin_outline)
+coho_extent <- assign_sub_basin(coho_extent, sub_basin, is_point = FALSE)
+coho_extent <- coho_extent |>
   filter(Location %in% streams$Label) 
 # steelhead 
-steelhead_abundance <- read_sf("data-raw/species_distribution/Steelhead_Abundance_Linear.shp") 
-steelhead_abundance <- st_transform(steelhead_abundance, crs = 4326)
-steelhead_abundance <- st_intersection(steelhead_abundance, kl_basin_outline)
-steelhead_abundance <- assign_sub_basin(steelhead_abundance, sub_basin, is_point = FALSE)
-steelhead_abundance <- steelhead_abundance |>
+steelhead_extent <- read_sf("data-raw/species_distribution/Steelhead_Abundance_Linear.shp") 
+steelhead_extent <- st_transform(steelhead_extent, crs = 4326)
+steelhead_extent <- st_intersection(steelhead_extent, kl_basin_outline)
+steelhead_extent <- assign_sub_basin(steelhead_extent, sub_basin, is_point = FALSE)
+steelhead_extent <- steelhead_extent |>
   filter(Location %in% streams$Label) 
 
-abundance <- bind_rows(coho_abundance, steelhead_abundance, chinook_abundance) |>
+habitat_extent <- bind_rows(coho_abundance, steelhead_abundance, chinook_abundance) |>
   clean_names() |>
   select(-c(miles2, shape_len, fid, area, perimeter, kbbnd, kbbnd_id, shape_are, shape_len_1, global_id,trend_id, link)) |>
   mutate(stream = extract_waterbody(location),
-         data_type = "fish abundance") |> 
+         data_type = "fish habitat extent") |> 
   rename(species = c_name,
          species_full_name = s_name) |> 
   select(stream, sub_basin, data_type, location, species, species_full_name, run, everything()) |> 

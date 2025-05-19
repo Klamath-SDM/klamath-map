@@ -4,6 +4,7 @@ library(leaflet)
 library(DT)
 
 ui <- fluidPage(
+  style = "overflow-y: auto; height: 100vh;",
   tags$head(
     tags$style(HTML("
       body {
@@ -98,7 +99,7 @@ ui <- fluidPage(
       ),
       
       sidebarLayout(
-        sidebarPanel(
+        sidebarPanel(width = 3,
           h5("There is a wealth of data about water and ecological resources in the Klamath Basin collected over multiple decades by many entities. The high volume and dispersed nature of these data make it challenging to quickly determine data availability. This map was developed to support the Klamath Basin Science Collaborative by summarizing the data being collected in the Basin."),
           br(),
           # Select Input for Zooming to Rivers
@@ -200,18 +201,18 @@ ui <- fluidPage(
           
           hr(),
           
-          # Species Abundance Map Layers ---
+          # Species Habitat Extents Map Layers ---
           tags$div(
             class = "legend-item",
-            checkboxInput("show_fish_abundance", "Fish Abundance", value = TRUE)
+            checkboxInput("show_habitat_extent", "Fish Habitat Extents", value = TRUE)
             ),
           conditionalPanel(
-            condition = "input.show_fish_abundance == true",
+            condition = "input.show_habitat_extent == true",
             tags$div(
               style = "margin-left: 20px;",
-              checkboxInput("show_chinook_abundance", HTML("<span><img src='legend-abundance-1.png' style='width: 20px; height: 20px;'/> Chinook Salmon Abundance</span>"), value = TRUE),
-              checkboxInput("show_coho_abundance", HTML("<span><img src='legend-abundance-2.png' style='width: 20px; height: 20px;'/> Coho Abundance</span>"), value = TRUE),
-              checkboxInput("show_steelhead_abundance", HTML("<span><img src='legend-abundance-3.png' style='width: 20px; height: 20px;'/> Steelhead Abundance</span>"), value = TRUE)
+              checkboxInput("show_chinook_extent", HTML("<span><img src='legend-abundance-1.png' style='width: 20px; height: 20px;'/> Chinook Habitat Extent</span>"), value = TRUE),
+              checkboxInput("show_coho_extent", HTML("<span><img src='legend-abundance-2.png' style='width: 20px; height: 20px;'/> Coho Habitat Extent</span>"), value = TRUE),
+              checkboxInput("show_steelhead_extent", HTML("<span><img src='legend-abundance-3.png' style='width: 20px; height: 20px;'/> Steelhead Habitat Extent</span>"), value = TRUE)
               )
             ),
           
@@ -248,7 +249,7 @@ ui <- fluidPage(
                    "USGS Dam Removal Monitoring Map", target = "_blank"))
           ),
         
-        mainPanel(
+        mainPanel(width = 9,
           leafletOutput("mainMap", height = "1000px")
           )
         )
@@ -264,7 +265,7 @@ ui <- fluidPage(
         br(),
         selectInput("data_type", "Select Data Type:",
                     choices = c("Select Data Type", "All", "Flow", "Temperature", "Dissolved Oxygen", "pH", "Habitat Models", "Hatcheries", 
-                                "Rotary Screw Traps", "Fish Abundance", "Redd/Carcass Surveys")),
+                                "Rotary Screw Traps", "Fish Habitat Extents", "Redd/Carcass Surveys")),
         selectInput("sub_basin", "Select Sub-Basin:",
                     choices = c("All", "Williamson", "Sprague", "Upper Klamath Lake", "Butte", "Shasta", "Scott", 
                                 "Lower Klamath", "Salmon", "Trinity", "South Fork Trinity", "Lost"))
