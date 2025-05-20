@@ -3,6 +3,7 @@ library(shiny)
 library(leaflet)
 library(sf)
 library(janitor)
+library(klamathWaterData)
 #library(shinyauthr)
 
 #source("funcs.R")
@@ -64,11 +65,12 @@ streams <- st_read("data-raw/klamath_basin_river_lines/Merged_Rivers.shp")
 streams <- st_transform(streams, crs = 4326)
 
 ### Temperature and flow data ### ----
-flow_data <- processed_data_board |> 
-  pins::pin_read("flow_data") |> glimpse()
+flow_data <- klamathWaterData::flow_data |> 
+  glimpse()
 
-flow_gage <- processed_data_board |> 
-  pins::pin_read("flow_gage") |> glimpse()
+flow_gage <- klamathWaterData::flow_gage |> 
+  glimpse()
+
 
 flow <- flow_data |> 
   inner_join(flow_gage, by = c("gage_id", "gage_name", "stream")) |> 
@@ -80,13 +82,12 @@ flow <- flow_data |>
   relocate(sub_basin, data_type, .before = gage_id) |> 
   glimpse()
 
-# Pulling data from AWS processed data
 # temperature
-temperature_data <- processed_data_board |> 
-  pins::pin_read("temperature_data") |> glimpse()
+temperature_data <- klamathWaterData::temperature_data |> 
+  glimpse()
 
-temperature_gage <- processed_data_board |> 
-  pins::pin_read("temperature_gage") |> glimpse()
+temperature_gage <- klamathWaterData::temperature_gage |> 
+  glimpse()
 
 temperature <- temperature_data |> 
   inner_join(temperature_gage, by = c("gage_id", "gage_name", "stream")) |> 
@@ -99,13 +100,10 @@ temperature <- temperature_data |>
   glimpse()
 
 ### DO and pH ----
-# Pulling data from AWS processed data
+# Pulling data from klamathWaterData
+do_data <- klamathWaterData::do_data
 
-do_data <- processed_data_board |> 
-  pins::pin_read("do_data") |> glimpse()
-
-do_gage <- processed_data_board |> 
-  pins::pin_read("do_gage") |> glimpse()
+do_gage <- klamathWaterData::do_gage 
 
 do <- do_data |> 
   inner_join(do_gage, by = c("gage_id", "gage_name", "stream")) |> 
@@ -118,11 +116,9 @@ do <- do_data |>
   glimpse()
 
 ## pH data - #TODO add stream name to all datasets
-ph_data <- processed_data_board |> 
-  pins::pin_read("ph_data") |> glimpse()
+ph_data <- klamathWaterData::ph_data 
 
-ph_gage <- processed_data_board |> 
-  pins::pin_read("ph_gage") |> glimpse()
+ph_gage_new <- klamathWaterData::ph_gage 
 
 ph <- ph_data |> 
   inner_join(ph_gage, by = c("gage_id", "gage_name", "stream")) |> 
