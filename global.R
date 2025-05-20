@@ -242,33 +242,24 @@ all_surveys <- bind_rows(survey_lines_1, survey_lines_2, survey_points) |>
   glimpse()
 
 ### USGS map layers ### ----
-dams_tb_removed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams_to_be_removed.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-dams <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/Dams.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-copco_res <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Copco_Reservoir_bed_sediment_cores.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-estuary_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Estuary_bed_sediment_samples.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-jc_boyle_reservoir_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_JCBoyle_Reservoir_bed_sediment_cores.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-ig_reservoir_bedsed <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_IronGate_Reservoir_bed_sediment_cores.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-geomorphic_reaches <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Mainstem_Geomorphic_Reaches.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-sediment_bug <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Sediment_Bug_Samples.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
-fingerprinting <- read_sf("data-raw/usgs_dam_removal_map/klamath_map_shapefiles/USGS_Tributary_Fingerprinting_Samples.shp") |> 
-  mutate(longitude = st_coordinates(geometry)[, 1],
-         latitude = st_coordinates(geometry)[, 2])
+dams_tb_removed <- klamathWaterData::usgs_dam_removal_monitoring_layers$dams_tb_removed
+
+dams <- klamathWaterData::usgs_dam_removal_monitoring_layers$dams
+
+copco_res <- klamathWaterData::usgs_dam_removal_monitoring_layers$copco_res
+
+estuary_bedsed <- klamathWaterData::usgs_dam_removal_monitoring_layers$estuary_bedsed
+
+jc_boyle_reservoir_bedsed <- klamathWaterData::usgs_dam_removal_monitoring_layers$jc_boyle_reservoir_bedsed
+
+ig_reservoir_bedsed <- klamathWaterData::usgs_dam_removal_monitoring_layers$ig_reservoir_bedsed
+
+geomorphic_reaches <- klamathWaterData::usgs_dam_removal_monitoring_layers$geomorphic_reaches
+
+sediment_bug <- klamathWaterData::usgs_dam_removal_monitoring_layers$sediment_bug
+
+fingerprinting <- klamathWaterData::usgs_dam_removal_monitoring_layers$fingerprinting
+
 
 ### Species Distrubution Shapefiles ----
 #chinook

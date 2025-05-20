@@ -442,10 +442,10 @@ shinyServer(function(input, output, session) {
                          fillOpacity = 0.7, 
                          weight = 2, 
                          radius = 5,
-                         popup = ~paste("<em>Dams to be Removed</em>",
+                         popup = ~paste("<em>Removed Dams</em>",
                                         "<br>Dam Name:", DAM_NAME,
                                         "<br>Source: USGS Dam Removal Map"),
-                         label = ~htmltools::HTML("<em>Dams to be Removed</em>"), 
+                         label = ~htmltools::HTML("<em>Removed Dams</em>"), 
                          group = "Dams to be Removed")
       } else {
         proxy |>
