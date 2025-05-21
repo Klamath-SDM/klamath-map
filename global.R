@@ -4,6 +4,7 @@ library(leaflet)
 library(sf)
 library(janitor)
 library(klamathWaterData)
+library(rivermile)
 #library(shinyauthr)
 
 #source("funcs.R")
@@ -35,17 +36,6 @@ assign_sub_basin <- function(data, sub_basin, is_point = TRUE, lon_col = "longit
   return(sf_data)
   }
 
-#function for extracting stream names
-extract_waterbody <- function(names) {
-  names <- gsub("\\bRvr\\b", "River", names, ignore.case = TRUE)
-  names <- gsub("\\br\\b", "River", names, ignore.case = TRUE)
-  
-  names <- stringr::str_extract(names, "(?i)(\\b(?:upper|lower|north|south|east|west|middle|fork|branch)?\\s*(?:\\w+\\s){0,3}(?:Creek|River))")
-  
-  cleaned_names <- gsub("\\b(?:at|HOBO)\\b", "", names, ignore.case = TRUE)
-  result <- trimws(cleaned_names)
-  return(result)
-  }
 
 ###############
 # DATA IMPORTS 
@@ -290,7 +280,7 @@ steelhead_extent <- assign_sub_basin(steelhead_extent, sub_basin, is_point = FAL
 steelhead_extent <- steelhead_extent |>
   filter(Location %in% streams$Label) 
 
-habitat_extent <- bind_rows(coho_abundance, steelhead_abundance, chinook_abundance) |>
+habitat_extent <- bind_rows(coho_extent, steelhead_extent, chinook_extent) |>
   clean_names() |>
   select(-c(miles2, shape_len, fid, area, perimeter, kbbnd, kbbnd_id, shape_are, shape_len_1, global_id,trend_id, link)) |>
   mutate(stream = extract_waterbody(location),
