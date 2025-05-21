@@ -359,7 +359,7 @@ shinyServer(function(input, output, session) {
     if (input$show_habitat_extent && input$show_chinook_extent) {
       proxy |> 
         addPolylines(
-          data = chinook_abundance,
+          data = chinook_extent,
           color = "blue",
           weight = 7,
           opacity = 0.4,

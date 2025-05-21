@@ -5,6 +5,7 @@ library(sf)
 library(janitor)
 library(klamathWaterData)
 library(rivermile)
+library(klamathFishData)
 #library(shinyauthr)
 
 #source("funcs.R")
@@ -16,7 +17,7 @@ library(rivermile)
 # Set up aws bucket - note that login is required in order to connect to aws
 processed_data_board <- pins::board_s3(bucket = "klamath-sdm", region = "us-east-1", prefix = "water_quality/processed-data/")
 
-# function to assign sub-basin to datasets 
+# function to assign sub-basin to datasets #TODO let's consider moving this function to an R package(?)
 assign_sub_basin <- function(data, sub_basin, is_point = TRUE, lon_col = "longitude", lat_col = "latitude", sub_basin_col = "NAME") {
   if (is_point) {
     sf_data <- st_as_sf(data, coords = c(lon_col, lat_col), crs = 4326)
@@ -121,34 +122,15 @@ ph <- ph_data |>
   glimpse()
 
 ### RST data  ----
-rst_sites <- read_csv(here::here('data-raw', 'rst_sites.csv')) |> 
-  clean_names() |>
-  mutate(data_type = "RST data",
-         stream = paste(watershed, "River")) |>
-  assign_sub_basin(sub_basin) |>
-  select(stream, sub_basin, data_type, rst_name, operator, latitude, longitude, link) |>
-  glimpse()
+rst_sites <- klamathFishData::rst_sites |> glimpse()
+
 
 ### Habitat extent data ----
-habitat_data <- read_csv(here::here('data-raw','habitat_data.csv')) |> 
-  clean_names() |>
-  mutate(longitude = as.numeric(longtidue)) |>
-  rename(stream = river) |> 
-  assign_sub_basin(sub_basin) |> 
-  select(-longtidue) |>
-  select(stream, sub_basin, everything()) |>
-  glimpse()
+habitat_data <- klamathFishData::habitat_data |> glimpse()
 
 ### Hatcheries ----
-hatcheries <- read_csv(here::here('data-raw','fish_hatchery_locations.csv')) |> 
-  clean_names() |> 
-  mutate(stream = paste(watershed, "River"),
-         data_type = "hatchery") |> 
-  rename(agency = operator) |> 
-  assign_sub_basin(sub_basin) |> 
-  select(-c(google_earth_location,  watershed)) |> 
-  select(stream, sub_basin, data_type, everything()) |>
-  glimpse()
+hatcheris_new <- klamathFishData::hatcheries |> glimpse()
+
 
 ### Redd and Carcass Surveys ### ----
 ## Survey Lines
