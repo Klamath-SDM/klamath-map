@@ -9,7 +9,7 @@ ui <- fluidPage(
     tags$style(HTML("
       body {
         font-family: Helvetica, Arial, sans-serif;
-        background: linear-gradient(to bottom, #F0F8FF, #004d99);
+        background: linear-gradient(to bottom, #f0f0f0, #333333);
         background-attachment: fixed;
         margin: 0;
         padding: 0;
@@ -29,7 +29,7 @@ ui <- fluidPage(
         position: absolute;
         inset: 0;
         background: url('klamath_film_image.jpg') center/cover no-repeat;
-        filter: blur(1px) brightness(0.7);
+        filter: brightness(0.7);
         z-index: 1;
       }
 
@@ -57,9 +57,9 @@ ui <- fluidPage(
       .nav-tabs > li.active > a,
       .nav-tabs > li.active > a:focus,
       .nav-tabs > li.active > a:hover {
-        background: #004d99 !important;
+        background: #333333 !important;
         color: white !important;
-        border-color: #004d99 !important;
+        border-color: #333333 !important;
       }
 
       .nav-tabs > li > a:hover {
@@ -143,7 +143,7 @@ ui <- fluidPage(
               checkboxInput("show_temp_gages", HTML("<span><img src='icon-circle-t.png' style='width: 20px; height: 20px;'/> Temperature gage</span>"), value = TRUE),
               checkboxInput("show_flow_gages", HTML("<span><img src='icon-circle-f.png' style='width: 20px; height: 20px;'/> Flow gage</span>"), value = TRUE),
               checkboxInput("show_do_gages", HTML("<span><i class='fa fa-tint' style='color: blue; font-size: 16px;'></i> DO gage</span>"), value = TRUE),
-              checkboxInput("show_ph_gages", HTML("<span><i class='fa fa-tint' style='color: green; font-size: 16px;'></i> pH gage</span>"), value = TRUE)
+              checkboxInput("show_ph_gages", HTML("<span><img src='ph-icon.png' style='width: 20px; height: 20px; '></i> pH gage</span>"), value = TRUE)
               )
             ),
           

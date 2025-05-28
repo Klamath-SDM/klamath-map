@@ -201,10 +201,10 @@ shinyServer(function(input, output, session) {
     proxy <- leafletProxy("mainMap")
     if (input$show_water_quality && input$show_ph_gages) {
       proxy |>
-        addAwesomeMarkers(
+        addMarkers(
           data = ph,
           lng = ~longitude, lat = ~latitude,
-          icon = ph_icon,
+          icon = ~rst_markers["ph-icon"],
           popup = ~paste("<em>pH Gage</em>", "<br><strong>Gage Number:</strong>", gage_id,
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
