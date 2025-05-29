@@ -7,71 +7,13 @@ ui <- fluidPage(
   style = "overflow-y: auto; height: 100vh;",
   tags$head(
     tags$style(HTML("
-      body {
-        font-family: Helvetica, Arial, sans-serif;
-        background: linear-gradient(to bottom, #f0f0f0, #333333);
-        background-attachment: fixed;
-        margin: 0;
-        padding: 0;
-      }
-
-      .title-panel {
-        position: relative;
-        height: 240px; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-      }
-
-      .title-panel::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: url('klamath_film_image.jpg') center/cover no-repeat;
-        filter: brightness(0.7);
-        z-index: 1;
-      }
-
       .title-panel-text {
-        position: relative;
-        z-index: 2;
         font-size: 36px;
-        font-weight: bold;
-        color: white;
+        font-weight: normal;
+        color: gray;
         text-align: center;
-        text-shadow: 0 2px 6px rgba(0,0,0,0.7);
         padding: 10px 20px;
-      }
-
-      .nav-tabs > li > a {
-        background: #f8f9fa;
-        color: #333;
-        font-size: 16px;
-        padding: 10px 20px;
-        border-radius: 8px 8px 0 0;
-        border: 1px solid #ccc;
-        transition: background-color 0.3s;
-      }
-
-      .nav-tabs > li.active > a,
-      .nav-tabs > li.active > a:focus,
-      .nav-tabs > li.active > a:hover {
-        background: #333333 !important;
-        color: white !important;
-        border-color: #333333 !important;
-      }
-
-      .nav-tabs > li > a:hover {
-        background: #e0e0e0 !important;
-        color: #000 !important;
-      }
-
-      .tab-content {
-        background: white;
-        padding: 20px;
-        border-radius: 0 8px 8px 8px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
       }
     ")),
   
