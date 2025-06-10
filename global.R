@@ -287,6 +287,7 @@ rst_markers <- iconList(
   "H" = makeIcon("icon-spiral.png", "icon-spiral.png", 18, 18, 9, 9),
   "X" = makeIcon("icon-x.png", "icon-x.png", 14, 14, 7, 7),
   "circle-T" = makeIcon("icon-circle-t.png", "icon-circle-t.png", 18, 18, 9, 9),
+  "circle-DO" = makeIcon("icon-circle-do.png", "icon-circle-do.png", 18, 18, 9, 9),
   "circle-F" = makeIcon("icon-circle-f.png", "icon-circle-f.png", 18, 18, 9, 9),
   "circle-TF" = makeIcon("icon-circle-tf.png", "icon-circle-tf.png", 18, 18, 9, 9),
   "square" = makeIcon("legend-bypass.png", "legend-bypass.png", 18, 18, 9, 9),
@@ -303,12 +304,12 @@ reach_markers <- iconList(
 )
 
 
-do_icon <- makeAwesomeIcon(
-  icon = "tint",
-  library = "fa",  
-  markerColor = "blue", 
-  iconColor = "white",
-  squareMarker = TRUE)
+# do_icon <- makeAwesomeIcon(
+#   icon = "tint",
+#   library = "fa",  
+#   markerColor = "blue", 
+#   iconColor = "white",
+#   squareMarker = TRUE)
 
 # ph_icon <- makeAwesomeIcon(
 #   icon = "tint",

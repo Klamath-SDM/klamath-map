@@ -10,7 +10,7 @@ ui <- fluidPage(
       .title-panel-text {
         font-size: 36px;
         font-weight: normal;
-        color: gray;
+        color: black;
         text-align: center;
         padding: 10px 20px;
         border-radius: 8px;
@@ -84,7 +84,7 @@ ui <- fluidPage(
               style = "margin-left: 20px;",
               checkboxInput("show_temp_gages", HTML("<span><img src='icon-circle-t.png' style='width: 20px; height: 20px;'/> Temperature gage</span>"), value = TRUE),
               checkboxInput("show_flow_gages", HTML("<span><img src='icon-circle-f.png' style='width: 20px; height: 20px;'/> Flow gage</span>"), value = TRUE),
-              checkboxInput("show_do_gages", HTML("<span><i class='fa fa-tint' style='color: blue; font-size: 16px;'></i> DO gage</span>"), value = TRUE),
+              checkboxInput("show_do_gages", HTML("<span><img src='icon-circle-do.png' style='width: 20px; height: 20px;'/> DO gage</span>"), value = TRUE),
               checkboxInput("show_ph_gages", HTML("<span><img src='ph-icon.png' style='width: 20px; height: 20px; '></i> pH gage</span>"), value = TRUE)
               )
             ),
