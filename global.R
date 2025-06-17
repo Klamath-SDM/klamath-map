@@ -129,7 +129,7 @@ rst_sites <- klamathFishData::rst_sites |> glimpse()
 habitat_data <- klamathFishData::habitat_data |> glimpse()
 
 ### Hatcheries ----
-hatcheris_new <- klamathFishData::hatcheries |> glimpse()
+hatcheries <- klamathFishData::hatcheries |> glimpse()
 
 
 ### Redd and Carcass Surveys ### ----
