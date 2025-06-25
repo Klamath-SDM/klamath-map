@@ -6,6 +6,7 @@ library(janitor)
 library(klamathWaterData)
 library(rivermile)
 library(klamathFishData)
+library(klamathHabitatData)
 #library(shinyauthr)
 
 #source("funcs.R")
@@ -15,7 +16,7 @@ library(klamathFishData)
 #readRenviron(".Renviron")
 
 # Set up aws bucket - note that login is required in order to connect to aws
-processed_data_board <- pins::board_s3(bucket = "klamath-sdm", region = "us-east-1", prefix = "water_quality/processed-data/")
+# processed_data_board <- pins::board_s3(bucket = "klamath-sdm", region = "us-east-1", prefix = "water_quality/processed-data/")
 
 # function to assign sub-basin to datasets #TODO let's consider moving this function to an R package(?)
 assign_sub_basin <- function(data, sub_basin, is_point = TRUE, lon_col = "longitude", lat_col = "latitude", sub_basin_col = "NAME") {
@@ -233,47 +234,21 @@ sediment_bug <- klamathWaterData::usgs_dam_removal_monitoring_layers$sediment_bu
 fingerprinting <- klamathWaterData::usgs_dam_removal_monitoring_layers$fingerprinting
 
 
-### Species Distrubution Shapefiles ----
-#chinook
-chinook_extent <- read_sf("data-raw/species_distribution/Chinook_Abundance_Linear.shp") 
-chinook_extent <- st_transform(chinook_extent, crs = 4326) 
+### Species Distrubution ----
+habitat_extent <- klamathHabitatData::habitat_extents |> glimpse()
 
-chinook_extent <- st_intersection(chinook_extent, kl_basin_outline)
+chinook_extent <- habitat_extent |> 
+  filter(species == "chinook") 
+chinook_extent <- st_transform(chinook_extent, crs = 4326)
 
-centroids <- st_centroid(chinook_extent)
-chinook_extent$longitude <- st_coordinates(centroids)[, 1]
-chinook_extent$latitude  <- st_coordinates(centroids)[, 2]
-chinook_extent <- assign_sub_basin(chinook_extent, sub_basin, is_point = FALSE) 
-chinook_extent <- chinook_extent |>
-  filter(Location %in% streams$Label) 
-
-#coho 
-coho_extent <- read_sf("data-raw/species_distribution/Coho_Abundance_Linear.shp") 
-coho_extent <- st_transform(coho_extent, crs = 4326)
-coho_extent <- st_intersection(coho_extent, kl_basin_outline)
-coho_extent <- assign_sub_basin(coho_extent, sub_basin, is_point = FALSE)
-coho_extent <- coho_extent |>
-  filter(Location %in% streams$Label) 
-# steelhead 
-steelhead_extent <- read_sf("data-raw/species_distribution/Steelhead_Abundance_Linear.shp") 
+steelhead_extent <- habitat_extent |> 
+  filter(species == "steelhead")
 steelhead_extent <- st_transform(steelhead_extent, crs = 4326)
-steelhead_extent <- st_intersection(steelhead_extent, kl_basin_outline)
-steelhead_extent <- assign_sub_basin(steelhead_extent, sub_basin, is_point = FALSE)
-steelhead_extent <- steelhead_extent |>
-  filter(Location %in% streams$Label) 
 
-habitat_extent <- bind_rows(coho_extent, steelhead_extent, chinook_extent) |>
-  clean_names() |>
-  select(-c(miles2, shape_len, fid, area, perimeter, kbbnd, kbbnd_id, shape_are, shape_len_1, global_id,trend_id, link)) |>
-  mutate(stream = extract_waterbody(location),
-         data_type = "fish habitat extent") |> 
-  rename(species = c_name,
-         species_full_name = s_name) |> 
-  select(stream, sub_basin, data_type, location, species, species_full_name, run, everything()) |> 
-  st_drop_geometry() |>
-  glimpse()
-
-
+coho_extent <- habitat_extent |> 
+  filter(species == "coho")
+coho_extent <- st_transform(coho_extent, crs = 4326)
+                            
 ###################
 ### ICON DEFINITIONS ----
 ###################

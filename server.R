@@ -351,7 +351,7 @@ shinyServer(function(input, output, session) {
 
   run_palette <- colorFactor(
     palette = "Set1",  
-    domain = unique(chinook_extent$Run)
+    domain = unique(chinook_extent$run)
   )
   
   observe({
@@ -363,9 +363,8 @@ shinyServer(function(input, output, session) {
           color = "blue",
           weight = 7,
           opacity = 0.4,
-          label = ~paste("Run:", Run),
-          popup = ~paste("<em>Chinook Salmon Habitat Extent</em><br><strong>Run:</strong> ", Run, 
-                         "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
+          label = ~paste("Chinook Salmon Habitat Extent"),
+          popup = ~paste("<em>Chinook Salmon Habitat Extent</em><br><strong>run:</strong> ", run),
           group = "Chinook Distribution"
         )
       } else {
@@ -383,9 +382,8 @@ shinyServer(function(input, output, session) {
           color = "orange",
           weight = 4,
           opacity = 0.4,
-          label = ~paste("Run:", Run),
-          popup = ~paste("<em>Coho Habitat Extent</em><br><strong>Run:</strong> ", Run,
-                         "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
+          label = ~paste("Coho Habitat Extent"),
+          popup = ~paste("<em>Coho Habitat Extent</em><br><strong>Run:</strong> ", run),
           group = "Coho Distribution"
         )
       } else {
@@ -403,9 +401,8 @@ shinyServer(function(input, output, session) {
           color = "red",
           weight = 1,
           opacity = 0.4,
-          label = ~paste("Run:", Run),
-          popup = ~paste("<em>Coho Habitat Extent</em><br><strong>Run:</strong> ", Run,
-                         "<br><strong>Category:</strong>", Category, "<br><strong>Observation:</strong>", ObsType),
+          label = ~paste("Coho Habitat Extent"),
+          popup = ~paste("<em>Coho Habitat Extent</em><br><strong>Run:</strong> ", run),
           group = "Steelhead Distribution"
         )
       } else {
