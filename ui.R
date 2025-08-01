@@ -23,7 +23,17 @@ ui <- fluidPage(
       var lng = $(this).data('longitude');
       var coords = lat + ',' + lng;
       Shiny.setInputValue('map_click', coords, {priority: 'event'});
-    });"))
+    });")),
+  tags$script(HTML("
+  $(document).on('click', '.show-plot-btn', function() {
+    var gage = $(this).data('gage');
+    var type = $(this).data('type');
+    Shiny.setInputValue('selected_plot_info', {
+      gage: gage,
+      type: type
+    }, {priority: 'event'});
+  });
+"))
   ),
   
   div(class = "title-panel",

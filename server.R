@@ -139,7 +139,8 @@ shinyServer(function(input, output, session) {
           popup = ~paste("<em>Flow Gage</em><br>", "<strong>Gage Number:</strong>", gage_id, 
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
-                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
+                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date,
+                         "<br><button class='show-plot-btn' data-type='flow' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
                          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
                          # gage_number, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>Flow Gage</em>"),
@@ -158,10 +159,11 @@ shinyServer(function(input, output, session) {
           data = temperature,
           lng = ~longitude, lat = ~latitude, 
           icon = ~rst_markers["circle-T"],
-          popup = ~paste("<em>Temperature Gage</em><br>", "<strong>Gage Number:</strong>", gage_id,
+          popup = ~paste0("<em>Temperature Gage</em><br>", "<strong>Gage Number:</strong>", gage_id,
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
-                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
+                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date,
+                         "<br><button class='show-plot-btn' data-type='temperature' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
                          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
                          # gage_id, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>Temperature Gage</em>"),
@@ -185,7 +187,8 @@ shinyServer(function(input, output, session) {
           popup = ~paste("<em>Dissolved Oxygen Gage</em><br>", "<strong>Gage Number:</strong>", gage_id, 
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
-                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
+                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date,
+                         "<br><button class='show-plot-btn' data-type='do' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
           # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
           # gage_id, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>Dissolved Oxygen Gage</em>"),
@@ -208,7 +211,8 @@ shinyServer(function(input, output, session) {
           popup = ~paste("<em>pH Gage</em>", "<br><strong>Gage Number:</strong>", gage_id,
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
-                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date),
+                         "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date,
+                         "<br><button class='show-plot-btn' data-type='ph' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
           # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=",
           # gage_id, "', '_blank')\">Gage Site</button>"),
           label = ~htmltools::HTML("<em>pH Gage</em>"),
@@ -696,6 +700,48 @@ shinyServer(function(input, output, session) {
         ))
       })
     })
+  
+  # timeseries plots for wq data
+  observeEvent(input$selected_plot_info, {
+    req(input$selected_plot_info$gage, input$selected_plot_info$type)
+    
+    gage_id_selected <- input$selected_plot_info$gage
+    data_type <- input$selected_plot_info$type
+    
+    # Choose dataset
+    selected_data <- switch(data_type,
+                            "temperature" = temperature_mean,
+                            "flow" = flow_data,
+                            "do" = do_data,
+                            "ph" = ph_data)
+    
+    # Store the selected dataset in a reactive value
+    output$wq_timeseries_plot <- renderPlotly({
+      selected_data |>
+        filter(gage_id == gage_id_selected) |>
+        plot_ly(
+          x = ~date,
+          y = ~value,
+          type = 'scatter',
+          mode = 'markers',
+          # line = list(color = 'steelblue', width = 2),
+          hoverinfo = 'x+y'
+        ) |>
+        layout(
+          yaxis = list(title = toupper(data_type)),
+          xaxis = list(title = "Date")
+        )
+    })
+    
+    showModal(modalDialog(
+      title = paste("Time Series for", toupper(data_type), "-", gage_id_selected),
+      plotlyOutput("wq_timeseries_plot", height = "400px"),
+      size = "l",
+      easyClose = TRUE
+    ))
+  })
+  
+  
   
   # Listen for map click events - TODO need to fix button function
   # observeEvent(input$map_click, {

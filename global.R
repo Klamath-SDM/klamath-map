@@ -7,6 +7,7 @@ library(klamathWaterData)
 library(rivermile)
 library(klamathFishData)
 library(klamathHabitatData)
+library(plotly)
 #library(shinyauthr)
 
 #source("funcs.R")
@@ -90,6 +91,9 @@ temperature <- temperature_data |>
   filter(!is.na(longitude)) |> 
   relocate(sub_basin, data_type, .before = gage_id) |> 
   glimpse()
+
+temperature_mean <- temperature_data |> 
+  filter(statistic == "mean")
 
 ### DO and pH ----
 # Pulling data from klamathWaterData
