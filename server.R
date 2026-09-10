@@ -296,7 +296,7 @@ shinyServer(function(input, output, session) {
           data = rst_sites,
           lng = ~longitude, lat = ~latitude,
           icon = ~rst_markers["single"],
-          popup = ~paste("<em>RST Trap</em><br>", "Trap Name:", rst_name,
+          popup = ~paste("<em>RST Trap</em><br>", "Trap Name:", site_name,
                          "<br><button onclick='window.open(\"", link, "\", \"_blank\")'>More Info</button>"),
           label = ~htmltools::HTML("<em>RST Trap</em>"),
           group = "Rotary Screw Traps"
@@ -319,7 +319,7 @@ shinyServer(function(input, output, session) {
           popup = ~paste(
             "<em>Hatchery</em><br>",
             "Hatchery Name:", site_name, 
-            "<br><button onclick='window.open(\"", resource, "\", \"_blank\")'>More Info</button>"
+            "<br><button onclick='window.open(\"", link, "\", \"_blank\")'>More Info</button>"
           ),
           label = ~htmltools::HTML("<em>Hatchery</em>"),
           group = "Hatcheries"
@@ -338,10 +338,10 @@ shinyServer(function(input, output, session) {
         data = habitat_data,
         lng = ~longitude, lat = ~latitude,
         icon = ~rst_markers["X"],
-        popup = ~paste0(
-          "<em>Habitat Data</em><br>Model Type: ", model_type,
-          "<br>Status: ", status, "<br>Location Name: ", location_name
-        ),
+        # popup = ~paste0(
+        #   "<em>Habitat Data</em><br>Model Type: ", data_type,
+        #   "<br>Location Name: ", location_name
+        # ),
         label = ~htmltools::HTML("<em>Habitat Data</em>"),
         group = "Habitat Data"
         )

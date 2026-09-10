@@ -66,8 +66,8 @@ flow_gage <- klamathWaterData::flow_gage |>
 
 
 flow <- flow_data |> 
-  inner_join(flow_gage, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
+  inner_join(flow_gage, by = c("gage_id", "gage_name", "location")) |> 
+  group_by(location, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "flow") |> 
   assign_sub_basin(sub_basin) |>
@@ -83,8 +83,8 @@ temperature_gage <- klamathWaterData::temperature_gage |>
   glimpse()
 
 temperature <- temperature_data |> 
-  inner_join(temperature_gage, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
+  inner_join(temperature_gage, by = c("gage_id", "gage_name", "location")) |> 
+  group_by(location, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "temperature") |> 
   assign_sub_basin(sub_basin) |>
@@ -102,8 +102,8 @@ do_data <- klamathWaterData::do_data
 do_gage <- klamathWaterData::do_gage 
 
 do <- do_data |> 
-  inner_join(do_gage, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
+  inner_join(do_gage, by = c("gage_id", "gage_name", "location")) |> 
+  group_by(location, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "dissolved oxygen") |> 
   assign_sub_basin(sub_basin) |>
@@ -117,8 +117,8 @@ ph_data <- klamathWaterData::ph_data
 ph_gage_new <- klamathWaterData::ph_gage 
 
 ph <- ph_data |> 
-  inner_join(ph_gage, by = c("gage_id", "gage_name", "stream")) |> 
-  group_by(stream, gage_id, gage_name, agency, latitude, longitude) |> 
+  inner_join(ph_gage, by = c("gage_id", "gage_name", "location")) |> 
+  group_by(location, gage_id, gage_name, agency, latitude, longitude) |> 
   summarise(min_date = min(date), max_date = max(date)) |> 
   mutate(data_type = "ph") |> 
   assign_sub_basin(sub_basin) |>
@@ -126,15 +126,21 @@ ph <- ph_data |>
   relocate(sub_basin, data_type, .before = gage_id) |> 
   glimpse()
 
+#  data object that contains datasets below:
+data_location_lookup <- klamathFishData::data_location_lookup
+
 ### RST data  ----
-rst_sites <- klamathFishData::rst_sites |> glimpse()
+rst_sites <- data_location_lookup |>
+  filter(data_type == "rst") |> glimpse()
 
 
 ### Habitat extent data ----
-habitat_data <- klamathFishData::habitat_data |> glimpse()
+habitat_data <- data_location_lookup |>
+  filter(data_type == "habitat") |> glimpse()
 
 ### Hatcheries ----
-hatcheries <- klamathFishData::hatcheries |> glimpse()
+hatcheries <- data_location_lookup |>
+  filter(data_type == "hatchery") |> glimpse()
 
 
 ### Redd and Carcass Surveys ### ----
