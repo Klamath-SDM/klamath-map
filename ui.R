@@ -79,23 +79,23 @@ ui <- fluidPage(
           # Basin Outline
           # checkboxInput("show_basin_outline", "Klamath River Basin Outline", value = TRUE),
           checkboxInput("show_sub_basin_outline", "Klamath Sub Basin Boundaries", value = TRUE),
-          checkboxInput("show_streams", "Klamath Basin Streams", value = TRUE),
+          checkboxInput("show_streams", "Klamath Basin Streams", value = FALSE),
           
           hr(),
           
           # Water Quality
           tags$div(
             class = "legend-item",
-            checkboxInput("show_water_quality", "Water Quality", value = TRUE)
+            checkboxInput("show_water_quality", "Water Quality", value = FALSE)
             ),
           conditionalPanel(
-            condition = "input.show_water_quality == true", 
+            condition = "input.show_water_quality == true",
             tags$div(
               style = "margin-left: 20px;",
-              checkboxInput("show_temp_gages", HTML("<span><img src='icon-circle-t.png' style='width: 20px; height: 20px;'/> Temperature gage</span>"), value = TRUE),
-              checkboxInput("show_flow_gages", HTML("<span><img src='icon-circle-f.png' style='width: 20px; height: 20px;'/> Flow gage</span>"), value = TRUE),
-              checkboxInput("show_do_gages", HTML("<span><img src='icon-circle-do.png' style='width: 20px; height: 20px;'/> DO gage</span>"), value = TRUE),
-              checkboxInput("show_ph_gages", HTML("<span><img src='ph-icon.png' style='width: 20px; height: 20px; '></i> pH gage</span>"), value = TRUE)
+              checkboxInput("show_temp_gages", HTML("<span><img src='icon-circle-t.png' style='width: 20px; height: 20px;'/> Temperature gage</span>"), value = FALSE),
+              checkboxInput("show_flow_gages", HTML("<span><img src='icon-circle-f.png' style='width: 20px; height: 20px;'/> Flow gage</span>"), value = FALSE),
+              checkboxInput("show_do_gages", HTML("<span><img src='icon-circle-do.png' style='width: 20px; height: 20px;'/> DO gage</span>"), value = FALSE),
+              checkboxInput("show_ph_gages", HTML("<span><img src='ph-icon.png' style='width: 20px; height: 20px; '></i> pH gage</span>"), value = FALSE)
               )
             ),
           
@@ -109,7 +109,7 @@ ui <- fluidPage(
           # Salmonid Data
           tags$div(
             class = "legend-item",
-            checkboxInput("show_salmonid_data", "Salmonid Data", value = TRUE)),
+            checkboxInput("show_salmonid_data", "Salmonid Data", value = FALSE)),
           conditionalPanel(
             condition = "input.show_salmonid_data == true",
             tags$div(
@@ -118,14 +118,14 @@ ui <- fluidPage(
               <ul style='list-style-type: none; margin: 0; padding-left: 0;'>
               <li><img src='icon-diamond.png' style='width: 20px; height: 20px;' /> Single Trap</li>
               <li><img src='icon-diamond-stack.png' style='width: 20px; height: 20px;' /> Multiple Traps</li>
-                                             </ul>"), value = TRUE),
-              checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = TRUE),
+                                             </ul>"), value = FALSE),
+              checkboxInput("show_survey_layers", "Redd/Carcass Survey Layers", value = FALSE),
               HTML("<img src='legend-habitat-1.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Reaches"),
               HTML("<div style='display: block; margin-top: 5px;'>
                    <img src='legend-bypass.png' style='width: 20px; height: 20px;' /> Redd/Carcass Survey Points</div>"),
               
               # Fish Hatcheries
-              checkboxInput("show_hatcheries", "Hatcheries", value = TRUE),
+              checkboxInput("show_hatcheries", "Hatcheries", value = FALSE),
               HTML("<img src='icon-spiral.png' style='width: 20px; height: 20px;' /> Fish Hatcheries")
               )
             ),
@@ -137,14 +137,14 @@ ui <- fluidPage(
           
           tags$div(
             class = "legend-item",
-            checkboxInput("show_habitat_data", "Habitat Models", value = TRUE)
+            checkboxInput("show_habitat_data", "Habitat Models", value = FALSE)
             ),
           conditionalPanel(
             condition = "input.show_habitat_data == true",
             tags$div(
               style = "margin-left: 20px; display: flex; align-items: center; gap: 10px;",
-              checkboxInput("show_habitat_data_detail", 
-                            HTML("<div><img src='icon-x.png' style='width: 20px; height: 20px; vertical-align: middle;' />Habitat Data</div>"), value = TRUE)
+              checkboxInput("show_habitat_data_detail",
+                            HTML("<div><img src='icon-x.png' style='width: 20px; height: 20px; vertical-align: middle;' />Habitat Data</div>"), value = FALSE)
               )
             ),
           p(class = "legend-description", "Some models were already developed, some are being developed now. For more detailed data exploration information click ",
@@ -156,15 +156,15 @@ ui <- fluidPage(
           # Species Habitat Extents Map Layers ---
           tags$div(
             class = "legend-item",
-            checkboxInput("show_habitat_extent", "Fish Habitat Extents", value = TRUE)
+            checkboxInput("show_habitat_extent", "Fish Habitat Extents", value = FALSE)
             ),
           conditionalPanel(
             condition = "input.show_habitat_extent == true",
             tags$div(
               style = "margin-left: 20px;",
-              checkboxInput("show_chinook_extent", HTML("<span><img src='legend-abundance-1.png' style='width: 20px; height: 20px;'/> Chinook Habitat Extent</span>"), value = TRUE),
-              checkboxInput("show_coho_extent", HTML("<span><img src='legend-abundance-2.png' style='width: 20px; height: 20px;'/> Coho Habitat Extent</span>"), value = TRUE),
-              checkboxInput("show_steelhead_extent", HTML("<span><img src='legend-abundance-3.png' style='width: 20px; height: 20px;'/> Steelhead Habitat Extent</span>"), value = TRUE)
+              checkboxInput("show_chinook_extent", HTML("<span><img src='legend-abundance-1.png' style='width: 20px; height: 20px;'/> Chinook Habitat Extent</span>"), value = FALSE),
+              checkboxInput("show_coho_extent", HTML("<span><img src='legend-abundance-2.png' style='width: 20px; height: 20px;'/> Coho Habitat Extent</span>"), value = FALSE),
+              checkboxInput("show_steelhead_extent", HTML("<span><img src='legend-abundance-3.png' style='width: 20px; height: 20px;'/> Steelhead Habitat Extent</span>"), value = FALSE)
               )
             ),
           
@@ -179,21 +179,21 @@ ui <- fluidPage(
           #TODO figure out why mainbox disappears
           tags$div(
             class = "legend-item",
-            checkboxInput("show_usgs_dam_layers", "USGS Dam Removal Monitoring Map Layers", value = TRUE)
+            checkboxInput("show_usgs_dam_layers", "USGS Dam Removal Monitoring Map Layers", value = FALSE)
             ),
           conditionalPanel(
             condition = "input.show_usgs_dam_layers == true",
             tags$div(
               style = "margin-left: 20px;",
-              checkboxInput("show_dams_tb_removed", HTML("<span style='color:red;'>&#9673;</span> Removed Dams"), value = TRUE),
-              checkboxInput("show_dams", HTML("<span style='color:blue;'>&#9673;</span> Existing Dams"), value = TRUE),
-              checkboxInput("show_copco_res", HTML("<span style='color:orange;'>&#9673;</span> Copco Reservoir Bed Sediment Cores"), value = TRUE),
-              checkboxInput("show_estuary_bedsed", HTML("<span style='color:purple;'>&#9673;</span> Estuary Bed Sediment Samples"), value = TRUE),
-              checkboxInput("show_jc_boyle_reservoir_bedsed", HTML("<span style='color:cyan;'>&#9673;</span> JCBoyle Reservoir Bed Sediments"), value = TRUE),
-              checkboxInput("show_ig_reservoir_bedsed", HTML("<span style='color:lavender;'>&#9673;</span> Iron Gate Reservoir Bed Sediment Cores"), value = TRUE),
-              checkboxInput("show_geomorphic_reaches", HTML("<span style='color:brown;'>&#9673;</span> Geomorphic Reaches"), value = TRUE),
-              checkboxInput("show_sediment_bug", HTML("<span style='color:yellow;'>&#9673;</span> Sediment Bug Samples"), value = TRUE),
-              checkboxInput("show_fingerprinting", HTML("<span style='color:lightgreen;'>&#9673;</span> Tributary Fingerprinting Samples"), value = TRUE)
+              checkboxInput("show_dams_tb_removed", HTML("<span style='color:red;'>&#9673;</span> Removed Dams"), value = FALSE),
+              checkboxInput("show_dams", HTML("<span style='color:blue;'>&#9673;</span> Existing Dams"), value = FALSE),
+              checkboxInput("show_copco_res", HTML("<span style='color:orange;'>&#9673;</span> Copco Reservoir Bed Sediment Cores"), value = FALSE),
+              checkboxInput("show_estuary_bedsed", HTML("<span style='color:purple;'>&#9673;</span> Estuary Bed Sediment Samples"), value = FALSE),
+              checkboxInput("show_jc_boyle_reservoir_bedsed", HTML("<span style='color:cyan;'>&#9673;</span> JCBoyle Reservoir Bed Sediments"), value = FALSE),
+              checkboxInput("show_ig_reservoir_bedsed", HTML("<span style='color:lavender;'>&#9673;</span> Iron Gate Reservoir Bed Sediment Cores"), value = FALSE),
+              checkboxInput("show_geomorphic_reaches", HTML("<span style='color:brown;'>&#9673;</span> Geomorphic Reaches"), value = FALSE),
+              checkboxInput("show_sediment_bug", HTML("<span style='color:yellow;'>&#9673;</span> Sediment Bug Samples"), value = FALSE),
+              checkboxInput("show_fingerprinting", HTML("<span style='color:lightgreen;'>&#9673;</span> Tributary Fingerprinting Samples"), value = FALSE)
               )
             ),
           p(class = "legend-description", "These layers were sourced from",
