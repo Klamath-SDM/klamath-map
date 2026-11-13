@@ -39,6 +39,22 @@ assign_sub_basin <- function(data, sub_basin, is_point = TRUE, lon_col = "longit
   return(sf_data)
   }
 
+# builds a "Gage Site" popup button linking out to the gage's source page, where a
+# reliable public page exists. USGS gages link to their NWIS monitoring-location
+# page. Other agencies link to their Water Quality Portal page only when gage_id
+# is a real WQP monitoring location identifier (an uppercase org code followed by
+# a hyphen, e.g. "OREGONDEQ-12491-ORDEQ") - many agencies (e.g. Yurok Tribe, USFWS,
+# Karuk Tribe) use informal site codes with no corresponding WQP/public page, so
+# those are left without a button rather than link somewhere broken.
+gage_site_button <- function(gage_id, agency) {
+  wqp_org <- sub("-.*$", "", gage_id)
+  dplyr::case_when(
+    agency == "usgs" ~ paste0("<br><button onclick=\"window.open('https://waterdata.usgs.gov/monitoring-location/USGS-", gage_id, "/', '_blank')\">Gage Site</button>"),
+    grepl("^[A-Z0-9_]+-", gage_id) ~ paste0("<br><button onclick=\"window.open('https://www.waterqualitydata.us/provider/STORET/", wqp_org, "/", gage_id, "/', '_blank')\">Gage Site</button>"),
+    TRUE ~ ""
+  )
+}
+
 
 ###############
 # DATA IMPORTS 

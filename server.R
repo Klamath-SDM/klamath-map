@@ -136,13 +136,12 @@ shinyServer(function(input, output, session) {
           data = flow,
           lng = ~longitude, lat = ~latitude, 
           icon = ~rst_markers["circle-F"],
-          popup = ~paste("<em>Flow Gage</em><br>", "<strong>Gage Number:</strong>", gage_id, 
+          popup = ~paste("<em>Flow Gage</em><br>", "<strong>Gage Number:</strong>", gage_id,
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
                          "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date,
-                         "<br><button class='show-plot-btn' data-type='flow' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
-                         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-                         # gage_number, "', '_blank')\">Gage Site</button>"),
+                         # "<br><button class='show-plot-btn' data-type='flow' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
+                         gage_site_button(gage_id, agency)),
           label = ~htmltools::HTML("<em>Flow Gage</em>"),
           group = "flow") 
       } else {
@@ -163,9 +162,8 @@ shinyServer(function(input, output, session) {
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
                          "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date,
-                         "<br><button class='show-plot-btn' data-type='temperature' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
-                         # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-                         # gage_id, "', '_blank')\">Gage Site</button>"),
+                         # "<br><button class='show-plot-btn' data-type='temperature' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
+                         gage_site_button(gage_id, agency)),
           label = ~htmltools::HTML("<em>Temperature Gage</em>"),
           group = "temperature"
         )
@@ -184,13 +182,12 @@ shinyServer(function(input, output, session) {
           lng = ~jitter(longitude, amount = 0.0020),  
           lat = ~jitter(latitude, amount = 0.0020), 
           icon = ~rst_markers["circle-DO"],
-          popup = ~paste("<em>Dissolved Oxygen Gage</em><br>", "<strong>Gage Number:</strong>", gage_id, 
+          popup = ~paste("<em>Dissolved Oxygen Gage</em><br>", "<strong>Gage Number:</strong>", gage_id,
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
                          "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date,
-                         "<br><button class='show-plot-btn' data-type='do' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
-          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=", 
-          # gage_id, "', '_blank')\">Gage Site</button>"),
+                         # "<br><button class='show-plot-btn' data-type='do' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
+          gage_site_button(gage_id, agency)),
           label = ~htmltools::HTML("<em>Dissolved Oxygen Gage</em>"),
           group = "dissolved oxygen"
         )
@@ -212,9 +209,8 @@ shinyServer(function(input, output, session) {
                          "<br><strong>Gage Name:</strong>", gage_name,
                          "<br><strong>Agency:</strong>", agency,
                          "<br><strong>Latest Date:</strong>", max_date, "<br><strong>Earliest Date:</strong>", min_date,
-                         "<br><button class='show-plot-btn' data-type='ph' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
-          # "<button onclick=\"window.open('https://waterdata.usgs.gov/nwis/inventory?site_no=",
-          # gage_id, "', '_blank')\">Gage Site</button>"),
+                         # "<br><button class='show-plot-btn' data-type='ph' data-gage='", gage_id, "'>See Timeseries Plot</button>"),
+          gage_site_button(gage_id, agency)),
           label = ~htmltools::HTML("<em>pH Gage</em>"),
           group = "pH"
         )
